@@ -40,4 +40,16 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 4
+vim.opt.softtabstop = 4
+vim.opt.cursorline = true
+vim.opt.cursorcolumn = true
+
+-- Path for gf
+vim.opt_local.suffixesadd:prepend('.lua')
+vim.opt_local.suffixesadd:prepend('init.lua')
+vim.opt_local.path:prepend(vim.fn.stdpath('config') .. '/lua')
+vim.g.python3_host_prog = vim.fn.expand("~/miniconda3/envs/nvim/bin/python")
+
 -- vim: ts=2 sts=2 sw=2 et
