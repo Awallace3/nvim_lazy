@@ -169,9 +169,12 @@ require('lazy').setup({
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   --  
   {
-    "github/copilot.vim"
+    "github/copilot.vim",
+    config = function()
+    end
   },
   { 'akinsho/toggleterm.nvim'},
+  -- { 'ThePrimeagen/harpoon' },
   { import = 'custom.plugins' },
 }, {})
 
