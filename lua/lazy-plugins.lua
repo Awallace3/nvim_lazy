@@ -173,7 +173,6 @@ require('lazy').setup({
     config = function()
     end
   },
-  { 'akinsho/toggleterm.nvim' },
   { 'ThePrimeagen/harpoon' },
   { import = 'custom.plugins' },
 }, {})

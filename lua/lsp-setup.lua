@@ -26,8 +26,8 @@ local on_attach = function(_, bufnr)
   nmap('<leader>ws', require('telescope.builtin').lsp_dynamic_workspace_symbols, '[W]orkspace [S]ymbols')
 
   -- See `:help K` for why this keymap
-  nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+  -- nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
+  -- nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
@@ -129,15 +129,15 @@ wk.setup {
   }
 }
 
-Terminal = require('toggleterm.terminal').Terminal
-local toggle_float = function()
-  local float = Terminal:new({ direction = "float" })
-  return float:toggle()
-end
-local toggle_top = function()
-  local top = Terminal:new({ cmd = 'top', direction = "float" })
-  return top:toggle()
-end
+-- Terminal = require('toggleterm.terminal').Terminal
+-- local toggle_float = function()
+--   local float = Terminal:new({ direction = "float" })
+--   return float:toggle()
+-- end
+-- local toggle_top = function()
+--   local top = Terminal:new({ cmd = 'top', direction = "float" })
+--   return top:toggle()
+-- end
 
 GetPythonFunctionName = function()
   local function_name = vim.fn.search("def", "bnW")
@@ -416,10 +416,10 @@ local normal_mappings = {
   },
   t = {
     name = "Terminal",
-    t = { ":ToggleTerm<cr>", "Split Below" },
-    f = { toggle_float, "Floating Terminal" },
+    -- t = { ":ToggleTerm<cr>", "Split Below" },
+    -- f = { toggle_float, "Floating Terminal" },
     -- l = {toggle_lazygit, "LazyGit"},
-    y = { toggle_top, "top" },
+    -- y = { toggle_top, "top" },
     -- m = {toggle_neomutt, "NeoMutt"},
     d = {
       ":!dftd4 tmp.xyz --json t.json --param 1.0 0.9171 0.3385 2.883<cr>",
