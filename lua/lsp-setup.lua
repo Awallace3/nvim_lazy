@@ -43,6 +43,8 @@ local on_attach = function(_, bufnr)
   end, { desc = 'Format current buffer with LSP' })
 end
 
+local lspconfig = require('lspconfig')
+
 -- document existing key chains
 
 -- mason-lspconfig requires that these setup functions are called in this order
@@ -59,13 +61,14 @@ require('mason-lspconfig').setup()
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
 local servers = {
-  -- clangd = {},
+  clangd = {},
   -- gopls = {},
-  -- pyright = {},
-  -- rust_analyzer = {},
+  pyright = {},
+  rust_analyzer = {},
+  julials = {},
+  ltex = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
-
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -97,6 +100,113 @@ mason_lspconfig.setup_handlers {
       on_attach = on_attach,
       settings = servers[server_name],
       filetypes = (servers[server_name] or {}).filetypes,
+    }
+  end,
+  ["lua_ls"] = function()
+    lspconfig.lua_ls.setup {
+      capabilities = capabilities,
+      -- cmd = { sumneko_binary, "-E", sumneko_root_path .. "/main.lua" },
+      settings = {
+        Lua = {
+          runtime = {
+            -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+            version = 'LuaJIT',
+            -- Setup your lua path
+            path = vim.split(package.path, ';')
+          },
+          diagnostics = {
+            -- Get the language server to recognize the `vim` global
+            globals = { 'vim' }
+          },
+          workspace = {
+            -- Make the server aware of Neovim runtime files
+            library = {
+              [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+              [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true
+            }
+          }
+        }
+      }
+    }
+  end,
+  ["rust_analyzer"] = function()
+    lspconfig.rust_analyzer.setup {
+      on_attach = on_attach,
+      capabilities = capabilities,
+      settings = {
+        ["rust-analyzer"] = {
+          imports = {
+            granularity = {
+              group = "module",
+            },
+            prefix = "self",
+          },
+          cargo = {
+            buildScripts = {
+              enable = true,
+            },
+          },
+          procMacro = {
+            enable = true
+          },
+        }
+      }
+    }
+  end,
+  ["julials"] = function()
+    lspconfig.julials.setup {
+      on_new_config = function(new_config, _)
+        local julia = vim.fn.expand("~/.julia/environments/nvim-lspconfig/bin/julia")
+        -- local julia = vim.fn.expand("~/gits/julia/julia")
+        local sysimage_arg = "--sysimage=" ..
+            vim.fn.expand("~/.julia/environments/nvim-lspconfig/languageserver.so")
+        local sysimage_native = "--sysimage-native-code=yes"
+        if false then
+          new_config.cmd[5] = (new_config.cmd[5]):gsub("using LanguageServer",
+            "using Revise; using LanguageServer; if isdefined(LanguageServer, :USE_REVISE); LanguageServer.USE_REVISE[] = true; end")
+        elseif require 'lspconfig'.util.path.is_file(julia) then
+          vim.notify("Julia LSP Engaged!")
+          new_config.cmd[1] = julia
+          if new_config.cmd[2] ~= sysimage_arg then
+            table.insert(new_config.cmd, 2, sysimage_arg)
+            table.insert(new_config.cmd, 3, sysimage_native)
+          end
+        end
+      end,
+      -- This just adds dirname(fname) as a fallback (see nvim-lspconfig#1768).
+      root_dir = function(fname)
+        local util = require 'lspconfig.util'
+        return util.root_pattern 'Project.toml' (fname) or util.find_git_ancestor(fname) or
+            util.path.dirname(fname)
+      end,
+      -- on_attach = function(client, bufnr)
+      --     on_attach(client, bufnr)
+      --     -- Disable automatic formatexpr since the LS.jl formatter isn't so nice.
+      --     vim.bo[bufnr].formatexpr = ''
+      -- end,
+      on_attach = on_attach,
+      capabilities = capabilities,
+    }
+  end,
+  ["ltex"] = function()
+    lspconfig.ltex.setup {
+      enabled = { "latex", "tex", "bib", "markdown" },
+      on_attach = on_attach,
+      capabilities = capabilities,
+      checkFrequency = "save",
+      language = "en-US",
+      settings = {
+        ltex = {
+          dictionary = {
+            ["en-US"] = words,
+          },
+          disabledRules = {
+            ['en-US'] = {
+              "ARROWS",
+            },
+          }
+        },
+      },
     }
   end,
 }
