@@ -277,6 +277,14 @@ local normal_mappings = {
       ":vs<bar>e ~/.config/nvim/lua/whichkey-config/init.lua<cr>",
       "Edit config"
     },
+    p = {
+      ":e ~/.config/nvim/lua/custom/plugins<cr>",
+      "Edit Plugins"
+    },
+    P = {
+      ":vs<bar>e ~/.config/nvim/lua/custom/plugins<cr>",
+      "Edit Plugins"
+    },
     s = { ":e<bar>e ~/.config/nvim/snippets<cr>", "Edit config" },
     S = {
       ":vs<bar>e ~/.config/nvim/lua/luasnip-config.lua<bar>40<cr>",
@@ -416,7 +424,8 @@ local normal_mappings = {
   },
   t = {
     name = "Terminal",
-    -- t = { ":ToggleTerm<cr>", "Split Below" },
+    t = { ":term<cr>", "Terminal" },
+    T = { ":vs<bar>term<cr>", "Split+Terminal" },
     -- f = { toggle_float, "Floating Terminal" },
     -- l = {toggle_lazygit, "LazyGit"},
     -- y = { toggle_top, "top" },

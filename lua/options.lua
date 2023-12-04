@@ -5,6 +5,9 @@
 -- Set highlight on search
 vim.o.hlsearch = false
 
+-- Set word wrap
+vim.o.wrap = true
+
 -- Make line numbers default
 vim.wo.number = true
 vim.wo.relativenumber = true
