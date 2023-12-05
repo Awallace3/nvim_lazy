@@ -51,6 +51,8 @@ local lspconfig = require('lspconfig')
 -- before setting up the servers.
 require('mason').setup()
 require('mason-lspconfig').setup()
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -67,6 +69,7 @@ local servers = {
   rust_analyzer = {},
   julials = {},
   ltex = {},
+  texlab = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
   lua_ls = {
@@ -83,8 +86,6 @@ local servers = {
 require('neodev').setup()
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
@@ -188,6 +189,12 @@ mason_lspconfig.setup_handlers {
       capabilities = capabilities,
     }
   end,
+  ['texlab'] = function()
+    lspconfig.ltex.setup {
+      on_attach = on_attach,
+      capabilities = capabilities,
+    }
+  end,
   ["ltex"] = function()
     lspconfig.ltex.setup {
       enabled = { "latex", "tex", "bib", "markdown" },
@@ -198,7 +205,7 @@ mason_lspconfig.setup_handlers {
       settings = {
         ltex = {
           dictionary = {
-            ["en-US"] = words,
+            -- ["en-US"] = words,
           },
           disabledRules = {
             ['en-US'] = {
