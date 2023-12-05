@@ -24,6 +24,9 @@ vim.keymap.set('n', '<c-l>', '<c-w>l', opts)
 vim.keymap.set('n', '[b', ':bprevious<cr>', opts)
 vim.keymap.set('n', ']b', ':bnext<cr>', opts)
 
+vim.keymap.set('n', '<c-w>v', ':vsplit<cr><c-w>l', opts)
+-- vim.keymap.set('c', 'vs', 'vs<cr><c-w>l', opts)
+
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
