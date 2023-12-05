@@ -386,7 +386,7 @@ local normal_mappings = {
     B = { ":vs <bar>term cd src/dispersion && bash build.sh<cr>", "./build.sh" },
     d = { ":vs <bar>term make build_and_test<cr>", "dftd4 build and run" },
     f = { ":vs <bar>term flask --app cdsg run --debug<cr>", "Run csdg" },
-    r = { ":w <bar>so %<cr>", "Save and Source" },
+    r = { ":vs <bar>term cargo run main.rs%<cr>", "cargo run main.rs" },
     j = { ":vs <bar>term julia main.jl<cr>", "julia main.jl" },
     -- RUN TESTS
     t = {
