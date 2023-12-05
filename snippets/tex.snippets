@@ -273,7 +273,11 @@ snippet ft \footnote
 snippet fig figure environment (includegraphics)
 	\\begin{figure}
 	\\begin{center}
+<<<<<<< HEAD
+		\\includegraphics[scale=${1}]{Figures/${2}}
+=======
 		\\includegraphics[scale=${1}]{./figures/${2}}
+>>>>>>> da710edb4d6ecdc5e3522c472a5bdaa00b8489df
 	\\end{center}
 	\\caption{${3}}
 	\\label{fig:${4}}
@@ -366,6 +370,8 @@ snippet frameimgsplit frame environment
 		\end{figure}
 		\end{minipage}
 	\\end{frame}
+<<<<<<< HEAD
+=======
 
 snippet frame2rectangles frame environment
 	\\begin{frame}[t]
@@ -404,6 +410,7 @@ snippet frame2rectangles frame environment
 	    \end{tikzpicture}
 	\\end{frame}
 
+>>>>>>> da710edb4d6ecdc5e3522c472a5bdaa00b8489df
 snippet block block environment
 	\\begin{block}{${1:title}}
 		${0:${VISUAL}}
