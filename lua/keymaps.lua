@@ -1,5 +1,5 @@
 -- [[ Basic Keymaps ]]
-
+local opts = { noremap = true }
 -- Keymaps for better default experience
 -- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
@@ -14,8 +14,8 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnos
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
-
-local opts = {noremap=true}
+vim.keymap.set('v', '>', ">gv", opts)
+vim.keymap.set('v', '<', "<gv", opts)
 
 vim.keymap.set('n', '<c-j>', '<c-w>j', opts)
 vim.keymap.set('n', '<c-h>', '<c-w>h', opts)
