@@ -77,6 +77,7 @@ local servers = {
       -- diagnostics = { disable = { 'missing-fields' } },
     },
   },
+  swift_mesonls = {},
 }
 
 -- Setup neovim lua configuration
@@ -209,6 +210,13 @@ mason_lspconfig.setup_handlers {
       },
     }
   end,
+  -- ['swift_mesonls'] = function()
+  --   lspconfig.swift_mesonls.setup {
+  --     on_attach = on_attach,
+  --     capabilities = capabilities,
+  --     filetypes = { "meson" },
+  --   }
+  -- end,
 }
 
 require('which-key').register {
@@ -496,7 +504,8 @@ local normal_mappings = {
     B = { ":vs <bar>term cd src/dispersion && bash build.sh<cr>", "./build.sh" },
     d = { ":vs <bar>term make build_and_test<cr>", "dftd4 build and run" },
     f = { ":vs <bar>term flask --app cdsg run --debug<cr>", "Run csdg" },
-    r = { ":vs <bar>term cargo run main.rs%<cr>", "cargo run main.rs" },
+    r = { ":vs <bar>term cargo run <cr>", "cargo run" },
+    s = { ":vs <bar>term swift %<cr>", "swift main.swift" },
     j = { ":vs <bar>term julia main.jl<cr>", "julia main.jl" },
     -- RUN TESTS
     t = {
