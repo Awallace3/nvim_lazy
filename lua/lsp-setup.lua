@@ -51,6 +51,8 @@ local lspconfig = require('lspconfig')
 -- before setting up the servers.
 require('mason').setup()
 require('mason-lspconfig').setup()
+local capabilities = vim.lsp.protocol.make_client_capabilities()
+capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Enable the following language servers
 --  Feel free to add/remove any LSPs that you want here. They will automatically be installed.
@@ -62,13 +64,11 @@ require('mason-lspconfig').setup()
 --  define the property 'filetypes' to the map in question.
 local servers = {
   clangd = {},
-  -- gopls = {},
   pyright = {},
   rust_analyzer = {},
   julials = {},
   ltex = {},
-  -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
+  texlab = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -84,8 +84,6 @@ local servers = {
 require('neodev').setup()
 
 -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
@@ -185,6 +183,12 @@ mason_lspconfig.setup_handlers {
       --     -- Disable automatic formatexpr since the LS.jl formatter isn't so nice.
       --     vim.bo[bufnr].formatexpr = ''
       -- end,
+      on_attach = on_attach,
+      capabilities = capabilities,
+    }
+  end,
+  ['texlab'] = function()
+    lspconfig.ltex.setup {
       on_attach = on_attach,
       capabilities = capabilities,
     }
@@ -472,6 +476,7 @@ local normal_mappings = {
     t = { get_filetype, "Current File Path" },
     -- i = { harpoon_nav_file, "Harpoon Index" },
   },
+  n = {  ":Neotree toggle<cr>", "Neotree Toggle"},
   p = { s = { ":w<bar>so %<bar>PackerSync<cr>", "PackerSync" } },
   -- t = {name = '+terminal', t = {":FloatermNew --wintype=popup --height=6", "terminal"}},
   l = {
