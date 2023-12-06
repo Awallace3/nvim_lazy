@@ -64,14 +64,11 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 --  define the property 'filetypes' to the map in question.
 local servers = {
   clangd = {},
-  -- gopls = {},
   pyright = {},
   rust_analyzer = {},
   julials = {},
   ltex = {},
   texlab = {},
-  -- tsserver = {},
-  -- html = { filetypes = { 'html', 'twig', 'hbs'} },
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -206,7 +203,7 @@ mason_lspconfig.setup_handlers {
       settings = {
         ltex = {
           dictionary = {
-            -- ["en-US"] = words,
+            ["en-US"] = words,
           },
           disabledRules = {
             ['en-US'] = {
@@ -468,6 +465,7 @@ local normal_mappings = {
     t = { get_filetype, "Current File Path" },
     -- i = { harpoon_nav_file, "Harpoon Index" },
   },
+  n = {  ":Neotree toggle<cr>", "Neotree Toggle"},
   p = { s = { ":w<bar>so %<bar>PackerSync<cr>", "PackerSync" } },
   -- t = {name = '+terminal', t = {":FloatermNew --wintype=popup --height=6", "terminal"}},
   l = {
