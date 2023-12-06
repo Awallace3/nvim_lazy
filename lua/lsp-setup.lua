@@ -219,6 +219,17 @@ mason_lspconfig.setup_handlers {
   -- end,
 }
 
+lspconfig.clangd.setup {
+    cmd = {
+        "clangd",
+        "--log=verbose",
+        "--compile-commands-dir=./build",
+        -- "--query-driver=/usr/bin/g++",
+        "--query-driver=/usr/bin/g++,/theoryfs2/ds/amwalla3/miniconda3/envs/p4dev18/bin/x86_64-conda-linux-gnu-c++",
+    },
+    capabilities = capabilities
+}
+
 require('which-key').register {
   ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
   ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
