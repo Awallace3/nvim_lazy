@@ -46,8 +46,10 @@ vim.o.termguicolors = true
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
+
 vim.opt.cursorline = true
 vim.opt.cursorcolumn = true
+vim.o.scrolloff = 10
 
 -- Path for gf
 vim.opt_local.suffixesadd:prepend('.lua')
