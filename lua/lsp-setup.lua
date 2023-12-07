@@ -223,6 +223,17 @@ mason_lspconfig.setup_handlers {
   -- end,
 }
 
+lspconfig.clangd.setup {
+  cmd = {
+    "clangd",
+    "--log=verbose",
+    "--compile-commands-dir=./build",
+    -- "--query-driver=/usr/bin/g++",
+    "--query-driver=/usr/bin/g++,/theoryfs2/ds/amwalla3/miniconda3/envs/p4dev18/bin/x86_64-conda-linux-gnu-c++",
+  },
+  capabilities = capabilities
+}
+
 require('which-key').register {
   ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
   ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
@@ -393,8 +404,10 @@ local normal_mappings = {
   e = {
     name = "Edit Config",
     E = { ":vs<bar>e ~/.config/nvim/init.lua<cr>", "Edit config" },
-    e = { ":e<bar>e ~/.config/nvim/init.lua<cr>", "Edit config" },
-    c = { ":e<bar>e ~/.config/nvim/lua/chatgpt-config.lua<cr>", "Edit config" },
+    e = { ":e ~/.config/nvim/init.lua<cr>", "Edit config" },
+    O = { ":vs<bar>e ~/.config/nvim/lua/options.lua<cr>", "Edit Options" },
+    o = { ":e ~/.config/nvim/lua/options.lua<cr>", "Edit Options" },
+    c = { ":e ~/.config/nvim/lua/chatgpt-config.lua<cr>", "Edit config" },
     W = {
       ":vs<bar>e ~/.config/nvim/lua/whichkey-config/init.lua<cr>",
       "Edit config"
@@ -407,7 +420,7 @@ local normal_mappings = {
       ":vs<bar>e ~/.config/nvim/lua/custom/plugins<cr>",
       "Edit Plugins"
     },
-    s = { ":e<bar>e ~/.config/nvim/snippets<cr>", "Edit config" },
+    s = { ":e ~/.config/nvim/snippets<cr>", "Edit config" },
     S = {
       ":vs<bar>e ~/.config/nvim/lua/luasnip-config.lua<bar>40<cr>",
       "Edit Snippets"
@@ -419,7 +432,8 @@ local normal_mappings = {
     L = {
       ":vs<bar>e ~/.config/nvim/lua/lsp-setup.lua<cr>",
       "Edit cmp (split)"
-    }
+    },
+    f = { ":e ~/.config/nvim_simplified<cr>", "Edit Last" },
     -- S = {":vs<bar>e ~/.config/nvim/snippets<cr>", "Edit config"}
   },
   F = { Formatter, "Format Buffer" },
@@ -465,7 +479,7 @@ local normal_mappings = {
     t = { get_filetype, "Current File Path" },
     -- i = { harpoon_nav_file, "Harpoon Index" },
   },
-  n = {  ":Neotree toggle<cr>", "Neotree Toggle"},
+  n = { ":Neotree toggle<cr>", "Neotree Toggle" },
   p = { s = { ":w<bar>so %<bar>PackerSync<cr>", "PackerSync" } },
   -- t = {name = '+terminal', t = {":FloatermNew --wintype=popup --height=6", "terminal"}},
   l = {

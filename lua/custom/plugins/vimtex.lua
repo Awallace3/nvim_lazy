@@ -6,10 +6,10 @@ return {
     vim.cmd [[
       let g:vimtex_quickfix_open_on_warning = 0
     ]]
-      vim.g.vimtex_env_change_autofill = 1
-      vim.g.vimtex_format_enabled = 1
-    -- vim.keymap.set('x', "<C-u>call (vimtex-env-surround-visual)", opts= { noremap=true})
-    vim.api.nvim_set_keymap('x', 'tss', ':<C-u>call vimtex#cmd#run_func("vimtex-env-surround-visual", visualmode())<CR>', { noremap = true, silent = true })
+    -- vim.g.vimtex_env_change_autofill = 1
+    vim.g.vimtex_format_enabled = 1
+    -- vim.api.nvim_set_keymap('x', 'tss', ':<C-u>call vimtex#cmd#run_func("vimtex-env-surround-visual", visualmode())<CR>',
+      -- { noremap = true, silent = true })
 
     vim.api.nvim_create_autocmd("BufWritePost", {
       pattern = "*.tex",
