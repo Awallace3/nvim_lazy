@@ -77,7 +77,7 @@ local servers = {
       -- diagnostics = { disable = { 'missing-fields' } },
     },
   },
-  swift_mesonls = {},
+  -- swift_mesonls = {},
 }
 
 -- Setup neovim lua configuration
@@ -221,13 +221,17 @@ mason_lspconfig.setup_handlers {
   end,
 }
 
+-- conda_env_path = vim.fn.expand("~/miniconda3/envs/p4dev18/bin")
+-- get $CONDA_PREFIX/bin path 
+conda_prefix_path = vim.fn.expand("$CONDA_PREFIX/bin")
 lspconfig.clangd.setup {
   cmd = {
     "clangd",
     "--log=verbose",
     "--compile-commands-dir=./build",
     -- "--query-driver=/usr/bin/g++",
-    "--query-driver=/usr/bin/g++,/theoryfs2/ds/amwalla3/miniconda3/envs/p4dev18/bin/x86_64-conda-linux-gnu-c++",
+    -- "--query-driver=/usr/bin/g++,/theoryfs2/ds/amwalla3/miniconda3/envs/p4dev18/bin/x86_64-conda-linux-gnu-c++",
+    "--query-driver=/usr/bin/g++," .. conda_prefix_path .. "/x86_64-conda-linux-gnu-c++",
   },
   capabilities = capabilities
 }
