@@ -92,6 +92,15 @@ mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
 
+local words = function()
+  local words = {}
+  nvim_config_spell = vim.fn.expand("~/.config/nvim/spell/en.utf-8.add")
+  for line in io.lines(nvim_config_spell) do
+    table.insert(words, line)
+  end
+  return words
+end
+
 mason_lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
