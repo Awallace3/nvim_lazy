@@ -92,9 +92,9 @@ mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
 
-local words = function()
+function Collect_words()
+  local nvim_config_spell = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
   local words = {}
-  nvim_config_spell = vim.fn.expand("~/.config/nvim/spell/en.utf-8.add")
   for line in io.lines(nvim_config_spell) do
     table.insert(words, line)
   end
@@ -203,6 +203,7 @@ mason_lspconfig.setup_handlers {
     }
   end,
   ["ltex"] = function()
+    Words = Collect_words()
     lspconfig.ltex.setup {
       enabled = { "latex", "tex", "bib", "markdown" },
       on_attach = on_attach,
@@ -212,7 +213,7 @@ mason_lspconfig.setup_handlers {
       settings = {
         ltex = {
           dictionary = {
-            ["en-US"] = words,
+            ["en-US"] = Words,
           },
           disabledRules = {
             ['en-US'] = {
