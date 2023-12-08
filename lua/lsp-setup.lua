@@ -92,7 +92,7 @@ mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
 
-function Collect_words()
+local function collect_words()
   local nvim_config_spell = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
   local words = {}
   for line in io.lines(nvim_config_spell) do
@@ -100,6 +100,8 @@ function Collect_words()
   end
   return words
 end
+
+Words = collect_words()
 
 mason_lspconfig.setup_handlers {
   function(server_name)
@@ -113,7 +115,6 @@ mason_lspconfig.setup_handlers {
   ["lua_ls"] = function()
     lspconfig.lua_ls.setup {
       capabilities = capabilities,
-      -- cmd = { sumneko_binary, "-E", sumneko_root_path .. "/main.lua" },
       settings = {
         Lua = {
           runtime = {
@@ -187,11 +188,6 @@ mason_lspconfig.setup_handlers {
         return util.root_pattern 'Project.toml' (fname) or util.find_git_ancestor(fname) or
             util.path.dirname(fname)
       end,
-      -- on_attach = function(client, bufnr)
-      --     on_attach(client, bufnr)
-      --     -- Disable automatic formatexpr since the LS.jl formatter isn't so nice.
-      --     vim.bo[bufnr].formatexpr = ''
-      -- end,
       on_attach = on_attach,
       capabilities = capabilities,
     }
@@ -203,7 +199,6 @@ mason_lspconfig.setup_handlers {
     }
   end,
   ["ltex"] = function()
-    Words = Collect_words()
     lspconfig.ltex.setup {
       enabled = { "latex", "tex", "bib", "markdown" },
       on_attach = on_attach,
@@ -224,13 +219,6 @@ mason_lspconfig.setup_handlers {
       },
     }
   end,
-  -- ['swift_mesonls'] = function()
-  --   lspconfig.swift_mesonls.setup {
-  --     on_attach = on_attach,
-  --     capabilities = capabilities,
-  --     filetypes = { "meson" },
-  --   }
-  -- end,
 }
 
 lspconfig.clangd.setup {
@@ -520,7 +508,8 @@ local normal_mappings = {
     r = { '<cmd>lua vim.lsp.buf.references()<cr>', "References" },
     R = { '<cmd>lua vim.lsp.buf.rename()<cr>', "Rename Variable" },
     a = { '<cmd>lua vim.lsp.buf.code_action()<cr>', "Code Action" },
-    T = { ':lua require("lsp_lines").toggle()<cr>', "Toggle lsp_lines" }
+    T = { ':lua require("lsp_lines").toggle()<cr>', "Toggle lsp_lines" },
+    z = { ':LspRestart<cr>', "LspRestart" },
   },
   r = {
     name = "Run",
