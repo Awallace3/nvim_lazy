@@ -101,6 +101,27 @@ local function collect_words()
   return words
 end
 
+-- conda_env_path = vim.fn.expand("~/miniconda3/envs/p4dev18/bin")
+-- get $CONDA_PREFIX/bin path 
+conda_prefix_path = vim.fn.expand("$CONDA_PREFIX/bin")
+-- check if os is APPLE or LINUX 
+local conda_cpp = ""
+local function get_os()
+    local uname = vim.loop.os_uname()
+    if uname.sysname == "Darwin" then
+        return "APPLE"
+    elseif uname.sysname == "Linux" then
+        return "LINUX"
+    else
+        return "UNKNOWN"
+    end
+end
+
+Os_type = get_os()
+if Os_type == "APPLE" then
+  conda_cpp = conda_prefix_path .. "/x86_64-apple-darwin13.4.0-clang++"
+end
+
 Words = collect_words()
 
 mason_lspconfig.setup_handlers {
@@ -221,9 +242,7 @@ mason_lspconfig.setup_handlers {
   end,
 }
 
--- conda_env_path = vim.fn.expand("~/miniconda3/envs/p4dev18/bin")
--- get $CONDA_PREFIX/bin path 
-conda_prefix_path = vim.fn.expand("$CONDA_PREFIX/bin")
+
 lspconfig.clangd.setup {
   cmd = {
     "clangd",
@@ -231,7 +250,7 @@ lspconfig.clangd.setup {
     "--compile-commands-dir=./build",
     -- "--query-driver=/usr/bin/g++",
     -- "--query-driver=/usr/bin/g++,/theoryfs2/ds/amwalla3/miniconda3/envs/p4dev18/bin/x86_64-conda-linux-gnu-c++",
-    "--query-driver=/usr/bin/g++," .. conda_prefix_path .. "/x86_64-conda-linux-gnu-c++",
+    "--query-driver=/usr/bin/g++," .. conda_cpp,
   },
   capabilities = capabilities
 }
