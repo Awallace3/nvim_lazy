@@ -28,6 +28,8 @@ require('lazy').setup({
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       {
         'j-hui/fidget.nvim',
+        commit = '785efc6',
+        
         opts = {
 
           -- Options related to LSP progress subsystem
