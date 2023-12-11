@@ -57,4 +57,9 @@ vim.opt_local.suffixesadd:prepend('init.lua')
 vim.opt_local.path:prepend(vim.fn.stdpath('config') .. '/lua')
 vim.g.python3_host_prog = vim.fn.expand("~/miniconda3/envs/nvim/bin/python")
 
+-- vim.cmd [[ 
+--   syn match hashComment "#.*" 
+--   syn match hashIgnore "*\d*" 
+-- ]]
+
 -- vim: ts=2 sts=2 sw=2 et
