@@ -62,6 +62,17 @@ capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 --
 --  If you want to override the default filetypes that your language server will attach to you can
 --  define the property 'filetypes' to the map in question.
+local function collect_words()
+  local nvim_config_spell = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
+  local words = {}
+  for line in io.lines(nvim_config_spell) do
+    table.insert(words, line)
+  end
+  return words
+end
+
+Words = collect_words()
+
 local servers = {
   clangd = {},
   pyright = {},
@@ -92,29 +103,21 @@ mason_lspconfig.setup {
   ensure_installed = vim.tbl_keys(servers),
 }
 
-local function collect_words()
-  local nvim_config_spell = vim.fn.stdpath("config") .. "/spell/en.utf-8.add"
-  local words = {}
-  for line in io.lines(nvim_config_spell) do
-    table.insert(words, line)
-  end
-  return words
-end
 
 -- conda_env_path = vim.fn.expand("~/miniconda3/envs/p4dev18/bin")
--- get $CONDA_PREFIX/bin path 
+-- get $CONDA_PREFIX/bin path
 conda_prefix_path = vim.fn.expand("$CONDA_PREFIX/bin")
--- check if os is APPLE or LINUX 
+-- check if os is APPLE or LINUX
 local conda_cpp = ""
 local function get_os()
-    local uname = vim.loop.os_uname()
-    if uname.sysname == "Darwin" then
-        return "APPLE"
-    elseif uname.sysname == "Linux" then
-        return "LINUX"
-    else
-        return "UNKNOWN"
-    end
+  local uname = vim.loop.os_uname()
+  if uname.sysname == "Darwin" then
+    return "APPLE"
+  elseif uname.sysname == "Linux" then
+    return "LINUX"
+  else
+    return "UNKNOWN"
+  end
 end
 
 Os_type = get_os()
@@ -122,7 +125,6 @@ if Os_type == "APPLE" then
   conda_cpp = conda_prefix_path .. "/x86_64-apple-darwin13.4.0-clang++"
 end
 
-Words = collect_words()
 
 mason_lspconfig.setup_handlers {
   function(server_name)
@@ -219,27 +221,54 @@ mason_lspconfig.setup_handlers {
       capabilities = capabilities,
     }
   end,
-  ["ltex"] = function()
-    lspconfig.ltex.setup {
-      enabled = { "latex", "tex", "bib", "markdown" },
-      on_attach = on_attach,
-      capabilities = capabilities,
-      checkFrequency = "save",
-      language = "en-US",
-      settings = {
-        ltex = {
-          dictionary = {
-            ["en-US"] = Words,
-          },
-          disabledRules = {
-            ['en-US'] = {
-              "ARROWS",
-            },
-          }
-        },
+  -- ["ltex"] = function()
+  --   lspconfig.ltex.setup {
+  --     enabled = {
+  --       "latex", "tex", "bib",
+  --       -- "markdown",
+  --     },
+  --     on_attach = on_attach,
+  --     capabilities = capabilities,
+  --     checkFrequency = "save",
+  --     language = "en-US",
+  --     settings = {
+  --       ltex = {
+  --         dictionary = {
+  --           ["en-US"] = Words,
+  --         },
+  --         disabledRules = {
+  --           ['en-US'] = {
+  --             "ARROWS",
+  --           },
+  --         }
+  --       },
+  --     },
+  --   }
+  -- end,
+}
+
+lspconfig.ltex.setup {
+  enabled = {
+    "latex", "tex", "bib",
+    -- "markdown",
+  },
+  on_attach = on_attach,
+  capabilities = capabilities,
+  checkFrequency = "save",
+  language = "en-US",
+  settings = {
+    ltex = {
+      dictionary = {
+        ["en-US"] = Words,
       },
-    }
-  end,
+      disabledRules = {
+        ['en-US'] = {
+          "ARROWS",
+          "WHITESPACE",
+        },
+      }
+    },
+  },
 }
 
 
