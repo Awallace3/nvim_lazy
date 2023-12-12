@@ -477,6 +477,11 @@ local normal_mappings = {
     c = { ":Git commit<bar>:startinsert<cr>", "Git Commit" },
     af = { ":Gw<cr>", "Add File" }
   },
+  i = {
+    name = "Insert",
+    -- t = {'o* [○] ', "Insert Task"},
+    t = {'o* [ ] ', "Insert Task"},
+  },
   -- h = {
   --     name = "Harpoon",
   --     i = { harpoon_nav_file, "Harpoon Index" },

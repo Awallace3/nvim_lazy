@@ -1,3 +1,0 @@
-return {
-  "tools-life/taskwiki"
-}
