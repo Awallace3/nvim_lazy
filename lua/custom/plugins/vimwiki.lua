@@ -14,10 +14,6 @@ return {
                 template_ext = '.tpl'
             }
         }
-        -- vim.cmd[[
-        -- set conceallevel=0
-        -- ]]
-
         vim.g.vimwiki_auto_diary_index = 1
         vim.g.vimwiki_global_ext = 0
         vim.g.vimwiki_ext2syntax = {
