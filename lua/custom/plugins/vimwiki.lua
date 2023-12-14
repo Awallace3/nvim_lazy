@@ -14,10 +14,6 @@ return {
                 template_ext = '.tpl'
             }
         }
-        -- vim.cmd[[
-        -- set conceallevel=0
-        -- ]]
-
         vim.g.vimwiki_auto_diary_index = 1
         vim.g.vimwiki_global_ext = 0
         vim.g.vimwiki_ext2syntax = {
@@ -33,8 +29,7 @@ return {
                 vim.api.nvim_command('set spellsuggest+=10')
                 vim.api.nvim_command('set filetype=markdown')
                 vim.api.nvim_command([[
-                    syn match hashComment "#.*"
-                    syn match hashIgnore "*\\d*"
+                    syn match numWord "[a-zA-Z0-9]*[0-9]" contains=@NoSpell
                 ]])
             end
         })

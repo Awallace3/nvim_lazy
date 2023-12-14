@@ -216,35 +216,11 @@ mason_lspconfig.setup_handlers {
     }
   end,
   ['texlab'] = function()
-    lspconfig.ltex.setup {
+    lspconfig.texlab.setup {
       on_attach = on_attach,
       capabilities = capabilities,
     }
   end,
-  -- ["ltex"] = function()
-  --   lspconfig.ltex.setup {
-  --     enabled = {
-  --       "latex", "tex", "bib",
-  --       -- "markdown",
-  --     },
-  --     on_attach = on_attach,
-  --     capabilities = capabilities,
-  --     checkFrequency = "save",
-  --     language = "en-US",
-  --     settings = {
-  --       ltex = {
-  --         dictionary = {
-  --           ["en-US"] = Words,
-  --         },
-  --         disabledRules = {
-  --           ['en-US'] = {
-  --             "ARROWS",
-  --           },
-  --         }
-  --       },
-  --     },
-  --   }
-  -- end,
 }
 
 lspconfig.ltex.setup {
@@ -266,6 +242,25 @@ lspconfig.ltex.setup {
           "ARROWS",
           "WHITESPACE",
         },
+      },
+      additionalRules = {
+        ignorePatterns = {
+          -- camelCasePattern
+          "([a-z]+[A-Z]+[a-z]+)+",
+          -- word containing a number
+          "[a-zA-Z]*[0-9]+[a-zA-Z]*",
+        }
+      },
+      markdown = {
+        nodes = {
+          CodeBlock = "ignore",
+          FencedCodeBlock = "ignore",
+          AutoLink = "ignore",
+          Link = "ignore",
+          LinkNode = "ignore",
+          LinkRef = "ignore",
+          Code = "dummy",
+        }
       }
     },
   },
@@ -509,7 +504,7 @@ local normal_mappings = {
   i = {
     name = "Insert",
     -- t = {'o* [○] ', "Insert Task"},
-    t = {'o* [ ] ', "Insert Task"},
+    t = { 'o* [ ] ', "Insert Task" },
   },
   -- h = {
   --     name = "Harpoon",
