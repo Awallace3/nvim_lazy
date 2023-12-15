@@ -361,24 +361,24 @@ GetPath = function(str, sep)
   return str:match("(.*" .. sep .. ")")
 end
 -- get directory of python3_host_prog path
-local nvim_bin_cmd = "silent !" .. GetPath(vim.g.python3_host_prog)
+local nvim_mason_bin = "silent !" .. "~/.local/share/nvim/mason/bin/"
 
 Formatter = function()
   local filetype = vim.bo.filetype
   if filetype == "python" then
     vim.cmd("write")
-    local cmd = nvim_bin_cmd .. "black --quiet" .. " " .. vim.fn.expand("%:p")
+    local cmd = nvim_mason_bin .. "black --quiet" .. " " .. vim.fn.expand("%:p")
     vim.cmd(cmd)
     vim.cmd("e!")
   elseif filetype == "htmldjango" or filetype == "html" then
     vim.cmd("write")
-    local cmd = nvim_bin_cmd .. "djlint" .. " --reformat --indent 4 " .. vim.fn.expand("%:p")
+    local cmd = nvim_mason_bin .. "djlint" .. " --reformat --indent 4 " .. vim.fn.expand("%:p")
     print(cmd)
     vim.cmd(cmd)
     vim.cmd("e!")
   elseif filetype == "css" then
     vim.cmd("write")
-    local cmd = nvim_bin_cmd .. "stylelint" .. " --fix " .. vim.fn.expand("%:p")
+    local cmd = nvim_mason_bin .. "stylelint" .. " --fix " .. vim.fn.expand("%:p")
     print(cmd)
     vim.cmd(cmd)
     vim.cmd("e!")
