@@ -75,7 +75,6 @@ Words = collect_words()
 
 local servers = {
   clangd = {},
-  pyright = {},
   rust_analyzer = {},
   julials = {},
   ltex = {},
@@ -216,35 +215,11 @@ mason_lspconfig.setup_handlers {
     }
   end,
   ['texlab'] = function()
-    lspconfig.ltex.setup {
+    lspconfig.texlab.setup {
       on_attach = on_attach,
       capabilities = capabilities,
     }
   end,
-  -- ["ltex"] = function()
-  --   lspconfig.ltex.setup {
-  --     enabled = {
-  --       "latex", "tex", "bib",
-  --       -- "markdown",
-  --     },
-  --     on_attach = on_attach,
-  --     capabilities = capabilities,
-  --     checkFrequency = "save",
-  --     language = "en-US",
-  --     settings = {
-  --       ltex = {
-  --         dictionary = {
-  --           ["en-US"] = Words,
-  --         },
-  --         disabledRules = {
-  --           ['en-US'] = {
-  --             "ARROWS",
-  --           },
-  --         }
-  --       },
-  --     },
-  --   }
-  -- end,
 }
 
 lspconfig.ltex.setup {
@@ -266,6 +241,25 @@ lspconfig.ltex.setup {
           "ARROWS",
           "WHITESPACE",
         },
+      },
+      additionalRules = {
+        ignorePatterns = {
+          -- camelCasePattern
+          "([a-z]+[A-Z]+[a-z]+)+",
+          -- word containing a number
+          "[a-zA-Z]*[0-9]+[a-zA-Z]*",
+        }
+      },
+      markdown = {
+        nodes = {
+          CodeBlock = "ignore",
+          FencedCodeBlock = "ignore",
+          AutoLink = "ignore",
+          Link = "ignore",
+          LinkNode = "ignore",
+          LinkRef = "ignore",
+          Code = "dummy",
+        }
       }
     },
   },
@@ -366,24 +360,24 @@ GetPath = function(str, sep)
   return str:match("(.*" .. sep .. ")")
 end
 -- get directory of python3_host_prog path
-local nvim_bin_cmd = "silent !" .. GetPath(vim.g.python3_host_prog)
+local nvim_mason_bin = "silent !" .. "~/.local/share/nvim/mason/bin/"
 
 Formatter = function()
   local filetype = vim.bo.filetype
   if filetype == "python" then
     vim.cmd("write")
-    local cmd = nvim_bin_cmd .. "black --quiet" .. " " .. vim.fn.expand("%:p")
+    local cmd = nvim_mason_bin .. "black --quiet" .. " " .. vim.fn.expand("%:p")
     vim.cmd(cmd)
     vim.cmd("e!")
   elseif filetype == "htmldjango" or filetype == "html" then
     vim.cmd("write")
-    local cmd = nvim_bin_cmd .. "djlint" .. " --reformat --indent 4 " .. vim.fn.expand("%:p")
+    local cmd = nvim_mason_bin .. "djlint" .. " --reformat --indent 4 " .. vim.fn.expand("%:p")
     print(cmd)
     vim.cmd(cmd)
     vim.cmd("e!")
   elseif filetype == "css" then
     vim.cmd("write")
-    local cmd = nvim_bin_cmd .. "stylelint" .. " --fix " .. vim.fn.expand("%:p")
+    local cmd = nvim_mason_bin .. "stylelint" .. " --fix " .. vim.fn.expand("%:p")
     print(cmd)
     vim.cmd(cmd)
     vim.cmd("e!")
@@ -509,7 +503,7 @@ local normal_mappings = {
   i = {
     name = "Insert",
     -- t = {'o* [○] ', "Insert Task"},
-    t = {'o* [ ] ', "Insert Task"},
+    t = { 'o* [ ] ', "Insert Task" },
   },
   -- h = {
   --     name = "Harpoon",

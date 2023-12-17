@@ -29,8 +29,7 @@ return {
                 vim.api.nvim_command('set spellsuggest+=10')
                 vim.api.nvim_command('set filetype=markdown')
                 vim.api.nvim_command([[
-                    syn match hashComment "#.*"
-                    syn match hashIgnore "*\\d*"
+                    syn match numWord "[a-zA-Z0-9]*[0-9]" contains=@NoSpell
                 ]])
             end
         })
