@@ -75,7 +75,6 @@ Words = collect_words()
 
 local servers = {
   clangd = {},
-  pyright = {},
   rust_analyzer = {},
   julials = {},
   ltex = {},
