@@ -605,7 +605,8 @@ local normal_mappings = {
       ":vs<bar>term mpiexec -n 2 python3 -u db.py<cr>",
       "mpiexec main.py"
     },
-    a = { ":vs<bar> term python3 %<cr>", "run active file" }
+    a = { "<C-W>v<C-W>l<cmd>term python3 %<cr>", "run active file" },
+    P = { "<C-W>v<C-W>l<cmd>term python3 main.py<cr>", "python3 main.py" },
   },
   s = {
     name = '[S]earch', _ = 'which_key_ignore'
