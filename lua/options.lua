@@ -18,7 +18,8 @@ vim.o.mouse = 'a'
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
 --  See `:help 'clipboard'`
-vim.o.clipboard = 'unnamedplus'
+-- vim.o.clipboard = 'unnamedplus'
+-- vim.o.clipboard = ''
 
 -- Enable break indent
 vim.o.breakindent = true
@@ -47,6 +48,7 @@ vim.opt.expandtab = true
 vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
+vim.opt.tabstop = 4
 
 vim.opt.cursorline = true
 vim.opt.cursorcolumn = true
@@ -57,5 +59,14 @@ vim.opt_local.suffixesadd:prepend('.lua')
 vim.opt_local.suffixesadd:prepend('init.lua')
 vim.opt_local.path:prepend(vim.fn.stdpath('config') .. '/lua')
 vim.g.python3_host_prog = vim.fn.expand("~/miniconda3/envs/nvim/bin/python")
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "tex", "markdown" },
+  callback = function()
+    vim.api.nvim_command('filetype plugin on')
+    vim.api.nvim_command('setlocal spell spelllang=en_us')
+    vim.api.nvim_command('set spellsuggest+=10')
+  end
+})
 
 -- vim: ts=2 sts=2 sw=2 et
