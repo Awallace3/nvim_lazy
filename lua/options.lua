@@ -83,8 +83,6 @@ function GetWordUnderCursor()
     end_col = end_col + 1
   end
   line = line:sub(start_col, end_col - 1)
-
-  print(line)
   return line
 end
 
@@ -98,7 +96,7 @@ function GetRefsBibFileName()
       if filename:sub(-4) ~= ".bib" then
         filename = filename .. ".bib"
       end
-      print(filename)
+      print("Bibliography found: " .. filename)
       return filename
     end
   end
@@ -117,6 +115,7 @@ function SearchTexCitation()
     print("No word found under cursor.")
     return nil
   end
+  print("Searching for citation: " .. word)
 
   local path_to_bib = "./" .. bib_filename -- Update with actual path
   local lines = vim.fn.readfile(path_to_bib)
@@ -162,12 +161,9 @@ function HandleSearchCitationOrURL(line)
       print("No title found in line for bib file.")
       return
     else
-      print(CitationTitle)
       CitationTitle = string.sub(CitationTitle, 2, -2)
-      print(CitationTitle)
-      -- concatenate title with + and search in google scholar
+      print("Title found: " .. CitationTitle)
       CitationTitle = vim.fn.substitute(CitationTitle, ' ', '+', 'g')
-      print(CitationTitle)
       vim.fn.system('open https://scholar.google.com/scholar?q=' .. CitationTitle)
     end
   else
