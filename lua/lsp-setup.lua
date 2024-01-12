@@ -240,6 +240,7 @@ lspconfig.ltex.setup {
         ['en-US'] = {
           "ARROWS",
           "WHITESPACE",
+          "UNPAIRED",
         },
       },
       additionalRules = {
