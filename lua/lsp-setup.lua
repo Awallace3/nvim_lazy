@@ -122,6 +122,10 @@ end
 Os_type = get_os()
 if Os_type == "APPLE" then
   conda_cpp = conda_prefix_path .. "/x86_64-apple-darwin13.4.0-clang++"
+elseif Os_type == "LINUX" then
+  conda_cpp = conda_prefix_path .. "/x86_64-conda-linux-gnu-c++"
+else
+  conda_cpp = conda_prefix_path .. "/x86_64-conda-linux-gnu-c++"
 end
 
 
