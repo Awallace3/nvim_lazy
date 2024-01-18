@@ -245,6 +245,7 @@ lspconfig.ltex.setup {
           "ARROWS",
           "WHITESPACE",
           "UNPAIRED",
+          "SENTENCE_WHITESPACE",
         },
       },
       additionalRules = {
@@ -670,7 +671,7 @@ local visual_mappings = {
   t = {
     name = "LaTex",
     r = { Round_number, "Round Number" },
-
+    c = { ":w !wc -w<CR>", "Word Count" },
   }
 }
 local opts_v = { prefix = '<leader>', mode = 'v' }
