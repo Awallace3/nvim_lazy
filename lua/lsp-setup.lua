@@ -122,6 +122,10 @@ end
 Os_type = get_os()
 if Os_type == "APPLE" then
   conda_cpp = conda_prefix_path .. "/x86_64-apple-darwin13.4.0-clang++"
+elseif Os_type == "LINUX" then
+  conda_cpp = conda_prefix_path .. "/x86_64-conda-linux-gnu-c++"
+else
+  conda_cpp = conda_prefix_path .. "/x86_64-conda-linux-gnu-c++"
 end
 
 
@@ -241,6 +245,7 @@ lspconfig.ltex.setup {
           "ARROWS",
           "WHITESPACE",
           "UNPAIRED",
+          "SENTENCE_WHITESPACE",
         },
       },
       additionalRules = {
@@ -591,7 +596,7 @@ local normal_mappings = {
 
     },
     i = {
-      ":vs<bar>term mpiexec -n 2 python3 -u mpi_jobs.py<cr>",
+      ":vs<bar>term mpiexec -n 4 python3 -u mpi_jobs.py<cr>",
       "mpiexec main.py"
     },
     h = {
@@ -603,8 +608,8 @@ local normal_mappings = {
       "mpiexec main.py"
     },
     k = {
-      ":vs<bar>term mpiexec -n 2 python3 -u db.py<cr>",
-      "mpiexec main.py"
+      ":vs<bar>term mpiexec -n 2 python3 -u %<cr>",
+      "mpiexec active"
     },
     a = { "<C-W>v<C-W>l<cmd>term python3 %<cr>", "run active file" },
     P = { "<C-W>v<C-W>l<cmd>term python3 main.py<cr>", "python3 main.py" },
@@ -666,7 +671,7 @@ local visual_mappings = {
   t = {
     name = "LaTex",
     r = { Round_number, "Round Number" },
-
+    c = { ":w !wc -w<CR>", "Word Count" },
   }
 }
 local opts_v = { prefix = '<leader>', mode = 'v' }

@@ -162,11 +162,11 @@ function HandleSearchCitationOrURL(line)
       return
     else
       CitationTitle = string.sub(CitationTitle, 2, -2)
-      print("Title found: " .. CitationTitle)
       CitationTitle = vim.fn.substitute(CitationTitle, ' ', '+', 'g')
-      local action = 'open "https://scholar.google.com/scholar?q=' .. CitationTitle .. '"'
-      print(action)
-      vim.fn.system(action)
+      print("Title found: " .. CitationTitle)
+      local open_command = 'open https://scholar.google.com/scholar?q=' .. CitationTitle
+      print(open_command)
+      vim.fn.system(open_command)
     end
   else
     print("No URI found in line.")
@@ -176,4 +176,12 @@ end
 vim.api.nvim_set_keymap('n', 'gX', ':lua SearchTexCitation()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'gt', ':lua GetWordUnderCursor()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'gx', ':lua HandleSearchCitationOrURL()<CR>', { noremap = true, silent = true })
+
+-- Track log files
+vim.o.autoread = true
+vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGained", "FileChangedShell" }, {
+    command = "if mode() != 'c' | checktime | endif",
+    pattern = { "*.log", "*.out" },
+})
+
 -- vim: ts=2 sts=2 sw=2 et
