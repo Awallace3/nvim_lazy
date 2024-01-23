@@ -164,7 +164,9 @@ function HandleSearchCitationOrURL(line)
       CitationTitle = string.sub(CitationTitle, 2, -2)
       print("Title found: " .. CitationTitle)
       CitationTitle = vim.fn.substitute(CitationTitle, ' ', '+', 'g')
-      vim.fn.system('open https://scholar.google.com/scholar?q=' .. CitationTitle)
+      local action = 'open "https://scholar.google.com/scholar?q=' .. CitationTitle .. '"'
+      print(action)
+      vim.fn.system(action)
     end
   else
     print("No URI found in line.")
