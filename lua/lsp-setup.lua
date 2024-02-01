@@ -387,10 +387,16 @@ Formatter = function()
     print(cmd)
     vim.cmd(cmd)
     vim.cmd("e!")
+  elseif filetype == "sql" then
+    vim.cmd("write")
+    local cmd = nvim_mason_bin .. "sql-formatter" .. " --language postgresql " .. vim.fn.expand("%:p")
+    print(cmd)
+    vim.cmd(cmd)
+    vim.cmd("e!")
   elseif filetype == "lua" or filetype == "tex" or filetype == "julia" then
     vim.lsp.buf.format()
   else
-    vim.lsp.buf.formatting()
+    vim.lsp.buf.format()
   end
 end
 
@@ -575,6 +581,7 @@ local normal_mappings = {
       -- b = { ":vs <bar>term cd ../.. && bash build.sh<cr>", "build psi4" },
       b = { ":vs <bar>term cd .. && bash build.sh<cr>", "build psi4" },
       p = { ":vs<bar>term psi4 input.dat<cr>", "psi4 input.dat" },
+      a = { ":vs<bar>term psi4 /theoryfs2/ds/amwalla3/projects/test_asapt/asapt.dat<cr>", "psi4 asapt.dat" },
     },
     B = { ":vs <bar>term cd src/dispersion && bash build.sh<cr>", "./build.sh" },
     d = { ":vs <bar>term make build_and_test<cr>", "dftd4 build and run" },
