@@ -491,10 +491,10 @@ local normal_mappings = {
     -- gitgutter
     name = "Git",
     d = { ":Git difftool<cr>", "Git Diff" },
-    n = { ":GitGutterNextHunk<cr>", "Next Hunk" },
-    p = { ":GitGutterPrevHunk<cr>", "Prev Hunk" },
-    a = { ":GitGutterStageHunk<cr>", "Stage Hunk" },
-    u = { ":GitGutterUndoHunk<cr>", "Undo Hunk" },
+    -- n = { ":GitGutterNextHunk<cr>", "Next Hunk" },
+    -- p = { ":GitGutterPrevHunk<cr>", "Prev Hunk" },
+    -- a = { ":GitGutterStageHunk<cr>", "Stage Hunk" },
+    -- u = { ":GitGutterUndoHunk<cr>", "Undo Hunk" },
     -- vimaget
     -- s = {":Magit<cr>", "Git Status"},
     s = { ":lua require('neogit').open()<CR>", "Git Status" },
@@ -575,6 +575,7 @@ local normal_mappings = {
       -- b = { ":vs <bar>term cd ../.. && bash build.sh<cr>", "build psi4" },
       b = { ":vs <bar>term cd .. && bash build.sh<cr>", "build psi4" },
       p = { ":vs<bar>term psi4 input.dat<cr>", "psi4 input.dat" },
+      m = { "<C-W>v<C-W>l<cmd>term python3 mpi_jobs.py<cr>", "python3 mpi_jobs.py" },
     },
     B = { ":vs <bar>term cd src/dispersion && bash build.sh<cr>", "./build.sh" },
     d = { ":vs <bar>term make build_and_test<cr>", "dftd4 build and run" },
@@ -595,9 +596,17 @@ local normal_mappings = {
       t = { ":vs<bar>term make t", "make" },
 
     },
-    i = {
-      ":vs<bar>term mpiexec -n 4 python3 -u mpi_jobs.py<cr>",
+    I = {
+      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='ad4'<cr>",
       "mpiexec main.py"
+    },
+    i = {
+      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet' --system='proteinHs_ligandPQR' <cr>",
+      "mpiexec main.py"
+    },
+    c = {
+      ":vs<bar>term mpiexec -n 1 python3 -u create_db.py<cr>",
+      "mpiexec create_db.py"
     },
     h = {
       ":vs<bar>term mpirun -n 8 --machinefile machineFile python3 -u mpi_jobs.py<cr>",
@@ -612,6 +621,7 @@ local normal_mappings = {
       "mpiexec active"
     },
     a = { "<C-W>v<C-W>l<cmd>term python3 %<cr>", "run active file" },
+    A = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "run active file" },
     P = { "<C-W>v<C-W>l<cmd>term python3 main.py<cr>", "python3 main.py" },
   },
   s = {
