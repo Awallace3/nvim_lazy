@@ -13,7 +13,7 @@ return {
 
     vim.api.nvim_create_autocmd("BufWritePost", {
       pattern = "*.tex",
-      command = "silent VimtexCompileSS",
+      command = "VimtexCompileSS",
       desc = "Compiles Latex"
     })
     vim.g.vimtex_compiler_method = 'latexmk'
