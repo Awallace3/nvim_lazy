@@ -559,6 +559,7 @@ local normal_mappings = {
       "LSP LOG"
     },
     t = { '<cmd>lua vim.lsp.buf.type_definition()<cr>', "Type Definition" },
+    e = { '<cmd>lua vim.diagnostic.open_float()<cr>', "Diag. Msg." },
     d = { '<cmd>lua vim.lsp.buf.definition()<cr>', "Go To Definition" },
     D = { '<cmd>vs<bar>lua vim.lsp.buf.definition()<cr>', "Go To Definition" },
     -- D = {'<cmd>lua vim.lsp.buf.declaration()<cr>', "Go To Declaration"},
