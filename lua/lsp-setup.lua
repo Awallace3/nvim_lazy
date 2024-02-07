@@ -87,7 +87,7 @@ local servers = {
       -- diagnostics = { disable = { 'missing-fields' } },
     },
   },
-  -- swift_mesonls = {},
+  jedi_language_server = {},
 }
 
 -- Setup neovim lua configuration
