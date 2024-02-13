@@ -273,7 +273,7 @@ snippet ft \footnote
 snippet fig figure environment (includegraphics)
 	\\begin{figure}
 	\\begin{center}
-		\\includegraphics[scale=${1}]{./figures/${2}}
+		\\includegraphics[scale=${1}]{Figures/${2}}
 	\\end{center}
 	\\caption{${3}}
 	\\label{fig:${4}}
@@ -366,44 +366,6 @@ snippet frameimgsplit frame environment
 		\end{figure}
 		\end{minipage}
 	\\end{frame}
-
-snippet frame2rectangles frame environment
-	\\begin{frame}[t]
-	    \frametitle{${1:Frametitle}}
-
-	    \begin{tikzpicture}[remember picture, overlay]
-		\def\boxwidth{5.5cm}
-		\def\boxheight{4.5cm}
-		\coordinate (box1) at ($(current page.center) + (-6.5cm, -2.0cm)$);
-		\coordinate (box2) at ($(current page.center) + (0.5cm, -2.0cm)$);
-		\draw[fill=slategrey!20, rounded corners] (box1) rectangle ++(\boxwidth,\boxheight);
-		\draw[fill=slategrey!20, rounded corners] (box2) rectangle ++(\boxwidth,\boxheight);
-
-		\coordinate (arrowstart) at ($(box1) + ( \boxwidth + 0.2cm, \boxheight/2)$);
-		\coordinate (arrowend) at ($(box2) - (0.2cm, -\boxheight/2)$);
-		\draw[->, thick] (arrowstart) -- (arrowend);
-
-		\node[align=left, anchor=north west] at ($(box1) + (0.0, 4.2)$) {
-		    \begin{minipage}{\boxwidth}
-			\begin{block}{\centering \LARGE ${2:Title1}}
-			    \begin{itemize}
-				\item <1->
-			    \end{itemize}
-			\end{block}
-		    \end{minipage}
-		};
-		\node[align=left, anchor=north west] at ($(box2) + (0.0, 4.2)$) {
-		    \begin{minipage}{\boxwidth}
-			\begin{block}{\centering \LARGE ${3:Title2}}
-			    \begin{itemize}
-				\item <1->
-			    \end{itemize}
-			\end{block}
-		    \end{minipage}
-		};
-	    \end{tikzpicture}
-	\\end{frame}
-
 snippet block block environment
 	\\begin{block}{${1:title}}
 		${0:${VISUAL}}
