@@ -87,7 +87,7 @@ local servers = {
       -- diagnostics = { disable = { 'missing-fields' } },
     },
   },
-  -- swift_mesonls = {},
+  jedi_language_server = {},
 }
 
 -- Setup neovim lua configuration
@@ -245,6 +245,7 @@ lspconfig.ltex.setup {
           "ARROWS",
           "WHITESPACE",
           "UNPAIRED",
+          "SENTENCE_WHITESPACE",
         },
       },
       additionalRules = {
@@ -386,10 +387,16 @@ Formatter = function()
     print(cmd)
     vim.cmd(cmd)
     vim.cmd("e!")
+  elseif filetype == "sql" then
+    vim.cmd("write")
+    local cmd = nvim_mason_bin .. "sql-formatter" .. " --language postgresql " .. vim.fn.expand("%:p")
+    print(cmd)
+    vim.cmd(cmd)
+    vim.cmd("e!")
   elseif filetype == "lua" or filetype == "tex" or filetype == "julia" then
     vim.lsp.buf.format()
   else
-    vim.lsp.buf.formatting()
+    vim.lsp.buf.format()
   end
 end
 
@@ -466,37 +473,37 @@ local normal_mappings = {
   },
   e = {
     name = "Edit Config",
-    E = { ":vs<bar>e ~/.config/nvim/init.lua<cr>", "Edit config" },
-    e = { ":e ~/.config/nvim/init.lua<cr>", "Edit config" },
-    O = { ":vs<bar>e ~/.config/nvim/lua/options.lua<cr>", "Edit Options" },
-    o = { ":e ~/.config/nvim/lua/options.lua<cr>", "Edit Options" },
-    c = { ":e ~/.config/nvim/lua/chatgpt-config.lua<cr>", "Edit config" },
+    E = { ":vs<bar>e $XDG_CONFIG_HOME/nvim/init.lua<cr>", "Edit config" },
+    e = { ":e $XDG_CONFIG_HOME/nvim/init.lua<cr>", "Edit config" },
+    O = { ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/options.lua<cr>", "Edit Options" },
+    o = { ":e $XDG_CONFIG_HOME/nvim/lua/options.lua<cr>", "Edit Options" },
+    c = { ":e $XDG_CONFIG_HOME/nvim/lua/chatgpt-config.lua<cr>", "Edit config" },
     W = {
-      ":vs<bar>e ~/.config/nvim/lua/whichkey-config/init.lua<cr>",
+      ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/whichkey-config/init.lua<cr>",
       "Edit config"
     },
     p = {
-      ":e ~/.config/nvim/lua/custom/plugins<cr>",
+      ":e $XDG_CONFIG_HOME/nvim/lua/custom/plugins<cr>",
       "Edit Plugins"
     },
     P = {
-      ":vs<bar>e ~/.config/nvim/lua/custom/plugins<cr>",
+      ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/custom/plugins<cr>",
       "Edit Plugins"
     },
-    s = { ":e ~/.config/nvim/snippets<cr>", "Edit config" },
+    s = { ":e $XDG_CONFIG_HOME/nvim/snippets<cr>", "Edit config" },
     S = {
-      ":vs<bar>e ~/.config/nvim/lua/luasnip-config.lua<bar>40<cr>",
+      ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/luasnip-config.lua<bar>40<cr>",
       "Edit Snippets"
     },
     l = {
-      ":e ~/.config/nvim/lua/lsp-setup.lua<cr>",
+      ":e $XDG_CONFIG_HOME/nvim/lua/lsp-setup.lua<cr>",
       "Edit cmp"
     },
     L = {
-      ":vs<bar>e ~/.config/nvim/lua/lsp-setup.lua<cr>",
+      ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/lsp-setup.lua<cr>",
       "Edit cmp (split)"
     },
-    f = { ":e ~/.config/nvim_simplified<cr>", "Edit Last" },
+    f = { ":e $XDG_CONFIG_HOME/nvim_simplified<cr>", "Edit Last" },
     -- S = {":vs<bar>e ~/.config/nvim/snippets<cr>", "Edit config"}
   },
   F = { Formatter, "Format Buffer" },
@@ -504,10 +511,10 @@ local normal_mappings = {
     -- gitgutter
     name = "Git",
     d = { ":Git difftool<cr>", "Git Diff" },
-    n = { ":GitGutterNextHunk<cr>", "Next Hunk" },
-    p = { ":GitGutterPrevHunk<cr>", "Prev Hunk" },
-    a = { ":GitGutterStageHunk<cr>", "Stage Hunk" },
-    u = { ":GitGutterUndoHunk<cr>", "Undo Hunk" },
+    -- n = { ":GitGutterNextHunk<cr>", "Next Hunk" },
+    -- p = { ":GitGutterPrevHunk<cr>", "Prev Hunk" },
+    -- a = { ":GitGutterStageHunk<cr>", "Stage Hunk" },
+    -- u = { ":GitGutterUndoHunk<cr>", "Undo Hunk" },
     -- vimaget
     -- s = {":Magit<cr>", "Git Status"},
     s = { ":lua require('neogit').open()<CR>", "Git Status" },
@@ -572,6 +579,7 @@ local normal_mappings = {
       "LSP LOG"
     },
     t = { '<cmd>lua vim.lsp.buf.type_definition()<cr>', "Type Definition" },
+    e = { '<cmd>lua vim.diagnostic.open_float()<cr>', "Diag. Msg." },
     d = { '<cmd>lua vim.lsp.buf.definition()<cr>', "Go To Definition" },
     D = { '<cmd>vs<bar>lua vim.lsp.buf.definition()<cr>', "Go To Definition" },
     -- D = {'<cmd>lua vim.lsp.buf.declaration()<cr>', "Go To Declaration"},
@@ -588,6 +596,8 @@ local normal_mappings = {
       -- b = { ":vs <bar>term cd ../.. && bash build.sh<cr>", "build psi4" },
       b = { ":vs <bar>term cd .. && bash build.sh<cr>", "build psi4" },
       p = { ":vs<bar>term psi4 input.dat<cr>", "psi4 input.dat" },
+      m = { "<C-W>v<C-W>l<cmd>term python3 mpi_jobs.py<cr>", "python3 mpi_jobs.py" },
+      a = { ":vs<bar>term psi4 /theoryfs2/ds/amwalla3/projects/test_asapt/asapt.dat<cr>", "psi4 asapt.dat" },
     },
     B = { ":vs <bar>term cd src/dispersion && bash build.sh<cr>", "./build.sh" },
     d = { ":vs <bar>term make build_and_test<cr>", "dftd4 build and run" },
@@ -609,9 +619,17 @@ local normal_mappings = {
 
     },
     n = { initJypterSession, "Init Jupyter Session" },
-    i = {
-      ":vs<bar>term mpiexec -n 4 python3 -u mpi_jobs.py<cr>",
+    I = {
+      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='ad4'<cr>",
       "mpiexec main.py"
+    },
+    i = {
+      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet' --system='proteinHs_ligandPQR' <cr>",
+      "mpiexec main.py"
+    },
+    c = {
+      ":vs<bar>term mpiexec -n 1 python3 -u create_db.py<cr>",
+      "mpiexec create_db.py"
     },
     h = {
       ":vs<bar>term mpirun -n 8 --machinefile machineFile python3 -u mpi_jobs.py<cr>",
@@ -626,6 +644,7 @@ local normal_mappings = {
       "mpiexec active"
     },
     a = { "<C-W>v<C-W>l<cmd>term python3 %<cr>", "run active file" },
+    A = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "run active file" },
     P = { "<C-W>v<C-W>l<cmd>term python3 main.py<cr>", "python3 main.py" },
   },
   s = {
@@ -685,7 +704,7 @@ local visual_mappings = {
   t = {
     name = "LaTex",
     r = { Round_number, "Round Number" },
-
+    c = { ":w !wc -w<CR>", "Word Count" },
   }
 }
 local opts_v = { prefix = '<leader>', mode = 'v' }
