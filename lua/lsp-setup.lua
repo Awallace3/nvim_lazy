@@ -429,6 +429,20 @@ function Round_number()
   vim.api.nvim_input("<esc>")
 end
 
+function initJypterSession()
+  local file_extension = vim.fn.expand("%:e")
+  local conda_env = os.getenv("CONDA_PREFIX")
+  print(conda_env)
+  if file_extension ~= 'ipynb' then
+    print("Not a Jupyter Notebook")
+    return
+  end
+  vim.cmd(':call jukit#convert#notebook_convert("jupyter-notebook")')
+  local cmd = "JukitOut conda activate " .. conda_env
+  print(cmd)
+  vim.cmd(cmd)
+end
+
 local normal_mappings = {
   q = { ":bn<bar>bd #<CR>", "Close Buffer" },
   Q = { ":wq<cr>", "Save & Quit" },
@@ -604,6 +618,7 @@ local normal_mappings = {
       t = { ":vs<bar>term make t", "make" },
 
     },
+    n = { initJypterSession, "Init Jupyter Session" },
     I = {
       ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='ad4'<cr>",
       "mpiexec main.py"
