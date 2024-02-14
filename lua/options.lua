@@ -183,4 +183,21 @@ vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "CursorHoldI", "FocusGai
     pattern = { "*.log", "*.out" },
 })
 
+    -- vim.cmd([[
+    --   autocmd BufNewFile,BufRead *.ipynb set filetype=ipynb
+    -- ]])
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { 'json' },
+  callback = function()
+    -- check if the extension is .ipynb
+    -- if it is, set the filetype to ipynb
+    -- if not, do nothing
+    if vim.fn.expand('%:e') == 'ipynb' then
+      print("Setting filetype to ipynb")
+      vim.api.nvim_command('set filetype=ipynb')
+      vim.api.nvim_command('filetype plugin on')
+    end
+  end
+})
+
 -- vim: ts=2 sts=2 sw=2 et
