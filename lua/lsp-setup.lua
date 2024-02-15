@@ -497,10 +497,18 @@ local normal_mappings = {
     },
     l = {
       ":e $XDG_CONFIG_HOME/nvim/lua/lsp-setup.lua<cr>",
-      "Edit cmp"
+      "Edit lsp"
     },
     L = {
       ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/lsp-setup.lua<cr>",
+      "Edit lsp (split)"
+    },
+    m = {
+      ":e $XDG_CONFIG_HOME/nvim/lua/cmp-setup.lua<cr>",
+      "Edit cmp"
+    },
+    M = {
+      ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/cmp-setup.lua<cr>",
       "Edit cmp (split)"
     },
     f = { ":e $XDG_CONFIG_HOME/nvim_simplified<cr>", "Edit Last" },

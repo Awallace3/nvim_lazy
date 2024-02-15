@@ -4,8 +4,8 @@ local cmp = require 'cmp'
 local luasnip = require 'luasnip'
 require('luasnip.loaders.from_vscode').lazy_load()
 local snippets_folder = os.getenv("XDG_CONFIG_HOME") .. "/nvim/snippets/"
-print(snippets_folder)
-require("luasnip.loaders.from_lua").lazy_load { paths = snippets_folder }
+-- require("luasnip.loaders.from_snipmate").lazy_load({ paths = snippets_folder })
+require("luasnip.loaders.from_snipmate").lazy_load()
 luasnip.config.setup {}
 
 cmp.setup {
