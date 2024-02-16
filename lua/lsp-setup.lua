@@ -604,7 +604,7 @@ local normal_mappings = {
 
     },
     I = {
-      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='ad4'<cr>",
+      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' <cr>",
       "mpiexec main.py"
     },
     i = {
