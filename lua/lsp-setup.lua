@@ -45,6 +45,7 @@ end
 
 local lspconfig = require('lspconfig')
 
+
 -- document existing key chains
 
 -- mason-lspconfig requires that these setup functions are called in this order
@@ -128,6 +129,8 @@ else
   conda_cpp = conda_prefix_path .. "/x86_64-conda-linux-gnu-c++"
 end
 
+UserHome = vim.fn.expand("$HOME")
+print(UserHome)
 
 mason_lspconfig.setup_handlers {
   function(server_name)
@@ -222,6 +225,36 @@ mason_lspconfig.setup_handlers {
     lspconfig.texlab.setup {
       on_attach = on_attach,
       capabilities = capabilities,
+      settings = {
+        texlab = {
+          rootDirectory = nil,
+          build = {
+            executable = 'latexmk',
+            args = { '-pdf', '-interaction=nonstopmode', '-synctex=1', '%f' },
+            onSave = false,
+            forwardSearchAfter = false,
+          },
+          auxDirectory = '.',
+          forwardSearch = {
+            executable = nil,
+            args = {},
+          },
+          chktex = {
+            onOpenAndSave = false,
+            onEdit = false,
+          },
+          diagnosticsDelay = 300,
+          latexFormatter = 'latexindent',
+          latexindent = {
+            -- lua get from $HOME/latexindent.yaml
+            -- local = vim.fn.expand("$HOME/latexindent.yaml"),
+            -- local = UserHome .. "/latexindent.yaml",
+            ['local'] = UserHome .. "/latexindent.yaml",
+          },
+          bibtexFormatter = 'texlab',
+          formatterLineLength = 80,
+        },
+      },
     }
   end,
 }
@@ -349,17 +382,6 @@ local PytestPythonFunction = function()
   print("R:" .. function_name)
 end
 
--- determine filetype for formatter, python different from others
-local determine_formatter = function()
-  local filetype = vim.bo.filetype
-  if filetype == "python" then
-    vim.cmd("Format")
-  elseif filetype == "htmldjango" then
-    vim.cmd("Format")
-  else
-    vim.lsp.buf.format()
-  end
-end
 
 GetPath = function(str, sep)
   sep = sep or '/'
@@ -394,9 +416,9 @@ Formatter = function()
     vim.cmd(cmd)
     vim.cmd("e!")
   elseif filetype == "lua" or filetype == "tex" or filetype == "julia" then
-    vim.lsp.buf.format()
+    vim.lsp.buf.format({ timeout_ms = 5000 })
   else
-    vim.lsp.buf.format()
+    vim.lsp.buf.format({ timeout_ms = 5000 })
   end
 end
 
@@ -718,4 +740,16 @@ local visual_mappings = {
 local opts_v = { prefix = '<leader>', mode = 'v' }
 wk.register(visual_mappings, opts_v)
 
+local null_ls = require("null-ls")
+
+null_ls.setup({
+  sources = {
+    -- null_ls.builtins.formatting.stylua,
+    -- null_ls.builtins.diagnostics.eslint,
+    null_ls.builtins.completion.spell,
+    null_ls.builtins.formatting.prettier,
+    null_ls.builtins.formatting.black,
+    -- null_ls.builtins.formatting.latexindent,
+  },
+})
 -- vim: ts=2 sts=2 sw=2 et
