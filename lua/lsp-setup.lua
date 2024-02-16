@@ -87,7 +87,7 @@ local servers = {
       -- diagnostics = { disable = { 'missing-fields' } },
     },
   },
-  -- swift_mesonls = {},
+  jedi_language_server = {},
 }
 
 -- Setup neovim lua configuration
@@ -429,6 +429,20 @@ function Round_number()
   vim.api.nvim_input("<esc>")
 end
 
+function initJypterSession()
+  local file_extension = vim.fn.expand("%:e")
+  local conda_env = os.getenv("CONDA_PREFIX")
+  print(conda_env)
+  if file_extension ~= 'ipynb' then
+    print("Not a Jupyter Notebook")
+    return
+  end
+  vim.cmd(':call jukit#convert#notebook_convert("jupyter-notebook")')
+  local cmd = "JukitOut conda activate " .. conda_env
+  print(cmd)
+  vim.cmd(cmd)
+end
+
 local normal_mappings = {
   q = { ":bn<bar>bd #<CR>", "Close Buffer" },
   Q = { ":wq<cr>", "Save & Quit" },
@@ -459,37 +473,45 @@ local normal_mappings = {
   },
   e = {
     name = "Edit Config",
-    E = { ":vs<bar>e ~/.config/nvim/init.lua<cr>", "Edit config" },
-    e = { ":e ~/.config/nvim/init.lua<cr>", "Edit config" },
-    O = { ":vs<bar>e ~/.config/nvim/lua/options.lua<cr>", "Edit Options" },
-    o = { ":e ~/.config/nvim/lua/options.lua<cr>", "Edit Options" },
-    c = { ":e ~/.config/nvim/lua/chatgpt-config.lua<cr>", "Edit config" },
+    E = { ":vs<bar>e $XDG_CONFIG_HOME/nvim/init.lua<cr>", "Edit config" },
+    e = { ":e $XDG_CONFIG_HOME/nvim/init.lua<cr>", "Edit config" },
+    O = { ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/options.lua<cr>", "Edit Options" },
+    o = { ":e $XDG_CONFIG_HOME/nvim/lua/options.lua<cr>", "Edit Options" },
+    c = { ":e $XDG_CONFIG_HOME/nvim/lua/chatgpt-config.lua<cr>", "Edit config" },
     W = {
-      ":vs<bar>e ~/.config/nvim/lua/whichkey-config/init.lua<cr>",
+      ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/whichkey-config/init.lua<cr>",
       "Edit config"
     },
     p = {
-      ":e ~/.config/nvim/lua/custom/plugins<cr>",
+      ":e $XDG_CONFIG_HOME/nvim/lua/custom/plugins<cr>",
       "Edit Plugins"
     },
     P = {
-      ":vs<bar>e ~/.config/nvim/lua/custom/plugins<cr>",
+      ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/custom/plugins<cr>",
       "Edit Plugins"
     },
-    s = { ":e ~/.config/nvim/snippets<cr>", "Edit config" },
+    s = { ":e $XDG_CONFIG_HOME/nvim/snippets<cr>", "Edit config" },
     S = {
-      ":vs<bar>e ~/.config/nvim/lua/luasnip-config.lua<bar>40<cr>",
+      ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/luasnip-config.lua<bar>40<cr>",
       "Edit Snippets"
     },
     l = {
-      ":e ~/.config/nvim/lua/lsp-setup.lua<cr>",
-      "Edit cmp"
+      ":e $XDG_CONFIG_HOME/nvim/lua/lsp-setup.lua<cr>",
+      "Edit lsp"
     },
     L = {
-      ":vs<bar>e ~/.config/nvim/lua/lsp-setup.lua<cr>",
+      ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/lsp-setup.lua<cr>",
+      "Edit lsp (split)"
+    },
+    m = {
+      ":e $XDG_CONFIG_HOME/nvim/lua/cmp-setup.lua<cr>",
+      "Edit cmp"
+    },
+    M = {
+      ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/cmp-setup.lua<cr>",
       "Edit cmp (split)"
     },
-    f = { ":e ~/.config/nvim_simplified<cr>", "Edit Last" },
+    f = { ":e $XDG_CONFIG_HOME/nvim_simplified<cr>", "Edit Last" },
     -- S = {":vs<bar>e ~/.config/nvim/snippets<cr>", "Edit config"}
   },
   F = { Formatter, "Format Buffer" },
@@ -565,6 +587,7 @@ local normal_mappings = {
       "LSP LOG"
     },
     t = { '<cmd>lua vim.lsp.buf.type_definition()<cr>', "Type Definition" },
+    e = { '<cmd>lua vim.diagnostic.open_float()<cr>', "Diag. Msg." },
     d = { '<cmd>lua vim.lsp.buf.definition()<cr>', "Go To Definition" },
     D = { '<cmd>vs<bar>lua vim.lsp.buf.definition()<cr>', "Go To Definition" },
     -- D = {'<cmd>lua vim.lsp.buf.declaration()<cr>', "Go To Declaration"},
@@ -603,6 +626,7 @@ local normal_mappings = {
       t = { ":vs<bar>term make t", "make" },
 
     },
+    n = { initJypterSession, "Init Jupyter Session" },
     I = {
       ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' <cr>",
       "mpiexec main.py"
