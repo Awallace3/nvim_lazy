@@ -1,5 +1,6 @@
 return {
     "L3MON4D3/LuaSnip",
+    requires = "garbas/vim-snipmate",
     config = function()
         local ls = require("luasnip")
         local s = ls.snippet
@@ -240,14 +241,6 @@ return {
                 t({ "Equation \\ref{eq:" }),
                 i(1, "eqLabel"),
                 t({ "} " }),
-                i(0)
-            }),
-            s({
-            trig = "frameimg",
-            namr = "frame image ",
-            dscr = "create frame for beamer",
-            }, {
-                t({""}),
                 i(0)
             })
 
