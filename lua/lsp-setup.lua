@@ -15,8 +15,6 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
-  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
@@ -454,11 +452,14 @@ function initJypterSession()
   local file_extension = vim.fn.expand("%:e")
   local conda_env = os.getenv("CONDA_PREFIX")
   print(conda_env)
-  if file_extension ~= 'ipynb' then
+  if file_extension ~= 'ipynb' and file_extension ~= 'py' then
+    print(file_extension)
     print("Not a Jupyter Notebook")
     return
   end
-  vim.cmd(':call jukit#convert#notebook_convert("jupyter-notebook")')
+  if file_extension == 'ipynb' then
+    vim.cmd(':call jukit#convert#notebook_convert("jupyter-notebook")')
+  end
   local cmd = "JukitOut conda activate " .. conda_env
   print(cmd)
   vim.cmd(cmd)
