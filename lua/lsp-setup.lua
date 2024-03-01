@@ -637,6 +637,7 @@ local normal_mappings = {
     j = { ":vs <bar>term julia main.jl<cr>", "julia main.jl" },
     -- RUN TESTS
     t = {
+      t = { "<C-W>v<C-W>l<cmd>term python3 tmp.py<cr>", "python3 tmp.py" },
       p = { ":vs<bar>term pytest tests.py<cr>", "PyTest" },
       k = { ":vs<bar>term pytest tests.py -k 'test_ATM_water'<cr>", "PyTest" },
       l = { PytestPythonFunction, "PyTest Specific" },
@@ -650,12 +651,26 @@ local normal_mappings = {
     },
     n = { initJypterSession, "Init Jupyter Session" },
     I = {
-      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' <cr>",
+      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --sf_components --verbosity=1 <cr>",
       "mpiexec main.py"
     },
     i = {
-      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet' --system='proteinHs_ligandPQR' <cr>",
+      a = {
+      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet_vina' --system='proteinHs_ligandPQR' --testing --verbosity=1<cr>",
       "mpiexec main.py"
+      },
+      i = {
+      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet' --system='proteinHs_ligandPQR' --testing <cr>",
+      "mpiexec main.py"
+      },
+      r = {
+        ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --verbosity=1 <cr>",
+        "mpiexec main.py"
+      },
+      c = {
+        ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --sf_components --verbosity=1 <cr>",
+        "mpiexec main.py"
+      },
     },
     c = {
       ":vs<bar>term mpiexec -n 1 python3 -u create_db.py<cr>",
