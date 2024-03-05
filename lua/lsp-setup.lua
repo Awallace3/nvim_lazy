@@ -15,9 +15,6 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
-  nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
-  nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
@@ -44,6 +41,7 @@ local on_attach = function(_, bufnr)
 end
 
 local lspconfig = require('lspconfig')
+
 
 -- document existing key chains
 
@@ -128,6 +126,8 @@ else
   conda_cpp = conda_prefix_path .. "/x86_64-conda-linux-gnu-c++"
 end
 
+UserHome = vim.fn.expand("$HOME")
+print(UserHome)
 
 mason_lspconfig.setup_handlers {
   function(server_name)
@@ -222,6 +222,36 @@ mason_lspconfig.setup_handlers {
     lspconfig.texlab.setup {
       on_attach = on_attach,
       capabilities = capabilities,
+      settings = {
+        texlab = {
+          rootDirectory = nil,
+          build = {
+            executable = 'latexmk',
+            args = { '-pdf', '-interaction=nonstopmode', '-synctex=1', '%f' },
+            onSave = false,
+            forwardSearchAfter = false,
+          },
+          auxDirectory = '.',
+          forwardSearch = {
+            executable = nil,
+            args = {},
+          },
+          chktex = {
+            onOpenAndSave = false,
+            onEdit = false,
+          },
+          diagnosticsDelay = 300,
+          latexFormatter = 'latexindent',
+          latexindent = {
+            -- lua get from $HOME/latexindent.yaml
+            -- local = vim.fn.expand("$HOME/latexindent.yaml"),
+            -- local = UserHome .. "/latexindent.yaml",
+            ['local'] = UserHome .. "/latexindent.yaml",
+          },
+          bibtexFormatter = 'texlab',
+          formatterLineLength = 80,
+        },
+      },
     }
   end,
 }
@@ -349,17 +379,6 @@ local PytestPythonFunction = function()
   print("R:" .. function_name)
 end
 
--- determine filetype for formatter, python different from others
-local determine_formatter = function()
-  local filetype = vim.bo.filetype
-  if filetype == "python" then
-    vim.cmd("Format")
-  elseif filetype == "htmldjango" then
-    vim.cmd("Format")
-  else
-    vim.lsp.buf.format()
-  end
-end
 
 GetPath = function(str, sep)
   sep = sep or '/'
@@ -394,9 +413,9 @@ Formatter = function()
     vim.cmd(cmd)
     vim.cmd("e!")
   elseif filetype == "lua" or filetype == "tex" or filetype == "julia" then
-    vim.lsp.buf.format()
+    vim.lsp.buf.format({ timeout_ms = 5000 })
   else
-    vim.lsp.buf.format()
+    vim.lsp.buf.format({ timeout_ms = 5000 })
   end
 end
 
@@ -433,11 +452,14 @@ function initJypterSession()
   local file_extension = vim.fn.expand("%:e")
   local conda_env = os.getenv("CONDA_PREFIX")
   print(conda_env)
-  if file_extension ~= 'ipynb' then
+  if file_extension ~= 'ipynb' and file_extension ~= 'py' then
+    print(file_extension)
     print("Not a Jupyter Notebook")
     return
   end
-  vim.cmd(':call jukit#convert#notebook_convert("jupyter-notebook")')
+  if file_extension == 'ipynb' then
+    vim.cmd(':call jukit#convert#notebook_convert("jupyter-notebook")')
+  end
   local cmd = "JukitOut conda activate " .. conda_env
   print(cmd)
   vim.cmd(cmd)
@@ -616,6 +638,7 @@ local normal_mappings = {
     j = { ":vs <bar>term julia main.jl<cr>", "julia main.jl" },
     -- RUN TESTS
     t = {
+      t = { "<C-W>v<C-W>l<cmd>term python3 tmp.py<cr>", "python3 tmp.py" },
       p = { ":vs<bar>term pytest tests.py<cr>", "PyTest" },
       k = { ":vs<bar>term pytest tests.py -k 'test_ATM_water'<cr>", "PyTest" },
       l = { PytestPythonFunction, "PyTest Specific" },
@@ -629,12 +652,26 @@ local normal_mappings = {
     },
     n = { initJypterSession, "Init Jupyter Session" },
     I = {
-      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='ad4'<cr>",
+      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --sf_components --verbosity=1 <cr>",
       "mpiexec main.py"
     },
     i = {
-      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet' --system='proteinHs_ligandPQR' <cr>",
+      a = {
+      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet_vina' --system='proteinHs_ligandPQR' --testing --verbosity=1<cr>",
       "mpiexec main.py"
+      },
+      i = {
+      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet' --system='proteinHs_ligandPQR' --testing <cr>",
+      "mpiexec main.py"
+      },
+      r = {
+        ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --verbosity=1 <cr>",
+        "mpiexec main.py"
+      },
+      c = {
+        ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --sf_components --verbosity=1 <cr>",
+        "mpiexec main.py"
+      },
     },
     c = {
       ":vs<bar>term mpiexec -n 1 python3 -u create_db.py<cr>",
@@ -719,4 +756,16 @@ local visual_mappings = {
 local opts_v = { prefix = '<leader>', mode = 'v' }
 wk.register(visual_mappings, opts_v)
 
+local null_ls = require("null-ls")
+
+null_ls.setup({
+  sources = {
+    -- null_ls.builtins.formatting.stylua,
+    -- null_ls.builtins.diagnostics.eslint,
+    null_ls.builtins.completion.spell,
+    null_ls.builtins.formatting.prettier,
+    null_ls.builtins.formatting.black,
+    -- null_ls.builtins.formatting.latexindent,
+  },
+})
 -- vim: ts=2 sts=2 sw=2 et

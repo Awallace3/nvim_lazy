@@ -58,7 +58,8 @@ vim.o.scrolloff = 10
 vim.opt_local.suffixesadd:prepend('.lua')
 vim.opt_local.suffixesadd:prepend('init.lua')
 vim.opt_local.path:prepend(vim.fn.stdpath('config') .. '/lua')
-vim.g.python3_host_prog = vim.fn.expand("~/miniconda3/envs/nvim/bin/python")
+vim.g.python3_host_prog = os.getenv('nvim_python')
+-- vim.g.python3_host_prog = vim.fn.expand("~/miniconda3/envs/nvim/bin/python")
 
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "tex", "markdown" },
