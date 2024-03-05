@@ -389,12 +389,12 @@ local nvim_mason_bin = "silent !" .. "~/.local/share/nvim/mason/bin/"
 
 Formatter = function()
   local filetype = vim.bo.filetype
-  if filetype == "python" then
-    vim.cmd("write")
-    local cmd = nvim_mason_bin .. "black --quiet" .. " " .. vim.fn.expand("%:p")
-    vim.cmd(cmd)
-    vim.cmd("e!")
-  elseif filetype == "htmldjango" or filetype == "html" then
+  -- if filetype == "python" then
+  --   vim.cmd("write")
+  --   local cmd = nvim_mason_bin .. "black --quiet" .. " " .. vim.fn.expand("%:p")
+  --   vim.cmd(cmd)
+  --   vim.cmd("e!")
+  if filetype == "htmldjango" or filetype == "html" then
     vim.cmd("write")
     local cmd = nvim_mason_bin .. "djlint" .. " --reformat --indent 4 " .. vim.fn.expand("%:p")
     print(cmd)
@@ -657,12 +657,12 @@ local normal_mappings = {
     },
     i = {
       a = {
-      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet_vina' --system='proteinHs_ligandPQR' --testing --verbosity=1<cr>",
-      "mpiexec main.py"
+        ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet_vina' --system='proteinHs_ligandPQR' --testing --verbosity=1<cr>",
+        "mpiexec main.py"
       },
       i = {
-      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet' --system='proteinHs_ligandPQR' --testing <cr>",
-      "mpiexec main.py"
+        ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet' --system='proteinHs_ligandPQR' --testing <cr>",
+        "mpiexec main.py"
       },
       r = {
         ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --verbosity=1 <cr>",
