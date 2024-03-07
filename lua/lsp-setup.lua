@@ -136,7 +136,6 @@ else
 end
 
 UserHome = vim.fn.expand("$HOME")
-print(UserHome)
 
 mason_lspconfig.setup_handlers {
   function(server_name)
