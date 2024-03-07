@@ -96,9 +96,21 @@ require('neodev').setup()
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
 
-mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers),
+local formatters = {
+  black = {},
+  stylua = {},
+  clang_format = {},
 }
+
+local ensure_installed = vim.tbl_keys(servers)
+for formatter, _ in pairs(formatters) do
+  table.insert(ensure_installed, formatter)
+end
+
+mason_lspconfig.setup {
+  ensure_installed = ensure_installed,
+}
+
 
 
 -- conda_env_path = vim.fn.expand("~/miniconda3/envs/p4dev18/bin")
