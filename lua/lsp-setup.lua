@@ -629,6 +629,10 @@ local normal_mappings = {
   },
   r = {
     name = "Run",
+    a = {
+     p = { "<C-W>v<C-W>l<cmd>term python3 %<cr>", "python3 active file" },
+     b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" }
+    },
     b = { ":vs <bar>term . build.sh<cr>", "./build.sh" },
     p = {
       -- b = { ":vs <bar>term cd ../.. && bash build.sh<cr>", "build psi4" },
@@ -666,9 +670,13 @@ local normal_mappings = {
     },
     i = {
       a = {
-        ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet_vina' --system='proteinHs_ligandPQR' --testing --verbosity=1<cr>",
-        "mpiexec main.py"
+        "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 -u %<cr>",
+        "mpiexec active python3"
       },
+      -- a = {
+      --   ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet_vina' --system='proteinHs_ligandPQR' --testing --verbosity=1<cr>",
+      --   "mpiexec main.py"
+      -- },
       i = {
         ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet' --system='proteinHs_ligandPQR' --testing <cr>",
         "mpiexec main.py"
@@ -698,7 +706,6 @@ local normal_mappings = {
       ":vs<bar>term mpiexec -n 2 python3 -u %<cr>",
       "mpiexec active"
     },
-    a = { "<C-W>v<C-W>l<cmd>term python3 %<cr>", "run active file" },
     A = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "run active file" },
     P = { "<C-W>v<C-W>l<cmd>term python3 main.py<cr>", "python3 main.py" },
   },
