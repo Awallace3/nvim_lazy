@@ -30,30 +30,30 @@ require('lazy').setup({
       {
         'j-hui/fidget.nvim',
         commit = '785efc6',
-        
+
         opts = {
 
           -- Options related to LSP progress subsystem
           progress = {
-            poll_rate = 0,                 -- How and when to poll for progress messages
-            suppress_on_insert = true,     -- Suppress new messages while in insert mode
-            ignore_done_already = false,   -- Ignore new tasks that are already complete
-            ignore_empty_message = true,   -- Ignore new tasks that don't contain a message
-            notification_group =           -- How to get a progress message's notification group key
+            poll_rate = 0,               -- How and when to poll for progress messages
+            suppress_on_insert = true,   -- Suppress new messages while in insert mode
+            ignore_done_already = false, -- Ignore new tasks that are already complete
+            ignore_empty_message = true, -- Ignore new tasks that don't contain a message
+            notification_group =         -- How to get a progress message's notification group key
                 function(msg) return msg.lsp_name end,
-            ignore = {},                   -- List of LSP servers to ignore
+            ignore = {},                 -- List of LSP servers to ignore
 
             -- Options related to how LSP progress messages are displayed as notifications
             -- Options related to Neovim's built-in LSP client
             lsp = {
-              progress_ringbuf_size = 0,   -- Configure the nvim's LSP progress ring buffer size
+              progress_ringbuf_size = 0, -- Configure the nvim's LSP progress ring buffer size
             },
           },
 
           logger = {
-            level = vim.log.levels.WARN,   -- Minimum logging level
-            float_precision = 0.01,        -- Limit the number of decimals displayed for floats
-            path =                         -- Where Fidget writes its logs to
+            level = vim.log.levels.WARN, -- Minimum logging level
+            float_precision = 0.01,      -- Limit the number of decimals displayed for floats
+            path =                       -- Where Fidget writes its logs to
                 string.format("%s/fidget.nvim.log", vim.fn.stdpath("cache")),
           },
         }

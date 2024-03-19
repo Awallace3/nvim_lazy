@@ -96,9 +96,18 @@ require('neodev').setup()
 -- Ensure the servers above are installed
 local mason_lspconfig = require 'mason-lspconfig'
 
-mason_lspconfig.setup {
-  ensure_installed = vim.tbl_keys(servers),
+local formatters = {
+  black = {},
+  stylua = {},
+  clang_format = {},
 }
+
+local ensure_installed = vim.tbl_keys(servers)
+
+mason_lspconfig.setup {
+  ensure_installed = ensure_installed,
+}
+
 
 
 -- conda_env_path = vim.fn.expand("~/miniconda3/envs/p4dev18/bin")
@@ -127,7 +136,6 @@ else
 end
 
 UserHome = vim.fn.expand("$HOME")
-print(UserHome)
 
 mason_lspconfig.setup_handlers {
   function(server_name)
@@ -389,12 +397,12 @@ local nvim_mason_bin = "silent !" .. "~/.local/share/nvim/mason/bin/"
 
 Formatter = function()
   local filetype = vim.bo.filetype
-  if filetype == "python" then
-    vim.cmd("write")
-    local cmd = nvim_mason_bin .. "black --quiet" .. " " .. vim.fn.expand("%:p")
-    vim.cmd(cmd)
-    vim.cmd("e!")
-  elseif filetype == "htmldjango" or filetype == "html" then
+  -- if filetype == "python" then
+  --   vim.cmd("write")
+  --   local cmd = nvim_mason_bin .. "black --quiet" .. " " .. vim.fn.expand("%:p")
+  --   vim.cmd(cmd)
+  --   vim.cmd("e!")
+  if filetype == "htmldjango" or filetype == "html" then
     vim.cmd("write")
     local cmd = nvim_mason_bin .. "djlint" .. " --reformat --indent 4 " .. vim.fn.expand("%:p")
     print(cmd)
@@ -584,7 +592,8 @@ local normal_mappings = {
     t = { get_filetype, "Current File Path" },
     -- i = { harpoon_nav_file, "Harpoon Index" },
   },
-  n = { ":Neotree toggle<cr>", "Neotree Toggle" },
+  -- n = { ":Neotree toggle<cr>", "Neotree Toggle" },
+  n = { ":Lexplore<cr>", "Lexplore Toggle" },
   p = { s = { ":w<bar>so %<bar>PackerSync<cr>", "PackerSync" } },
   -- t = {name = '+terminal', t = {":FloatermNew --wintype=popup --height=6", "terminal"}},
   l = {
@@ -621,13 +630,20 @@ local normal_mappings = {
   },
   r = {
     name = "Run",
+    a = {
+     p = { "<C-W>v<C-W>l<cmd>term python %<cr>", "python active file" },
+     i = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
+     b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" }
+    },
     b = { ":vs <bar>term . build.sh<cr>", "./build.sh" },
     p = {
       -- b = { ":vs <bar>term cd ../.. && bash build.sh<cr>", "build psi4" },
       b = { ":vs <bar>term cd .. && bash build.sh<cr>", "build psi4" },
       p = { ":vs<bar>term psi4 input.dat<cr>", "psi4 input.dat" },
       m = { "<C-W>v<C-W>l<cmd>term python3 mpi_jobs.py<cr>", "python3 mpi_jobs.py" },
-      a = { ":vs<bar>term psi4 /theoryfs2/ds/amwalla3/projects/test_asapt/asapt.dat<cr>", "psi4 asapt.dat" },
+      a = { ":vs<bar>term psi4 -n8 /theoryfs2/ds/amwalla3/projects/test_asapt/asapt.dat<cr>", "psi4 asapt.dat" },
+      o = { ":vs<bar>e /theoryfs2/ds/amwalla3/projects/test_asapt/asapt.out<cr>", "psi4 asapt.dat" },
+      d = { ":vs<bar>term python3 ~/data/sapt_dft_testing/water_test.py<cr>", "saptdft testing" },
     },
     B = { ":vs <bar>term cd src/dispersion && bash build.sh<cr>", "./build.sh" },
     d = { ":vs <bar>term make build_and_test<cr>", "dftd4 build and run" },
@@ -637,6 +653,7 @@ local normal_mappings = {
     j = { ":vs <bar>term julia main.jl<cr>", "julia main.jl" },
     -- RUN TESTS
     t = {
+      t = { "<C-W>v<C-W>l<cmd>term python3 tmp.py<cr>", "python3 tmp.py" },
       p = { ":vs<bar>term pytest tests.py<cr>", "PyTest" },
       k = { ":vs<bar>term pytest tests.py -k 'test_ATM_water'<cr>", "PyTest" },
       l = { PytestPythonFunction, "PyTest Specific" },
@@ -650,12 +667,30 @@ local normal_mappings = {
     },
     n = { initJypterSession, "Init Jupyter Session" },
     I = {
-      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' <cr>",
+      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --sf_components --verbosity=1 <cr>",
       "mpiexec main.py"
     },
     i = {
-      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet' --system='proteinHs_ligandPQR' <cr>",
-      "mpiexec main.py"
+      a = {
+        "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 -u %<cr>",
+        "mpiexec active python3"
+      },
+      -- a = {
+      --   ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet_vina' --system='proteinHs_ligandPQR' --testing --verbosity=1<cr>",
+      --   "mpiexec main.py"
+      -- },
+      i = {
+        ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet' --system='proteinHs_ligandPQR' --testing <cr>",
+        "mpiexec main.py"
+      },
+      r = {
+        ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --verbosity=1 <cr>",
+        "mpiexec main.py"
+      },
+      c = {
+        ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --sf_components --verbosity=1 <cr>",
+        "mpiexec main.py"
+      },
     },
     c = {
       ":vs<bar>term mpiexec -n 1 python3 -u create_db.py<cr>",
@@ -673,7 +708,6 @@ local normal_mappings = {
       ":vs<bar>term mpiexec -n 2 python3 -u %<cr>",
       "mpiexec active"
     },
-    a = { "<C-W>v<C-W>l<cmd>term python3 %<cr>", "run active file" },
     A = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "run active file" },
     P = { "<C-W>v<C-W>l<cmd>term python3 main.py<cr>", "python3 main.py" },
   },
