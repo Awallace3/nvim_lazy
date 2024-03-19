@@ -683,4 +683,7 @@ EGNN
 EGNN
 Interatomic
 featurized
+invertible
+Shor
+ParrLO
 submodules
