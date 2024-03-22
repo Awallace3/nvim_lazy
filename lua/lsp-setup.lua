@@ -631,8 +631,10 @@ local normal_mappings = {
   r = {
     name = "Run",
     a = {
+    name = "Active",
      p = { "<C-W>v<C-W>l<cmd>term python %<cr>", "python active file" },
      i = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
+     j = { "<C-W>s<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
      b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" }
     },
     b = { ":vs <bar>term . build.sh<cr>", "./build.sh" },
