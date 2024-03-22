@@ -15,6 +15,40 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
+ function YankCodeBlock()
+     local ts_utils = require'nvim-treesitter.ts_utils'
+     local parser = vim.treesitter.get_parser(0, "markdown")
+     local tree = parser:parse()[1]
+     local root = tree:root()
+
+     local node = ts_utils.get_node_at_cursor()
+     if node == nil then
+         print("No node at cursor position")
+         return
+     end
+
+     while node do
+         -- Check if the node is a fenced_code_block (depends on the parser grammar)  
+         local node_type = node:type()
+         if node_type == 'fence_block' or node_type == 'code_block' then
+             local start_row, start_col, end_row, end_col = node:range()
+
+             -- Select the code block
+             vim.api.nvim_win_set_cursor(0, {start_row + 1, start_col})
+             vim.cmd('normal! v')
+
+             local end_position = vim.api.nvim_buf_line_count(0) == end_row and end_col or end_col + 1
+             vim.api.nvim_win_set_cursor(0, {end_row + 1, end_position})
+             vim.cmd('normal! y')
+             print("Code block yanked")
+             return
+         end
+         node = node:parent()  -- Move to the parent node
+     end
+
+     print("No code block found")
+ end
+
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
   nmap('gI', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
@@ -250,14 +284,14 @@ mason_lspconfig.setup_handlers {
           },
           diagnosticsDelay = 300,
           latexFormatter = 'latexindent',
-          latexindent = {
-            -- lua get from $HOME/latexindent.yaml
-            -- local = vim.fn.expand("$HOME/latexindent.yaml"),
-            -- local = UserHome .. "/latexindent.yaml",
-            ['local'] = UserHome .. "/latexindent.yaml",
-          },
-          bibtexFormatter = 'texlab',
-          formatterLineLength = 80,
+          -- latexindent = {
+          --   extra_args = { "-l", vim.fn.expand("$HOME/.indentconfig.yaml"), "-m" },
+          --   -- lua get from $HOME/latexindent.yaml
+          --   -- ['local'] = vim.fn.expand("$HOME/latexindent.yaml"),
+          --   -- ['local'] = UserHome .. "/latexindent.yaml",
+          -- },
+          -- bibtexFormatter = 'texlab',
+          -- formatterLineLength = 30,
         },
       },
     }
@@ -421,7 +455,7 @@ Formatter = function()
     vim.cmd(cmd)
     vim.cmd("e!")
   elseif filetype == "lua" or filetype == "tex" or filetype == "julia" then
-    vim.lsp.buf.format({ timeout_ms = 5000 })
+    vim.lsp.buf.format({ timeout_ms = 10000 })
   else
     vim.lsp.buf.format({ timeout_ms = 5000 })
   end
@@ -473,27 +507,12 @@ function initJypterSession()
   vim.cmd(cmd)
 end
 
+local nvim_config_path = os.getenv("XDG_CONFIG_HOME") .. "/nvim"
+
 local normal_mappings = {
   q = { ":bn<bar>bd #<CR>", "Close Buffer" },
   Q = { ":wq<cr>", "Save & Quit" },
-  -- w = {":w<cr>", "Save"},
   x = { ":bdelete<cr>", "Close" },
-  c = {
-    name = "ChatGPT",
-    c = { "<cmd>ChatGPT<CR>", "ChatGPT" },
-    e = { "<cmd>ChatGPTEditWithInstruction<CR>", "Edit with instruction", mode = { "n", "v" } },
-    g = { "<cmd>ChatGPTRun grammar_correction<CR>", "Grammar Correction", mode = { "n", "v" } },
-    t = { "<cmd>ChatGPTRun translate<CR>", "Translate", mode = { "n", "v" } },
-    k = { "<cmd>ChatGPTRun keywords<CR>", "Keywords", mode = { "n", "v" } },
-    d = { "<cmd>ChatGPTRun docstring<CR>", "Docstring", mode = { "n", "v" } },
-    a = { "<cmd>ChatGPTRun add_tests<CR>", "Add Tests", mode = { "n", "v" } },
-    o = { "<cmd>ChatGPTRun optimize_code<CR>", "Optimize Code", mode = { "n", "v" } },
-    s = { "<cmd>ChatGPTRun summarize<CR>", "Summarize", mode = { "n", "v" } },
-    f = { "<cmd>ChatGPTRun fix_bugs<CR>", "Fix Bugs", mode = { "n", "v" } },
-    x = { "<cmd>ChatGPTRun explain_code<CR>", "Explain Code", mode = { "n", "v" } },
-    r = { "<cmd>ChatGPTRun roxygen_edit<CR>", "Roxygen Edit", mode = { "n", "v" } },
-    l = { "<cmd>ChatGPTRun code_readability_analysis<CR>", "Code Readability Analysis", mode = { "n", "v" } },
-  },
   d = {
     name = "Database",
     u = { "<Cmd>DBUIToggle<Cr>", "Toggle UI" },
@@ -503,45 +522,45 @@ local normal_mappings = {
   },
   e = {
     name = "Edit Config",
-    E = { ":vs<bar>e $XDG_CONFIG_HOME/nvim/init.lua<cr>", "Edit config" },
-    e = { ":e $XDG_CONFIG_HOME/nvim/init.lua<cr>", "Edit config" },
-    O = { ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/options.lua<cr>", "Edit Options" },
-    o = { ":e $XDG_CONFIG_HOME/nvim/lua/options.lua<cr>", "Edit Options" },
-    c = { ":e $XDG_CONFIG_HOME/nvim/lua/chatgpt-config.lua<cr>", "Edit config" },
+    E = { ":vs<bar>e " .. nvim_config_path .. "/init.lua<cr>", "Edit config" },
+    e = { ":e " .. nvim_config_path .. "/init.lua<cr>", "Edit config" },
+    O = { ":vs<bar>e " .. nvim_config_path .. "/lua/options.lua<cr>", "Edit Options" },
+    o = { ":e " .. nvim_config_path .. "/lua/options.lua<cr>", "Edit Options" },
+    c = { ":e " .. nvim_config_path .. "/lua/chatgpt-config.lua<cr>", "Edit config" },
     W = {
-      ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/whichkey-config/init.lua<cr>",
+      ":vs<bar>e " .. nvim_config_path .. "/lua/whichkey-config/init.lua<cr>",
       "Edit config"
     },
     p = {
-      ":e $XDG_CONFIG_HOME/nvim/lua/custom/plugins<cr>",
+      ":e " .. nvim_config_path .. "/lua/custom/plugins<cr>",
       "Edit Plugins"
     },
     P = {
-      ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/custom/plugins<cr>",
+      ":vs<bar>e " .. nvim_config_path .. "/lua/custom/plugins<cr>",
       "Edit Plugins"
     },
-    s = { ":e $XDG_CONFIG_HOME/nvim/snippets<cr>", "Edit config" },
+    s = { ":e " .. nvim_config_path .. "/snippets<cr>", "Edit config" },
     S = {
-      ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/luasnip-config.lua<bar>40<cr>",
+      ":vs<bar>e " .. nvim_config_path .. "/lua/luasnip-config.lua<bar>40<cr>",
       "Edit Snippets"
     },
     l = {
-      ":e $XDG_CONFIG_HOME/nvim/lua/lsp-setup.lua<cr>",
+      ":e " .. nvim_config_path .. "/lua/lsp-setup.lua<cr>",
       "Edit lsp"
     },
     L = {
-      ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/lsp-setup.lua<cr>",
+      ":vs<bar>e " .. nvim_config_path .. "/lua/lsp-setup.lua<cr>",
       "Edit lsp (split)"
     },
     m = {
-      ":e $XDG_CONFIG_HOME/nvim/lua/cmp-setup.lua<cr>",
+      ":e " .. nvim_config_path .. "/lua/cmp-setup.lua<cr>",
       "Edit cmp"
     },
     M = {
-      ":vs<bar>e $XDG_CONFIG_HOME/nvim/lua/cmp-setup.lua<cr>",
+      ":vs<bar>e " .. nvim_config_path .. "/lua/cmp-setup.lua<cr>",
       "Edit cmp (split)"
     },
-    f = { ":e $XDG_CONFIG_HOME/nvim_simplified<cr>", "Edit Last" },
+    f = { ":e " .. nvim_config_path .. "/nvim_simplified<cr>", "Edit Last" },
     -- S = {":vs<bar>e ~/.config/nvim/snippets<cr>", "Edit config"}
   },
   F = { Formatter, "Format Buffer" },
@@ -630,8 +649,8 @@ local normal_mappings = {
   r = {
     name = "Run",
     a = {
-     p = { "<C-W>v<C-W>l<cmd>term python3 %<cr>", "python3 active file" },
-     b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" }
+      p = { "<C-W>v<C-W>l<cmd>term python3 %<cr>", "python3 active file" },
+      b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" }
     },
     b = { ":vs <bar>term . build.sh<cr>", "./build.sh" },
     p = {
@@ -758,7 +777,39 @@ local normal_mappings = {
     f = {
       "{jV}kgq", "Format Paragraph",
     }
-  }
+  },
+  y = {
+    name = "Yank",
+    y = { '"+y', "Yank to clipboard" },
+    c = { YankCodeBlock, "Yank Code Block" },
+  },
+  -- nvimgp ChatGPT normal mode
+  ["<C-g>"] = {
+    c = { "<cmd>GpChatNew<cr>", "New Chat" },
+    t = { "<cmd>GpChatToggle<cr>", "Toggle Chat" },
+    f = { "<cmd>GpChatFinder<cr>", "Chat Finder" },
+
+    ["<C-x>"] = { "<cmd>GpChatNew split<cr>", "New Chat split" },
+    ["<C-v>"] = { "<cmd>GpChatNew vsplit<cr>", "New Chat vsplit" },
+    ["<C-t>"] = { "<cmd>GpChatNew tabnew<cr>", "New Chat tabnew" },
+
+    r = { "<cmd>GpRewrite<cr>", "Inline Rewrite" },
+    a = { "<cmd>GpAppend<cr>", "Append (after)" },
+    b = { "<cmd>GpPrepend<cr>", "Prepend (before)" },
+
+    g = {
+      name = "generate into new ..",
+      p = { "<cmd>GpPopup<cr>", "Popup" },
+      e = { "<cmd>GpEnew<cr>", "GpEnew" },
+      n = { "<cmd>GpNew<cr>", "GpNew" },
+      v = { "<cmd>GpVnew<cr>", "GpVnew" },
+      t = { "<cmd>GpTabnew<cr>", "GpTabnew" },
+    },
+
+    n = { "<cmd>GpNextAgent<cr>", "Next Agent" },
+    s = { "<cmd>GpStop<cr>", "GpStop" },
+    x = { "<cmd>GpContext<cr>", "Toggle GpContext" },
+  },
 }
 local opts = { prefix = '<leader>', mode = "n" }
 wk.register(normal_mappings, opts)
@@ -767,7 +818,35 @@ local visual_mappings = {
     name = "LaTex",
     r = { Round_number, "Round Number" },
     c = { ":w !wc -w<CR>", "Word Count" },
-  }
+  },
+  -- nvimgp ChatGPT: visual mode
+      ["<C-g>"] = {
+        c = { ":<C-u>'<,'>GpChatNew<cr>", "Visual Chat New" },
+        p = { ":<C-u>'<,'>GpChatPaste<cr>", "Visual Chat Paste" },
+        t = { ":<C-u>'<,'>GpChatToggle<cr>", "Visual Toggle Chat" },
+
+        ["<C-x>"] = { ":<C-u>'<,'>GpChatNew split<cr>", "Visual Chat New split" },
+        ["<C-v>"] = { ":<C-u>'<,'>GpChatNew vsplit<cr>", "Visual Chat New vsplit" },
+        ["<C-t>"] = { ":<C-u>'<,'>GpChatNew tabnew<cr>", "Visual Chat New tabnew" },
+
+        r = { ":<C-u>'<,'>GpRewrite<cr>", "Visual Rewrite" },
+        a = { ":<C-u>'<,'>GpAppend<cr>", "Visual Append (after)" },
+        b = { ":<C-u>'<,'>GpPrepend<cr>", "Visual Prepend (before)" },
+        i = { ":<C-u>'<,'>GpImplement<cr>", "Implement selection" },
+
+        g = {
+            name = "generate into new ..",
+            p = { ":<C-u>'<,'>GpPopup<cr>", "Visual Popup" },
+            e = { ":<C-u>'<,'>GpEnew<cr>", "Visual GpEnew" },
+            n = { ":<C-u>'<,'>GpNew<cr>", "Visual GpNew" },
+            v = { ":<C-u>'<,'>GpVnew<cr>", "Visual GpVnew" },
+            t = { ":<C-u>'<,'>GpTabnew<cr>", "Visual GpTabnew" },
+        },
+
+        n = { "<cmd>GpNextAgent<cr>", "Next Agent" },
+        s = { "<cmd>GpStop<cr>", "GpStop" },
+        x = { ":<C-u>'<,'>GpContext<cr>", "Visual GpContext" },
+    },
 }
 local opts_v = { prefix = '<leader>', mode = 'v' }
 wk.register(visual_mappings, opts_v)
@@ -781,7 +860,11 @@ null_ls.setup({
     null_ls.builtins.completion.spell,
     null_ls.builtins.formatting.prettier,
     null_ls.builtins.formatting.black,
-    -- null_ls.builtins.formatting.latexindent,
+    null_ls.builtins.formatting.latexindent,
   },
 })
+
+-- null_ls.builtins.formatting.latexindent.with({
+--   extra_args = { "-l", UserHome .. "/.indentconfig.yaml", "-m" },
+-- })
 -- vim: ts=2 sts=2 sw=2 et
