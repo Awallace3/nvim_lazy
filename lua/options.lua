@@ -12,6 +12,8 @@ vim.o.wrap = true
 vim.wo.number = true
 vim.wo.relativenumber = true
 
+vim.g.netrw_winsize = 15
+
 -- Enable mouse mode
 vim.o.mouse = 'a'
 

@@ -683,6 +683,7 @@ EGNN
 EGNN
 Interatomic
 featurized
+<<<<<<< HEAD
 pharmacogenomics
 pharmacogenomic
 NeuralPlexer
@@ -692,3 +693,15 @@ denoising
 ESDM
 benchmarked
 PDBBind2018
+=======
+invertible
+Shor
+ParrLO
+submodules
+QCArchive
+BFDB
+QCSchema
+checkmol
+encodings
+ASAPT0
+>>>>>>> a02b30de455075d34a5238dae39d54d92d0e4361

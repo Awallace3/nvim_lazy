@@ -611,7 +611,8 @@ local normal_mappings = {
     t = { get_filetype, "Current File Path" },
     -- i = { harpoon_nav_file, "Harpoon Index" },
   },
-  n = { ":Neotree toggle<cr>", "Neotree Toggle" },
+  -- n = { ":Neotree toggle<cr>", "Neotree Toggle" },
+  n = { ":Lexplore<cr>", "Lexplore Toggle" },
   p = { s = { ":w<bar>so %<bar>PackerSync<cr>", "PackerSync" } },
   -- t = {name = '+terminal', t = {":FloatermNew --wintype=popup --height=6", "terminal"}},
   l = {
@@ -649,8 +650,11 @@ local normal_mappings = {
   r = {
     name = "Run",
     a = {
-      p = { "<C-W>v<C-W>l<cmd>term python3 %<cr>", "python3 active file" },
-      b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" }
+    name = "Active",
+     p = { "<C-W>v<C-W>l<cmd>term python %<cr>", "python active file" },
+     i = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
+     j = { "<C-W>s<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
+     b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" }
     },
     b = { ":vs <bar>term . build.sh<cr>", "./build.sh" },
     p = {
