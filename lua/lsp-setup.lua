@@ -613,7 +613,7 @@ local normal_mappings = {
   },
   -- n = { ":Neotree toggle<cr>", "Neotree Toggle" },
   n = { ":Lexplore<cr>", "Lexplore Toggle" },
-  p = { s = { ":w<bar>so %<bar>PackerSync<cr>", "PackerSync" } },
+  -- p = { s = { ":w<bar>so %<bar>PackerSync<cr>", "PackerSync" } },
   -- t = {name = '+terminal', t = {":FloatermNew --wintype=popup --height=6", "terminal"}},
   l = {
     name = "LSP",
@@ -788,9 +788,9 @@ local normal_mappings = {
     c = { YankCodeBlock, "Yank Code Block" },
   },
   -- nvimgp ChatGPT normal mode
-  ["<C-g>"] = {
+  p = {
     c = { "<cmd>GpChatNew<cr>", "New Chat" },
-    t = { "<cmd>GpChatToggle<cr>", "Toggle Chat" },
+    p = { "<cmd>GpChatToggle<cr>", "Toggle Chat" },
     f = { "<cmd>GpChatFinder<cr>", "Chat Finder" },
 
     ["<C-x>"] = { "<cmd>GpChatNew split<cr>", "New Chat split" },
@@ -824,7 +824,7 @@ local visual_mappings = {
     c = { ":w !wc -w<CR>", "Word Count" },
   },
   -- nvimgp ChatGPT: visual mode
-      ["<C-g>"] = {
+      p = {
         c = { ":<C-u>'<,'>GpChatNew<cr>", "Visual Chat New" },
         p = { ":<C-u>'<,'>GpChatPaste<cr>", "Visual Chat Paste" },
         t = { ":<C-u>'<,'>GpChatToggle<cr>", "Visual Toggle Chat" },
