@@ -612,7 +612,8 @@ local normal_mappings = {
     -- i = { harpoon_nav_file, "Harpoon Index" },
   },
   -- n = { ":Neotree toggle<cr>", "Neotree Toggle" },
-  n = { ":Lexplore<cr>", "Lexplore Toggle" },
+  -- n = { ":Lexplore<cr>", "Lexplore Toggle" },
+  n = { ":NvimTreeToggle<cr>", "Tree Toggle" },
   -- p = { s = { ":w<bar>so %<bar>PackerSync<cr>", "PackerSync" } },
   -- t = {name = '+terminal', t = {":FloatermNew --wintype=popup --height=6", "terminal"}},
   l = {
