@@ -4,7 +4,9 @@ return {
     "nvim-lua/plenary.nvim",
     "antoinemadec/FixCursorHold.nvim",
     "nvim-treesitter/nvim-treesitter",
-    "nvim-neotest/neotest-python"
+    "nvim-neotest/neotest-python",
+    "mfussenegger/nvim-dap",
+    "nvim-neotest/nvim-nio",
   },
   lazy = true,
   init = function()
