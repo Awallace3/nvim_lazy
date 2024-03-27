@@ -111,6 +111,7 @@ local servers = {
   julials = {},
   ltex = {},
   texlab = {},
+  yamlls = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -759,18 +760,6 @@ local normal_mappings = {
     o = { ':lua require("neotest").output_panel.toggle()<CR>', "Neotest Output" },
     w = { ':lua require("neotest").watch.toggle()<CR>', "Neotest Watch" },
     s = { ':lua require("neotest").summary.toggle()<CR>', "Neotest Summary" },
-  },
-  o = {
-    name = "Overseer",
-    o = { ":OverseerToggle<cr>", "Overseer Toggle" },
-    r = { ":OverseerRun<cr>", "Overseer Run" },
-    c = { ":OverseerRun ", "Overseer Run template" },
-    l = { ":OverseerLoadBundle<cr>", "Overseer Load Bundle" },
-    d = { ":OverseerDeleteBundle<cr>", "Overseer Delete Bundle" },
-    h = { ':lua require("notify").history()<cr>', "Notify History" },
-    n = { ':Notifications<cr>', "Notify Notifications" },
-    p = { ":OverseerRun python3 main.py<cr>", "Overseer Run Python" }
-
   },
   m = {
     name = "Markdown and LaTex",
