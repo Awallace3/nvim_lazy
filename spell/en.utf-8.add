@@ -683,7 +683,15 @@ EGNN
 EGNN
 Interatomic
 featurized
-<<<<<<< HEAD
+Waals
+der
+Lilienfeld
+Tkatchenko
+NeuralPLexer
+PDBBind2018
+PDBBind
+PDBBind2021
+ESDM
 pharmacogenomics
 pharmacogenomic
 NeuralPlexer
@@ -693,7 +701,6 @@ denoising
 ESDM
 benchmarked
 PDBBind2018
-=======
 invertible
 Shor
 ParrLO
@@ -704,7 +711,6 @@ QCSchema
 checkmol
 encodings
 ASAPT0
->>>>>>> a02b30de455075d34a5238dae39d54d92d0e4361
 AAs
 ERIs
 submatrices
