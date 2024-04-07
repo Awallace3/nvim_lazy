@@ -767,10 +767,8 @@ softwares
 GlideSP
 GlideSP-min
 Vinardo
-ABFE
 RBFE
 ABFE
-unphyiscally
 unphysically
 RBFEs
 Cheminformatics
@@ -795,7 +793,6 @@ LoS
 AAs
 ERIs
 submatrices
-submatrices
 cmake
 gitsubmodules
 rescaled
@@ -808,6 +805,14 @@ equivariant
 Head-Gordan
 mpi
 DynamicBind
+CADD
+3D
+aggregator
+isomorphism
+Featurization
+ASCF's
+ASCF's
+Cartesians
 PMF
 DGMs
 CADD
@@ -873,3 +878,4 @@ MPNNs
 RDKit
 Tanimoto
 NNs
+FDDS

@@ -29,12 +29,7 @@ return -- lazy.nvim
       -- It's better to change only things where the default doesn't fit your needs.
 
       -- required openai api key (string or table with command and arguments)
-      -- openai_api_key = { "cat", "path_to/openai_api_key" },
-      -- openai_api_key = { "bw", "get", "password", "OPENAI_API_KEY" },
-      -- openai_api_key: "sk-...",
-      -- openai_api_key = os.getenv("env_name.."),
-      -- openai_api_key =  {"gpg",  "--decrypt ", vim.fn.expand("$HOME") .. "/secret.txt.gpg"},
-      openai_api_key = { "cat", vim.fn.expand("$HOME") .. "/secret.txt" },
+      openai_api_key =  {"gpg",  "--decrypt", vim.fn.expand("$HOME") .. "/secret.txt.gpg"},
       -- api endpoint (you can change this to azure endpoint)
       openai_api_endpoint = "https://api.openai.com/v1/chat/completions",
       -- openai_api_endpoint = "https://$URL.openai.azure.com/openai/deployments/{{model}}/chat/completions?api-version=2023-03-15-preview",
