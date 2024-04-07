@@ -72,6 +72,8 @@ return -- lazy.nvim
               "- Output any citations in a bibtex format with the key being 'x:y:z' where x is the first author's last name, y being the year, and z being the first meaningful word of the title with all letters lowercase. Also, please use the journal abbreviated journal name.\n"
               .. "- If you cite a paper, please provide all citations at the bottom of the response inside ``` ``` and use the latex \\cite{x:y:z} command to reference the citation in the response.\n"
               .. " - For bibtex citations please provide an additional field 'url' with the url of the paper.\n"
+              -- .. " - When I ask for a latex equation please provide the equation in a latex equation environment with a label of the format eq:x where x is a describibg label for the equation.\n"
+              -- .. " - If equation terms are defined outside of equation environments, please use dollar signs instead of \\( and \\).\n"
         },
         {
           name = "ChatGPT3-5",
