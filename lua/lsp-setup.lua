@@ -699,6 +699,10 @@ local normal_mappings = {
         "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 -u %<cr>",
         "mpiexec active python3"
       },
+      f = {
+        "<C-W>v<C-W>l<cmd>term mpiexec -n 4 python3 -u %<cr>",
+        "mpiexec active 4 python3"
+      },
       -- a = {
       --   ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet_vina' --system='proteinHs_ligandPQR' --testing --verbosity=1<cr>",
       --   "mpiexec main.py"
