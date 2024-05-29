@@ -614,7 +614,8 @@ local normal_mappings = {
   },
   -- n = { ":Neotree toggle<cr>", "Neotree Toggle" },
   -- n = { ":Lexplore<cr>", "Lexplore Toggle" },
-  n = { ":NvimTreeToggle<cr>", "Tree Toggle" },
+  -- n = { ":NvimTreeToggle<cr>", "Tree Toggle" },
+  n = { "<cmd>30vs<bar>Oil<cr>", "Oil Open" },
   -- p = { s = { ":w<bar>so %<bar>PackerSync<cr>", "PackerSync" } },
   -- t = {name = '+terminal', t = {":FloatermNew --wintype=popup --height=6", "terminal"}},
   l = {
