@@ -614,7 +614,8 @@ local normal_mappings = {
   },
   -- n = { ":Neotree toggle<cr>", "Neotree Toggle" },
   -- n = { ":Lexplore<cr>", "Lexplore Toggle" },
-  n = { ":NvimTreeToggle<cr>", "Tree Toggle" },
+  -- n = { ":NvimTreeToggle<cr>", "Tree Toggle" },
+  n = { "<cmd>30vs<bar>Oil<cr>", "Oil Open" },
   -- p = { s = { ":w<bar>so %<bar>PackerSync<cr>", "PackerSync" } },
   -- t = {name = '+terminal', t = {":FloatermNew --wintype=popup --height=6", "terminal"}},
   l = {
@@ -697,6 +698,10 @@ local normal_mappings = {
       a = {
         "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 -u %<cr>",
         "mpiexec active python3"
+      },
+      f = {
+        "<C-W>v<C-W>l<cmd>term mpiexec -n 4 python3 -u %<cr>",
+        "mpiexec active 4 python3"
       },
       -- a = {
       --   ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet_vina' --system='proteinHs_ligandPQR' --testing --verbosity=1<cr>",

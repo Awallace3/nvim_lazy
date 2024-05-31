@@ -366,6 +366,20 @@ snippet frameimgsplit frame environment
 		\end{figure}
 		\end{minipage}
 	\\end{frame}
+snippet frameimgtwo frame environment
+	\\begin{frame}[${1:c}]
+		\frametitle{${2:title}}
+		\begin{minipage}[c]{${4:0.48}\linewidth}
+		\begin{figure}
+		    \includegraphics[width=0.70\textwidth]{./figures${6:/f1.png}}
+		\end{figure}
+		\end{minipage}
+		\begin{minipage}[c]{${5:0.48}\linewidth}
+		\begin{figure}
+		    \includegraphics[width=0.70\textwidth]{./figures${6:/f1.png}}
+		\end{figure}
+		\end{minipage}
+	\\end{frame}
 snippet block block environment
 	\\begin{block}{${1:title}}
 		${0:${VISUAL}}

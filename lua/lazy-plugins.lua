@@ -35,9 +35,9 @@ require('lazy').setup({
 
           -- Options related to LSP progress subsystem
           progress = {
-            poll_rate = 0,               -- How and when to poll for progress messages
+            poll_rate = 10,               -- How and when to poll for progress messages
             suppress_on_insert = true,   -- Suppress new messages while in insert mode
-            ignore_done_already = false, -- Ignore new tasks that are already complete
+            ignore_done_already = true, -- Ignore new tasks that are already complete
             ignore_empty_message = true, -- Ignore new tasks that don't contain a message
             notification_group =         -- How to get a progress message's notification group key
                 function(msg) return msg.lsp_name end,

@@ -354,7 +354,6 @@ snippet frameitem frame environment
 snippet frameimgsplit frame environment
 	\\begin{frame}[${1:c}]
 		\frametitle{${2:title}}
-		\frametitle{${3:}}
 		\begin{minipage}[c]{${4:0.30}\linewidth}
 		\begin{itemize}
 		    \item ${0:${VISUAL}}
@@ -366,6 +365,27 @@ snippet frameimgsplit frame environment
 		\end{figure}
 		\end{minipage}
 	\\end{frame}
+snippet frameimgtwo frame environment
+	\\begin{frame}[${1:c}]
+		\frametitle{${2:title}}
+		\begin{minipage}[c]{${4:0.48}\linewidth}
+		\begin{figure}
+		    \includegraphics[width=0.95\textwidth]{./figures${5:/f1.png}}
+		\end{figure}
+		\end{minipage}
+		\begin{minipage}[c]{${6:0.48}\linewidth}
+		\begin{figure}
+		    \includegraphics[width=0.95\textwidth]{./figures${7:/f1.png}}
+		\end{figure}
+		\end{minipage}
+	\\end{frame}
+snippet leftitemize itemize environment
+	{
+		\setlength{\leftmargini}{0pt}
+		\begin{itemize}
+		\item<1-> ${0}
+		\end{itemize}
+	}
 snippet block block environment
 	\\begin{block}{${1:title}}
 		${0:${VISUAL}}
@@ -475,3 +495,4 @@ snippet ra rightarrow
 # Long right arrow
 snippet lra longrightarrow
 	\\longrightarrow {$0}
+

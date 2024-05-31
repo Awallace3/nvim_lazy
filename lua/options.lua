@@ -1,29 +1,18 @@
--- [[ Setting options ]]
--- See `:help vim.o`
--- NOTE: You can change these options as you wish!
-
 -- Set highlight on search
 vim.o.hlsearch = true
-
 -- Set word wrap
 vim.o.wrap = true
-
 -- Make line numbers default
 vim.wo.number = true
 vim.wo.relativenumber = true
-
 -- Enable mouse mode
 vim.o.mouse = 'a'
-
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
---  See `:help 'clipboard'`
 vim.o.clipboard = 'unnamedplus'
 -- vim.o.clipboard = ''
-
 -- Enable break indent
 vim.o.breakindent = true
-
 -- Save undo history
 vim.o.undofile = true
 
@@ -199,6 +188,11 @@ vim.api.nvim_create_autocmd("FileType", {
       vim.api.nvim_command('filetype plugin on')
     end
   end
+})
+
+vim.api.nvim_create_autocmd('TermOpen', {
+  pattern = '*',
+  command = 'setlocal scrollback=100000'
 })
 
 -- vim: ts=2 sts=2 sw=2 et
