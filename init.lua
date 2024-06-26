@@ -5,7 +5,6 @@ vim.g.maplocalleader = '\\'
 -- [[ Install `lazy.nvim` plugin manager ]]
 require('lazy-bootstrap')
 require('lazy-plugins')
-
 require('options')
 require('keymaps')
 require('telescope-setup')
