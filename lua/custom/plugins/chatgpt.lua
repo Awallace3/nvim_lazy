@@ -49,7 +49,7 @@ return -- lazy.nvim
       -- agents = {  { name = "ChatGPT4" }, ... },
       agents = {
         {
-          name = "ChatGPT4",
+          name = "ChatGPT4o",
           chat = true,
           command = false,
           -- string with model name or table with model name and parameters
