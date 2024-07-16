@@ -510,6 +510,12 @@ end
 
 local nvim_config_path = os.getenv("XDG_CONFIG_HOME") .. "/nvim"
 
+local insert_mappings = {
+  ["<C-k>"] = {'<cmd>lua vim.lsp.buf.hover()<cr>', 'Hover Commands'}
+}
+local insert_opts = { mode = "i" }
+wk.register(insert_mappings, insert_opts)
+
 local normal_mappings = {
   q = { ":bn<bar>bd #<CR>", "Close Buffer" },
   Q = { ":wq<cr>", "Save & Quit" },
@@ -701,6 +707,14 @@ local normal_mappings = {
       },
       f = {
         "<C-W>v<C-W>l<cmd>term mpiexec -n 4 python3 -u %<cr>",
+        "mpiexec active 4 python3"
+      },
+      g = {
+        "<C-W>v<C-W>l<cmd>term mpiexec -n 4 python3 -u % --grac_shifts<cr>",
+        "mpiexec active 4 python3"
+      },
+      d = {
+        "<C-W>v<C-W>l<cmd>term mpiexec -n 4 python3 -u % --level_theories SAPT_DFT_pbe0_adz<cr>",
         "mpiexec active 4 python3"
       },
       -- a = {
