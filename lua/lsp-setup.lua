@@ -143,6 +143,24 @@ mason_lspconfig.setup {
   ensure_installed = ensure_installed,
 }
 
+MainPythonFile = "main.py"
+UpdateMainPython = function()
+  -- get active buffer's file path and name and update global variable MainPythonFile
+  MainPythonFile = vim.fn.expand("%:t")
+  print("Main Python File Updated to: " .. MainPythonFile)
+end
+
+RunMainPython = function()
+  print("Running Main Python File: " .. MainPythonFile)
+  -- split widnow and run python file
+
+  vim.cmd("vs")
+  -- move to right buffer
+  vim.cmd("wincmd l")
+  -- run python file
+  vim.cmd("term python " .. MainPythonFile)
+end
+
 
 
 -- conda_env_path = vim.fn.expand("~/miniconda3/envs/p4dev18/bin")
@@ -657,7 +675,9 @@ local normal_mappings = {
      p = { "<C-W>v<C-W>l<cmd>term python %<cr>", "python active file" },
      i = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
      j = { "<C-W>s<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
-     b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" }
+     b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" },
+     s = { UpdateMainPython, "Update Main Python File" },
+     m = { RunMainPython, "Run MainPythonFile" },
     },
     b = { ":vs <bar>term . build.sh<cr>", "./build.sh" },
     p = {
