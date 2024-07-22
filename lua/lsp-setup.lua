@@ -143,6 +143,24 @@ mason_lspconfig.setup {
   ensure_installed = ensure_installed,
 }
 
+MainPythonFile = "main.py"
+UpdateMainPython = function()
+  -- get active buffer's file path and name and update global variable MainPythonFile
+  MainPythonFile = vim.fn.expand("%:t")
+  print("Main Python File Updated to: " .. MainPythonFile)
+end
+
+RunMainPython = function()
+  print("Running Main Python File: " .. MainPythonFile)
+  -- split widnow and run python file
+
+  vim.cmd("vs")
+  -- move to right buffer
+  vim.cmd("wincmd l")
+  -- run python file
+  vim.cmd("term python " .. MainPythonFile)
+end
+
 
 
 -- conda_env_path = vim.fn.expand("~/miniconda3/envs/p4dev18/bin")
@@ -510,6 +528,12 @@ end
 
 local nvim_config_path = os.getenv("XDG_CONFIG_HOME") .. "/nvim"
 
+local insert_mappings = {
+  ["<C-k>"] = {'<cmd>lua vim.lsp.buf.hover()<cr>', 'Hover Commands'}
+}
+local insert_opts = { mode = "i" }
+wk.register(insert_mappings, insert_opts)
+
 local normal_mappings = {
   q = { ":bn<bar>bd #<CR>", "Close Buffer" },
   Q = { ":wq<cr>", "Save & Quit" },
@@ -614,7 +638,8 @@ local normal_mappings = {
   },
   -- n = { ":Neotree toggle<cr>", "Neotree Toggle" },
   -- n = { ":Lexplore<cr>", "Lexplore Toggle" },
-  n = { ":NvimTreeToggle<cr>", "Tree Toggle" },
+  -- n = { ":NvimTreeToggle<cr>", "Tree Toggle" },
+  n = { "<cmd>30vs<bar>Oil<cr>", "Oil Open" },
   -- p = { s = { ":w<bar>so %<bar>PackerSync<cr>", "PackerSync" } },
   -- t = {name = '+terminal', t = {":FloatermNew --wintype=popup --height=6", "terminal"}},
   l = {
@@ -656,7 +681,9 @@ local normal_mappings = {
      p = { "<C-W>v<C-W>l<cmd>term python %<cr>", "python active file" },
      i = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
      j = { "<C-W>s<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
-     b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" }
+     b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" },
+     s = { UpdateMainPython, "Update Main Python File" },
+     m = { RunMainPython, "Run MainPythonFile" },
     },
     b = { ":vs <bar>term . build.sh<cr>", "./build.sh" },
     p = {
@@ -698,6 +725,18 @@ local normal_mappings = {
       a = {
         "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 -u %<cr>",
         "mpiexec active python3"
+      },
+      f = {
+        "<C-W>v<C-W>l<cmd>term mpiexec -n 4 python3 -u %<cr>",
+        "mpiexec active 4 python3"
+      },
+      g = {
+        "<C-W>v<C-W>l<cmd>term mpiexec -n 4 python3 -u % --grac_shifts<cr>",
+        "mpiexec active 4 python3"
+      },
+      d = {
+        "<C-W>v<C-W>l<cmd>term mpiexec -n 4 python3 -u % --level_theories SAPT_DFT_pbe0_adz<cr>",
+        "mpiexec active 4 python3"
       },
       -- a = {
       --   ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet_vina' --system='proteinHs_ligandPQR' --testing --verbosity=1<cr>",
@@ -858,6 +897,18 @@ null_ls.setup({
     null_ls.builtins.formatting.latexindent,
   },
 })
+
+-- Function to check line count and disable LSP if above threshold
+function Check_line_count()
+    local line_count = vim.fn.line('$')
+    if line_count > 10000 then
+        print("Disabling LSP for large file...")
+        vim.lsp.stop_client()
+    end
+end
+
+-- Automatically check line count on BufEnter event
+vim.cmd([[autocmd BufEnter * lua Check_line_count()]])
 
 -- null_ls.builtins.formatting.latexindent.with({
 --   extra_args = { "-l", UserHome .. "/.indentconfig.yaml", "-m" },
