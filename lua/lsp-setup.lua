@@ -161,6 +161,23 @@ RunMainPython = function()
   vim.cmd("term python " .. MainPythonFile)
 end
 
+MainbashFile = "run.sh"
+UpdateMainbash = function()
+  -- get active buffer's file path and name and update global variable MainbashFile
+  MainbashFile = vim.fn.expand("%:t")
+  print("Main bash File Updated to: " .. MainbashFile)
+end
+
+RunMainbash = function()
+  print("Running Main bash File: " .. MainbashFile)
+  -- split widnow and run bash file
+
+  vim.cmd("vs")
+  -- move to right buffer
+  vim.cmd("wincmd l")
+  -- run bash file
+  vim.cmd("term bash " .. MainbashFile)
+end
 
 
 -- conda_env_path = vim.fn.expand("~/miniconda3/envs/p4dev18/bin")
@@ -683,7 +700,9 @@ local normal_mappings = {
      j = { "<C-W>s<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
      b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" },
      s = { UpdateMainPython, "Update Main Python File" },
+     S = { UpdateMainbash, "Update Main bash File" },
      m = { RunMainPython, "Run MainPythonFile" },
+     M = { RunMainbash, "Run Mainbash" },
     },
     b = { ":vs <bar>term . build.sh<cr>", "./build.sh" },
     p = {
