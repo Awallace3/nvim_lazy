@@ -161,6 +161,23 @@ RunMainPython = function()
   vim.cmd("term python " .. MainPythonFile)
 end
 
+MainbashFile = "run.sh"
+UpdateMainbash = function()
+  -- get active buffer's file path and name and update global variable MainbashFile
+  MainbashFile = vim.fn.expand("%:t")
+  print("Main bash File Updated to: " .. MainbashFile)
+end
+
+RunMainbash = function()
+  print("Running Main bash File: " .. MainbashFile)
+  -- split widnow and run bash file
+
+  vim.cmd("vs")
+  -- move to right buffer
+  vim.cmd("wincmd l")
+  -- run bash file
+  vim.cmd("term bash " .. MainbashFile)
+end
 
 
 -- conda_env_path = vim.fn.expand("~/miniconda3/envs/p4dev18/bin")
@@ -679,12 +696,14 @@ local normal_mappings = {
     name = "Run",
     a = {
       name = "Active",
-      p = { "<C-W>v<C-W>l<cmd>term python %<cr>", "python active file" },
-      i = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
-      j = { "<C-W>s<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
-      b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" },
-      s = { UpdateMainPython, "Update Main Python File" },
-      m = { RunMainPython, "Run MainPythonFile" },
+     p = { "<C-W>v<C-W>l<cmd>term python %<cr>", "python active file" },
+     i = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
+     j = { "<C-W>s<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
+     b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" },
+     s = { UpdateMainPython, "Update Main Python File" },
+     S = { UpdateMainbash, "Update Main bash File" },
+     m = { RunMainPython, "Run MainPythonFile" },
+     M = { RunMainbash, "Run Mainbash" },
     },
     b = { ":vs <bar>term . build.sh<cr>", "./build.sh" },
     p = {
@@ -693,8 +712,9 @@ local normal_mappings = {
       p = { ":vs<bar>term psi4 input.dat<cr>", "psi4 input.dat" },
       m = { "<C-W>v<C-W>l<cmd>term python3 mpi_jobs.py<cr>", "python3 mpi_jobs.py" },
       a = { ":vs<bar>term psi4 -n8 /theoryfs2/ds/amwalla3/projects/test_asapt/asapt.dat<cr>", "psi4 asapt.dat" },
+      d = { ":vs<bar>term psi4 -n8 /theoryfs2/ds/amwalla3/projects/testing/dlpno_ccsd_disp/psi4.in <cr>", "psi4 dlpno_ccsd_disp" },
       o = { ":vs<bar>e /theoryfs2/ds/amwalla3/projects/test_asapt/asapt.out<cr>", "psi4 asapt.dat" },
-      d = { ":vs<bar>term python3 ~/data/sapt_dft_testing/water_test.py<cr>", "saptdft testing" },
+      -- d = { ":vs<bar>term python3 ~/data/sapt_dft_testing/water_test.py<cr>", "saptdft testing" },
     },
     B = { ":vs <bar>term cd src/dispersion && bash build.sh<cr>", "./build.sh" },
     d = { ":vs <bar>term make build_and_test<cr>", "dftd4 build and run" },
