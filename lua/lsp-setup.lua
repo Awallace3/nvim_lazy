@@ -15,39 +15,39 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
- function YankCodeBlock()
-     local ts_utils = require'nvim-treesitter.ts_utils'
-     local parser = vim.treesitter.get_parser(0, "markdown")
-     local tree = parser:parse()[1]
-     local root = tree:root()
+  function YankCodeBlock()
+    local ts_utils = require 'nvim-treesitter.ts_utils'
+    local parser = vim.treesitter.get_parser(0, "markdown")
+    local tree = parser:parse()[1]
+    local root = tree:root()
 
-     local node = ts_utils.get_node_at_cursor()
-     if node == nil then
-         print("No node at cursor position")
-         return
-     end
+    local node = ts_utils.get_node_at_cursor()
+    if node == nil then
+      print("No node at cursor position")
+      return
+    end
 
-     while node do
-         -- Check if the node is a fenced_code_block (depends on the parser grammar)  
-         local node_type = node:type()
-         if node_type == 'fence_block' or node_type == 'code_block' then
-             local start_row, start_col, end_row, end_col = node:range()
+    while node do
+      -- Check if the node is a fenced_code_block (depends on the parser grammar)
+      local node_type = node:type()
+      if node_type == 'fence_block' or node_type == 'code_block' then
+        local start_row, start_col, end_row, end_col = node:range()
 
-             -- Select the code block
-             vim.api.nvim_win_set_cursor(0, {start_row + 1, start_col})
-             vim.cmd('normal! v')
+        -- Select the code block
+        vim.api.nvim_win_set_cursor(0, { start_row + 1, start_col })
+        vim.cmd('normal! v')
 
-             local end_position = vim.api.nvim_buf_line_count(0) == end_row and end_col or end_col + 1
-             vim.api.nvim_win_set_cursor(0, {end_row + 1, end_position})
-             vim.cmd('normal! y')
-             print("Code block yanked")
-             return
-         end
-         node = node:parent()  -- Move to the parent node
-     end
+        local end_position = vim.api.nvim_buf_line_count(0) == end_row and end_col or end_col + 1
+        vim.api.nvim_win_set_cursor(0, { end_row + 1, end_position })
+        vim.cmd('normal! y')
+        print("Code block yanked")
+        return
+      end
+      node = node:parent() -- Move to the parent node
+    end
 
-     print("No code block found")
- end
+    print("No code block found")
+  end
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -161,6 +161,23 @@ RunMainPython = function()
   vim.cmd("term python " .. MainPythonFile)
 end
 
+MainbashFile = "run.sh"
+UpdateMainbash = function()
+  -- get active buffer's file path and name and update global variable MainbashFile
+  MainbashFile = vim.fn.expand("%:t")
+  print("Main bash File Updated to: " .. MainbashFile)
+end
+
+RunMainbash = function()
+  print("Running Main bash File: " .. MainbashFile)
+  -- split widnow and run bash file
+
+  vim.cmd("vs")
+  -- move to right buffer
+  vim.cmd("wincmd l")
+  -- run bash file
+  vim.cmd("term bash " .. MainbashFile)
+end
 
 
 -- conda_env_path = vim.fn.expand("~/miniconda3/envs/p4dev18/bin")
@@ -227,8 +244,9 @@ mason_lspconfig.setup_handlers {
   end,
   ["rust_analyzer"] = function()
     lspconfig.rust_analyzer.setup {
-      on_attach = on_attach,
-      capabilities = capabilities,
+      on_attach = function(client, bufnr)
+        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+      end,
       settings = {
         ["rust-analyzer"] = {
           imports = {
@@ -529,7 +547,7 @@ end
 local nvim_config_path = os.getenv("XDG_CONFIG_HOME") .. "/nvim"
 
 local insert_mappings = {
-  ["<C-k>"] = {'<cmd>lua vim.lsp.buf.hover()<cr>', 'Hover Commands'}
+  ["<C-k>"] = { '<cmd>lua vim.lsp.buf.hover()<cr>', 'Hover Commands' }
 }
 local insert_opts = { mode = "i" }
 wk.register(insert_mappings, insert_opts)
@@ -677,13 +695,15 @@ local normal_mappings = {
   r = {
     name = "Run",
     a = {
-    name = "Active",
+      name = "Active",
      p = { "<C-W>v<C-W>l<cmd>term python %<cr>", "python active file" },
      i = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
      j = { "<C-W>s<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
      b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" },
      s = { UpdateMainPython, "Update Main Python File" },
+     S = { UpdateMainbash, "Update Main bash File" },
      m = { RunMainPython, "Run MainPythonFile" },
+     M = { RunMainbash, "Run Mainbash" },
     },
     b = { ":vs <bar>term . build.sh<cr>", "./build.sh" },
     p = {
@@ -735,7 +755,7 @@ local normal_mappings = {
         "mpiexec active 4 python3"
       },
       d = {
-        "<C-W>v<C-W>l<cmd>term mpiexec -n 4 python3 -u % --level_theories SAPT_DFT_pbe0_adz<cr>",
+        "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 -u % --level_theories SAPT_DFT_pbe0_aqz<cr>",
         "mpiexec active 4 python3"
       },
       -- a = {
@@ -854,33 +874,33 @@ local visual_mappings = {
     c = { ":w !wc -w<CR>", "Word Count" },
   },
   -- nvimgp ChatGPT: visual mode
-      p = {
-        c = { ":<C-u>'<,'>GpChatNew<cr>", "Visual Chat New" },
-        p = { ":<C-u>'<,'>GpChatPaste<cr>", "Visual Chat Paste" },
-        t = { ":<C-u>'<,'>GpChatToggle<cr>", "Visual Toggle Chat" },
+  p = {
+    c = { ":<C-u>'<,'>GpChatNew<cr>", "Visual Chat New" },
+    p = { ":<C-u>'<,'>GpChatPaste<cr>", "Visual Chat Paste" },
+    t = { ":<C-u>'<,'>GpChatToggle<cr>", "Visual Toggle Chat" },
 
-        ["<C-x>"] = { ":<C-u>'<,'>GpChatNew split<cr>", "Visual Chat New split" },
-        ["<C-v>"] = { ":<C-u>'<,'>GpChatNew vsplit<cr>", "Visual Chat New vsplit" },
-        ["<C-t>"] = { ":<C-u>'<,'>GpChatNew tabnew<cr>", "Visual Chat New tabnew" },
+    ["<C-x>"] = { ":<C-u>'<,'>GpChatNew split<cr>", "Visual Chat New split" },
+    ["<C-v>"] = { ":<C-u>'<,'>GpChatNew vsplit<cr>", "Visual Chat New vsplit" },
+    ["<C-t>"] = { ":<C-u>'<,'>GpChatNew tabnew<cr>", "Visual Chat New tabnew" },
 
-        r = { ":<C-u>'<,'>GpRewrite<cr>", "Visual Rewrite" },
-        a = { ":<C-u>'<,'>GpAppend<cr>", "Visual Append (after)" },
-        b = { ":<C-u>'<,'>GpPrepend<cr>", "Visual Prepend (before)" },
-        i = { ":<C-u>'<,'>GpImplement<cr>", "Implement selection" },
+    r = { ":<C-u>'<,'>GpRewrite<cr>", "Visual Rewrite" },
+    a = { ":<C-u>'<,'>GpAppend<cr>", "Visual Append (after)" },
+    b = { ":<C-u>'<,'>GpPrepend<cr>", "Visual Prepend (before)" },
+    i = { ":<C-u>'<,'>GpImplement<cr>", "Implement selection" },
 
-        g = {
-            name = "generate into new ..",
-            p = { ":<C-u>'<,'>GpPopup<cr>", "Visual Popup" },
-            e = { ":<C-u>'<,'>GpEnew<cr>", "Visual GpEnew" },
-            n = { ":<C-u>'<,'>GpNew<cr>", "Visual GpNew" },
-            v = { ":<C-u>'<,'>GpVnew<cr>", "Visual GpVnew" },
-            t = { ":<C-u>'<,'>GpTabnew<cr>", "Visual GpTabnew" },
-        },
-
-        n = { "<cmd>GpNextAgent<cr>", "Next Agent" },
-        s = { "<cmd>GpStop<cr>", "GpStop" },
-        x = { ":<C-u>'<,'>GpContext<cr>", "Visual GpContext" },
+    g = {
+      name = "generate into new ..",
+      p = { ":<C-u>'<,'>GpPopup<cr>", "Visual Popup" },
+      e = { ":<C-u>'<,'>GpEnew<cr>", "Visual GpEnew" },
+      n = { ":<C-u>'<,'>GpNew<cr>", "Visual GpNew" },
+      v = { ":<C-u>'<,'>GpVnew<cr>", "Visual GpVnew" },
+      t = { ":<C-u>'<,'>GpTabnew<cr>", "Visual GpTabnew" },
     },
+
+    n = { "<cmd>GpNextAgent<cr>", "Next Agent" },
+    s = { "<cmd>GpStop<cr>", "GpStop" },
+    x = { ":<C-u>'<,'>GpContext<cr>", "Visual GpContext" },
+  },
 }
 local opts_v = { prefix = '<leader>', mode = 'v' }
 wk.register(visual_mappings, opts_v)
@@ -900,11 +920,11 @@ null_ls.setup({
 
 -- Function to check line count and disable LSP if above threshold
 function Check_line_count()
-    local line_count = vim.fn.line('$')
-    if line_count > 10000 then
-        print("Disabling LSP for large file...")
-        vim.lsp.stop_client()
-    end
+  local line_count = vim.fn.line('$')
+  if line_count > 10000 then
+    print("Disabling LSP for large file...")
+    vim.lsp.stop_client()
+  end
 end
 
 -- Automatically check line count on BufEnter event
