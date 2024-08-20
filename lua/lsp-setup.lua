@@ -15,39 +15,39 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
- function YankCodeBlock()
-     local ts_utils = require'nvim-treesitter.ts_utils'
-     local parser = vim.treesitter.get_parser(0, "markdown")
-     local tree = parser:parse()[1]
-     local root = tree:root()
+  function YankCodeBlock()
+    local ts_utils = require 'nvim-treesitter.ts_utils'
+    local parser = vim.treesitter.get_parser(0, "markdown")
+    local tree = parser:parse()[1]
+    local root = tree:root()
 
-     local node = ts_utils.get_node_at_cursor()
-     if node == nil then
-         print("No node at cursor position")
-         return
-     end
+    local node = ts_utils.get_node_at_cursor()
+    if node == nil then
+      print("No node at cursor position")
+      return
+    end
 
-     while node do
-         -- Check if the node is a fenced_code_block (depends on the parser grammar)  
-         local node_type = node:type()
-         if node_type == 'fence_block' or node_type == 'code_block' then
-             local start_row, start_col, end_row, end_col = node:range()
+    while node do
+      -- Check if the node is a fenced_code_block (depends on the parser grammar)
+      local node_type = node:type()
+      if node_type == 'fence_block' or node_type == 'code_block' then
+        local start_row, start_col, end_row, end_col = node:range()
 
-             -- Select the code block
-             vim.api.nvim_win_set_cursor(0, {start_row + 1, start_col})
-             vim.cmd('normal! v')
+        -- Select the code block
+        vim.api.nvim_win_set_cursor(0, { start_row + 1, start_col })
+        vim.cmd('normal! v')
 
-             local end_position = vim.api.nvim_buf_line_count(0) == end_row and end_col or end_col + 1
-             vim.api.nvim_win_set_cursor(0, {end_row + 1, end_position})
-             vim.cmd('normal! y')
-             print("Code block yanked")
-             return
-         end
-         node = node:parent()  -- Move to the parent node
-     end
+        local end_position = vim.api.nvim_buf_line_count(0) == end_row and end_col or end_col + 1
+        vim.api.nvim_win_set_cursor(0, { end_row + 1, end_position })
+        vim.cmd('normal! y')
+        print("Code block yanked")
+        return
+      end
+      node = node:parent()    -- Move to the parent node
+    end
 
-     print("No code block found")
- end
+    print("No code block found")
+  end
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -529,10 +529,37 @@ end
 local nvim_config_path = os.getenv("XDG_CONFIG_HOME") .. "/nvim"
 
 local insert_mappings = {
-  ["<C-k>"] = {'<cmd>lua vim.lsp.buf.hover()<cr>', 'Hover Commands'}
+  ["<C-k>"] = { '<cmd>lua vim.lsp.buf.hover()<cr>', 'Hover Commands' }
 }
 local insert_opts = { mode = "i" }
 wk.register(insert_mappings, insert_opts)
+
+local function patternReplaceIncrement()
+    -- Prompt the user for the pattern and replacement text
+    local pattern = vim.fn.input("Pattern to replace: ")
+
+    -- Initialize the increment variable
+    local i = 1
+
+    -- Define a function to perform the replacement
+    local function replace_line(line_num)
+        local line = vim.fn.getline(line_num)
+        if line:find(pattern) then
+            -- Create the replacement text with the current increment
+            local replacement = pattern .. "_" .. i
+            -- Perform the substitution in the line
+            local new_line = line:gsub(pattern, replacement)
+            vim.fn.setline(line_num, new_line)
+            -- Increment the counter
+            i = i + 1
+        end
+    end
+
+    -- Iterate over all lines in the buffer
+    for line_num = 1, vim.fn.line('$') do
+        replace_line(line_num)
+    end
+end
 
 local normal_mappings = {
   q = { ":bn<bar>bd #<CR>", "Close Buffer" },
@@ -647,6 +674,10 @@ local normal_mappings = {
     i = { ":LspInfo<cr>", "Connected Language Servers" },
     k = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "Signature Help" },
     K = { "<cmd>lua vim.lsp.buf.hover()<cr>", "Hover Commands" },
+    b = {
+      patternReplaceIncrement,
+      "Replace Pattern Increment"
+    },
     w = {
       '<cmd>lua vim.lsp.buf.add_workspace_folder()<cr>',
       "Add Workspace Folder"
@@ -677,13 +708,13 @@ local normal_mappings = {
   r = {
     name = "Run",
     a = {
-    name = "Active",
-     p = { "<C-W>v<C-W>l<cmd>term python %<cr>", "python active file" },
-     i = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
-     j = { "<C-W>s<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
-     b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" },
-     s = { UpdateMainPython, "Update Main Python File" },
-     m = { RunMainPython, "Run MainPythonFile" },
+      name = "Active",
+      p = { "<C-W>v<C-W>l<cmd>term python %<cr>", "python active file" },
+      i = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
+      j = { "<C-W>s<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
+      b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" },
+      s = { UpdateMainPython, "Update Main Python File" },
+      m = { RunMainPython, "Run MainPythonFile" },
     },
     b = { ":vs <bar>term . build.sh<cr>", "./build.sh" },
     p = {
@@ -854,33 +885,33 @@ local visual_mappings = {
     c = { ":w !wc -w<CR>", "Word Count" },
   },
   -- nvimgp ChatGPT: visual mode
-      p = {
-        c = { ":<C-u>'<,'>GpChatNew<cr>", "Visual Chat New" },
-        p = { ":<C-u>'<,'>GpChatPaste<cr>", "Visual Chat Paste" },
-        t = { ":<C-u>'<,'>GpChatToggle<cr>", "Visual Toggle Chat" },
+  p = {
+    c = { ":<C-u>'<,'>GpChatNew<cr>", "Visual Chat New" },
+    p = { ":<C-u>'<,'>GpChatPaste<cr>", "Visual Chat Paste" },
+    t = { ":<C-u>'<,'>GpChatToggle<cr>", "Visual Toggle Chat" },
 
-        ["<C-x>"] = { ":<C-u>'<,'>GpChatNew split<cr>", "Visual Chat New split" },
-        ["<C-v>"] = { ":<C-u>'<,'>GpChatNew vsplit<cr>", "Visual Chat New vsplit" },
-        ["<C-t>"] = { ":<C-u>'<,'>GpChatNew tabnew<cr>", "Visual Chat New tabnew" },
+    ["<C-x>"] = { ":<C-u>'<,'>GpChatNew split<cr>", "Visual Chat New split" },
+    ["<C-v>"] = { ":<C-u>'<,'>GpChatNew vsplit<cr>", "Visual Chat New vsplit" },
+    ["<C-t>"] = { ":<C-u>'<,'>GpChatNew tabnew<cr>", "Visual Chat New tabnew" },
 
-        r = { ":<C-u>'<,'>GpRewrite<cr>", "Visual Rewrite" },
-        a = { ":<C-u>'<,'>GpAppend<cr>", "Visual Append (after)" },
-        b = { ":<C-u>'<,'>GpPrepend<cr>", "Visual Prepend (before)" },
-        i = { ":<C-u>'<,'>GpImplement<cr>", "Implement selection" },
+    r = { ":<C-u>'<,'>GpRewrite<cr>", "Visual Rewrite" },
+    a = { ":<C-u>'<,'>GpAppend<cr>", "Visual Append (after)" },
+    b = { ":<C-u>'<,'>GpPrepend<cr>", "Visual Prepend (before)" },
+    i = { ":<C-u>'<,'>GpImplement<cr>", "Implement selection" },
 
-        g = {
-            name = "generate into new ..",
-            p = { ":<C-u>'<,'>GpPopup<cr>", "Visual Popup" },
-            e = { ":<C-u>'<,'>GpEnew<cr>", "Visual GpEnew" },
-            n = { ":<C-u>'<,'>GpNew<cr>", "Visual GpNew" },
-            v = { ":<C-u>'<,'>GpVnew<cr>", "Visual GpVnew" },
-            t = { ":<C-u>'<,'>GpTabnew<cr>", "Visual GpTabnew" },
-        },
-
-        n = { "<cmd>GpNextAgent<cr>", "Next Agent" },
-        s = { "<cmd>GpStop<cr>", "GpStop" },
-        x = { ":<C-u>'<,'>GpContext<cr>", "Visual GpContext" },
+    g = {
+      name = "generate into new ..",
+      p = { ":<C-u>'<,'>GpPopup<cr>", "Visual Popup" },
+      e = { ":<C-u>'<,'>GpEnew<cr>", "Visual GpEnew" },
+      n = { ":<C-u>'<,'>GpNew<cr>", "Visual GpNew" },
+      v = { ":<C-u>'<,'>GpVnew<cr>", "Visual GpVnew" },
+      t = { ":<C-u>'<,'>GpTabnew<cr>", "Visual GpTabnew" },
     },
+
+    n = { "<cmd>GpNextAgent<cr>", "Next Agent" },
+    s = { "<cmd>GpStop<cr>", "GpStop" },
+    x = { ":<C-u>'<,'>GpContext<cr>", "Visual GpContext" },
+  },
 }
 local opts_v = { prefix = '<leader>', mode = 'v' }
 wk.register(visual_mappings, opts_v)
@@ -900,11 +931,11 @@ null_ls.setup({
 
 -- Function to check line count and disable LSP if above threshold
 function Check_line_count()
-    local line_count = vim.fn.line('$')
-    if line_count > 10000 then
-        print("Disabling LSP for large file...")
-        vim.lsp.stop_client()
-    end
+  local line_count = vim.fn.line('$')
+  if line_count > 10000 then
+    print("Disabling LSP for large file...")
+    vim.lsp.stop_client()
+  end
 end
 
 -- Automatically check line count on BufEnter event
