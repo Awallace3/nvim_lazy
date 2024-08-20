@@ -161,6 +161,23 @@ RunMainPython = function()
   vim.cmd("term python " .. MainPythonFile)
 end
 
+MainbashFile = "run.sh"
+UpdateMainbash = function()
+  -- get active buffer's file path and name and update global variable MainbashFile
+  MainbashFile = vim.fn.expand("%:t")
+  print("Main bash File Updated to: " .. MainbashFile)
+end
+
+RunMainbash = function()
+  print("Running Main bash File: " .. MainbashFile)
+  -- split widnow and run bash file
+
+  vim.cmd("vs")
+  -- move to right buffer
+  vim.cmd("wincmd l")
+  -- run bash file
+  vim.cmd("term bash " .. MainbashFile)
+end
 
 
 -- conda_env_path = vim.fn.expand("~/miniconda3/envs/p4dev18/bin")
@@ -227,8 +244,9 @@ mason_lspconfig.setup_handlers {
   end,
   ["rust_analyzer"] = function()
     lspconfig.rust_analyzer.setup {
-      on_attach = on_attach,
-      capabilities = capabilities,
+      on_attach = function(client, bufnr)
+        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+      end,
       settings = {
         ["rust-analyzer"] = {
           imports = {
@@ -709,12 +727,14 @@ local normal_mappings = {
     name = "Run",
     a = {
       name = "Active",
-      p = { "<C-W>v<C-W>l<cmd>term python %<cr>", "python active file" },
-      i = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
-      j = { "<C-W>s<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
-      b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" },
-      s = { UpdateMainPython, "Update Main Python File" },
-      m = { RunMainPython, "Run MainPythonFile" },
+     p = { "<C-W>v<C-W>l<cmd>term python %<cr>", "python active file" },
+     i = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
+     j = { "<C-W>s<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
+     b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" },
+     s = { UpdateMainPython, "Update Main Python File" },
+     S = { UpdateMainbash, "Update Main bash File" },
+     m = { RunMainPython, "Run MainPythonFile" },
+     M = { RunMainbash, "Run Mainbash" },
     },
     b = { ":vs <bar>term . build.sh<cr>", "./build.sh" },
     p = {
@@ -766,7 +786,7 @@ local normal_mappings = {
         "mpiexec active 4 python3"
       },
       d = {
-        "<C-W>v<C-W>l<cmd>term mpiexec -n 4 python3 -u % --level_theories SAPT_DFT_pbe0_adz<cr>",
+        "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 -u % --level_theories SAPT_DFT_pbe0_aqz<cr>",
         "mpiexec active 4 python3"
       },
       -- a = {
