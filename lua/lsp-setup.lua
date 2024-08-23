@@ -43,7 +43,7 @@ local on_attach = function(_, bufnr)
         print("Code block yanked")
         return
       end
-      node = node:parent() -- Move to the parent node
+      node = node:parent()    -- Move to the parent node
     end
 
     print("No code block found")
@@ -552,6 +552,33 @@ local insert_mappings = {
 local insert_opts = { mode = "i" }
 wk.register(insert_mappings, insert_opts)
 
+local function patternReplaceIncrement()
+    -- Prompt the user for the pattern and replacement text
+    local pattern = vim.fn.input("Pattern to replace: ")
+
+    -- Initialize the increment variable
+    local i = 1
+
+    -- Define a function to perform the replacement
+    local function replace_line(line_num)
+        local line = vim.fn.getline(line_num)
+        if line:find(pattern) then
+            -- Create the replacement text with the current increment
+            local replacement = pattern .. "_" .. i
+            -- Perform the substitution in the line
+            local new_line = line:gsub(pattern, replacement)
+            vim.fn.setline(line_num, new_line)
+            -- Increment the counter
+            i = i + 1
+        end
+    end
+
+    -- Iterate over all lines in the buffer
+    for line_num = 1, vim.fn.line('$') do
+        replace_line(line_num)
+    end
+end
+
 local normal_mappings = {
   q = { ":bn<bar>bd #<CR>", "Close Buffer" },
   Q = { ":wq<cr>", "Save & Quit" },
@@ -665,6 +692,10 @@ local normal_mappings = {
     i = { ":LspInfo<cr>", "Connected Language Servers" },
     k = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "Signature Help" },
     K = { "<cmd>lua vim.lsp.buf.hover()<cr>", "Hover Commands" },
+    b = {
+      patternReplaceIncrement,
+      "Replace Pattern Increment"
+    },
     w = {
       '<cmd>lua vim.lsp.buf.add_workspace_folder()<cr>',
       "Add Workspace Folder"
