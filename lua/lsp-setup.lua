@@ -844,6 +844,16 @@ local normal_mappings = {
       ":vs<bar>term lscpu | grep -E '^Thread|^Core|^Socket|^CPU\\('<cr>",
       "lscpu grep"
     },
+    h = {
+      N = { ":TimerStart ", "Timer Start Template"},
+      n = { "<cmd>TimerStart 45m<CR>", "Timer Start 45m"},
+      h = { "<cmd>TimerHide<cr>", "Timer Hide" },
+      s = { "<cmd>TimerShow<cr>", "Timer Show" },
+      m = { "<cmd>TimerSession m<cr>", "TimerSession main" },
+      w = { "<cmd>TimerSession writing<cr>", "TimerSession writing" },
+      p = { "<cmd>TimerPause<cr>", "Timer Pause" },
+      r = { "<cmd>TimerResume<cr>", "Timer Resume" },
+    },
     r = { ':lua require("neotest").run.run()<CR>', "Neotest Pytest" },
     a = { ':lua require("neotest").run.run(vim.fn.expand("%f"))<CR>', "Neotest Pytest Active" },
     v = { ':lua require("neotest").run.attach()<CR>', "Neotest Attach" },
