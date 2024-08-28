@@ -3,6 +3,12 @@ return {
   dependencies = { "vhyrro/luarocks.nvim" },
   config = function()
     -- default config
+    -- check if magick is installed
+    -- if not, do not require images
+    local magick_ok, magick = pcall(require, "magick")
+    if not magick_ok then
+      return
+    end
     require("image").setup({
       backend = "kitty",
       integrations = {
