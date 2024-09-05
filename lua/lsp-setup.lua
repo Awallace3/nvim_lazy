@@ -207,6 +207,62 @@ end
 
 UserHome = vim.fn.expand("$HOME")
 
+
+
+function Get_visual_selection()
+    local s_start = vim.fn.getpos("'<")
+    local s_end = vim.fn.getpos("'>")
+    local n_lines = math.abs(s_end[2] - s_start[2]) + 1
+    local lines = vim.api.nvim_buf_get_lines(0, s_start[2] - 1, s_end[2], false)
+    lines[1] = string.sub(lines[1], s_start[3], -1)
+    if n_lines == 1 then
+        lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3] - s_start[3] + 1)
+    else
+        lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3])
+    end
+    return table.concat(lines, '\n')
+end
+
+function Write_coords_to_tmp_xyz(coords)
+    os.remove("tmp.xyz")
+    local file = io.open("tmp.xyz", "w")
+
+    if file == nil then
+        print("Error opening file")
+        return
+    end
+    -- print("Writing to file")
+    local n_atoms = 0
+    for _ in coords:gmatch("[^\r\n]+") do
+        n_atoms = n_atoms + 1
+    end
+    print(coords)
+    file:write(n_atoms)
+    file:write("\n\n")
+    file:write(coords)
+    file:write("\n")
+    file:close()
+end
+
+function Jmol_visual_xyz()
+    local coords = Get_visual_selection()
+    Write_coords_to_tmp_xyz(coords)
+    print("Running jmol")
+    print("jmol tmp.xyz")
+    io.popen("jmol tmp.xyz")
+end
+
+function Pymol_visual_xyz()
+    local coords = Get_visual_selection()
+    Write_coords_to_tmp_xyz(coords)
+    print("Running Pymol")
+    print("pymol tmp.xyz")
+    vim.cmd [[
+        vs
+        term pymol tmp.xyz
+    ]]
+end
+
 mason_lspconfig.setup_handlers {
   function(server_name)
     require('lspconfig')[server_name].setup {
@@ -579,6 +635,15 @@ local function patternReplaceIncrement()
     end
 end
 
+local function capture_and_copy(cmd)
+  -- Create a command to redirect the output to a variable
+  local output = vim.api.nvim_exec(cmd, true)
+
+  -- Copy the output to the clipboard
+  vim.fn.setreg('+', output)
+end
+
+
 local normal_mappings = {
   q = { ":bn<bar>bd #<CR>", "Close Buffer" },
   Q = { ":wq<cr>", "Save & Quit" },
@@ -596,6 +661,8 @@ local normal_mappings = {
     e = { ":e " .. nvim_config_path .. "/init.lua<cr>", "Edit config" },
     O = { ":vs<bar>e " .. nvim_config_path .. "/lua/options.lua<cr>", "Edit Options" },
     o = { ":e " .. nvim_config_path .. "/lua/options.lua<cr>", "Edit Options" },
+    b = { ":e ~/.bashrc<cr>", "Edit .bashrc" },
+    z = { ":e ~/.zshrc<cr>", "Edit .zshrc" },
     c = { ":e " .. nvim_config_path .. "/lua/chatgpt-config.lua<cr>", "Edit config" },
     W = {
       ":vs<bar>e " .. nvim_config_path .. "/lua/whichkey-config/init.lua<cr>",
@@ -678,6 +745,7 @@ local normal_mappings = {
     d = { ":Telescope help_tags<cr>", "Telescope Help Tags" },
     -- p = { ":redir @+ | echo expand('%:p') | redir END<CR>", "Current File Path" },
     p = { ":echo expand('%:p')<CR>", "Current File Path" },
+    P = { capture_and_copy, "Current File Path 2 Clipboard" },
     t = { get_filetype, "Current File Path" },
     -- i = { harpoon_nav_file, "Harpoon Index" },
   },
@@ -941,7 +1009,10 @@ local visual_mappings = {
     n = { "<cmd>GpNextAgent<cr>", "Next Agent" },
     s = { "<cmd>GpStop<cr>", "GpStop" },
     x = { ":<C-u>'<,'>GpContext<cr>", "Visual GpContext" },
+    v = { ": lua Pymol_visual_xyz()<CR>", "Pymol Visual XYZ" },
+    j = { ": lua Jmol_visual_xyz()<CR>", "JMol Visual XYZ" },
   },
+
 }
 local opts_v = { prefix = '<leader>', mode = 'v' }
 wk.register(visual_mappings, opts_v)
