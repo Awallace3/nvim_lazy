@@ -120,7 +120,8 @@ local servers = {
       -- diagnostics = { disable = { 'missing-fields' } },
     },
   },
-  jedi_language_server = {},
+  -- jedi_language_server = {},
+  pylsp = {},
 }
 
 -- Setup neovim lua configuration
@@ -508,7 +509,7 @@ local PytestPythonFunction = function()
   end
   local cmd = "vs"
   vim.cmd(cmd)
-  cmd = "term pytest " .. fname .. " -k '" .. function_name .. "'"
+  cmd = "term pytest " .. fname .. " --basetemp=tmp -k '" .. function_name .. "'"
   print(cmd)
   vim.cmd(cmd)
   print("R:" .. function_name)
