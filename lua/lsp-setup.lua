@@ -15,39 +15,39 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
- function YankCodeBlock()
-     local ts_utils = require'nvim-treesitter.ts_utils'
-     local parser = vim.treesitter.get_parser(0, "markdown")
-     local tree = parser:parse()[1]
-     local root = tree:root()
+  function YankCodeBlock()
+    local ts_utils = require 'nvim-treesitter.ts_utils'
+    local parser = vim.treesitter.get_parser(0, "markdown")
+    local tree = parser:parse()[1]
+    local root = tree:root()
 
-     local node = ts_utils.get_node_at_cursor()
-     if node == nil then
-         print("No node at cursor position")
-         return
-     end
+    local node = ts_utils.get_node_at_cursor()
+    if node == nil then
+      print("No node at cursor position")
+      return
+    end
 
-     while node do
-         -- Check if the node is a fenced_code_block (depends on the parser grammar)  
-         local node_type = node:type()
-         if node_type == 'fence_block' or node_type == 'code_block' then
-             local start_row, start_col, end_row, end_col = node:range()
+    while node do
+      -- Check if the node is a fenced_code_block (depends on the parser grammar)
+      local node_type = node:type()
+      if node_type == 'fence_block' or node_type == 'code_block' then
+        local start_row, start_col, end_row, end_col = node:range()
 
-             -- Select the code block
-             vim.api.nvim_win_set_cursor(0, {start_row + 1, start_col})
-             vim.cmd('normal! v')
+        -- Select the code block
+        vim.api.nvim_win_set_cursor(0, { start_row + 1, start_col })
+        vim.cmd('normal! v')
 
-             local end_position = vim.api.nvim_buf_line_count(0) == end_row and end_col or end_col + 1
-             vim.api.nvim_win_set_cursor(0, {end_row + 1, end_position})
-             vim.cmd('normal! y')
-             print("Code block yanked")
-             return
-         end
-         node = node:parent()  -- Move to the parent node
-     end
+        local end_position = vim.api.nvim_buf_line_count(0) == end_row and end_col or end_col + 1
+        vim.api.nvim_win_set_cursor(0, { end_row + 1, end_position })
+        vim.cmd('normal! y')
+        print("Code block yanked")
+        return
+      end
+      node = node:parent()    -- Move to the parent node
+    end
 
-     print("No code block found")
- end
+    print("No code block found")
+  end
 
   nmap('gd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
   nmap('gr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
@@ -111,7 +111,7 @@ local servers = {
   julials = {},
   ltex = {},
   texlab = {},
-  yamlls = {},
+  -- yamlls = {},
   lua_ls = {
     Lua = {
       workspace = { checkThirdParty = false },
@@ -357,14 +357,21 @@ lspconfig.clangd.setup {
   capabilities = capabilities
 }
 
-require('which-key').register {
-  ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-  ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-  ['<leader>g'] = { name = '[G]it', _ = 'which_key_ignore' },
-  ['<leader>h'] = { name = 'More git', _ = 'which_key_ignore' },
-  ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-  ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-  ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+require('which-key').add {
+  { "<leader>c",  group = "[C]ode" },
+  { "<leader>c_", hidden = true },
+  { "<leader>d",  group = "[D]ocument" },
+  { "<leader>d_", hidden = true },
+  { "<leader>g",  group = "[G]it" },
+  { "<leader>g_", hidden = true },
+  { "<leader>h",  group = "More git" },
+  { "<leader>h_", hidden = true },
+  { "<leader>r",  group = "[R]ename" },
+  { "<leader>r_", hidden = true },
+  { "<leader>s",  group = "[S]earch" },
+  { "<leader>s_", hidden = true },
+  { "<leader>w",  group = "[W]orkspace" },
+  { "<leader>w_", hidden = true },
 }
 
 local wk = require("which-key")
@@ -511,339 +518,184 @@ end
 local nvim_config_path = os.getenv("XDG_CONFIG_HOME") .. "/nvim"
 
 local normal_mappings = {
-  q = { ":bn<bar>bd #<CR>", "Close Buffer" },
-  Q = { ":wq<cr>", "Save & Quit" },
-  x = { ":bdelete<cr>", "Close" },
-  d = {
-    name = "Database",
-    u = { "<Cmd>DBUIToggle<Cr>", "Toggle UI" },
-    f = { "<Cmd>DBUIFindBuffer<Cr>", "Find buffer" },
-    r = { "<Cmd>DBUIRenameBuffer<Cr>", "Rename buffer" },
-    q = { "<Cmd>DBUILastQueryInfo<Cr>", "Last query info" },
-  },
-  e = {
-    name = "Edit Config",
-    E = { ":vs<bar>e " .. nvim_config_path .. "/init.lua<cr>", "Edit config" },
-    e = { ":e " .. nvim_config_path .. "/init.lua<cr>", "Edit config" },
-    O = { ":vs<bar>e " .. nvim_config_path .. "/lua/options.lua<cr>", "Edit Options" },
-    o = { ":e " .. nvim_config_path .. "/lua/options.lua<cr>", "Edit Options" },
-    c = { ":e " .. nvim_config_path .. "/lua/chatgpt-config.lua<cr>", "Edit config" },
-    W = {
-      ":vs<bar>e " .. nvim_config_path .. "/lua/whichkey-config/init.lua<cr>",
-      "Edit config"
-    },
-    p = {
-      ":e " .. nvim_config_path .. "/lua/custom/plugins<cr>",
-      "Edit Plugins"
-    },
-    P = {
-      ":vs<bar>e " .. nvim_config_path .. "/lua/custom/plugins<cr>",
-      "Edit Plugins"
-    },
-    s = { ":e " .. nvim_config_path .. "/snippets<cr>", "Edit config" },
-    S = {
-      ":vs<bar>e " .. nvim_config_path .. "/lua/luasnip-config.lua<bar>40<cr>",
-      "Edit Snippets"
-    },
-    l = {
-      ":e " .. nvim_config_path .. "/lua/lsp-setup.lua<cr>",
-      "Edit lsp"
-    },
-    L = {
-      ":vs<bar>e " .. nvim_config_path .. "/lua/lsp-setup.lua<cr>",
-      "Edit lsp (split)"
-    },
-    m = {
-      ":e " .. nvim_config_path .. "/lua/cmp-setup.lua<cr>",
-      "Edit cmp"
-    },
-    M = {
-      ":vs<bar>e " .. nvim_config_path .. "/lua/cmp-setup.lua<cr>",
-      "Edit cmp (split)"
-    },
-    f = { ":e " .. nvim_config_path .. "/nvim_simplified<cr>", "Edit Last" },
-    -- S = {":vs<bar>e ~/.config/nvim/snippets<cr>", "Edit config"}
-  },
-  F = { Formatter, "Format Buffer" },
-  g = {
-    -- gitgutter
-    name = "Git",
-    d = { ":Git difftool<cr>", "Git Diff" },
-    -- n = { ":GitGutterNextHunk<cr>", "Next Hunk" },
-    -- p = { ":GitGutterPrevHunk<cr>", "Prev Hunk" },
-    -- a = { ":GitGutterStageHunk<cr>", "Stage Hunk" },
-    -- u = { ":GitGutterUndoHunk<cr>", "Undo Hunk" },
-    -- vimaget
-    -- s = {":Magit<cr>", "Git Status"},
-    s = { ":lua require('neogit').open()<CR>", "Git Status" },
-    S = { ":lua require('neogit').open({ cwd = vim.fn.expand('%:p:h')})<CR>", "Git Status" },
-    -- t = {":lua require('neogit')", "Git Status"},
-    -- fugitive
-    P = { ":Git push<cr>", "Git Push" },
-    b = { ":Git blame<cr>", "Git Blame" },
-    c = { ":Git commit<bar>:startinsert<cr>", "Git Commit" },
-    af = { ":Gw<cr>", "Add File" }
-  },
-  i = {
-    name = "Insert",
-    -- t = {'o* [○] ', "Insert Task"},
-    t = { 'o* [ ] ', "Insert Task" },
-  },
-  -- h = {
-  --     name = "Harpoon",
-  --     i = { harpoon_nav_file, "Harpoon Index" },
-  --     n = { ':lua require("harpoon.ui").nav_next()<cr>', "Harpoon Next" },
-  --     p = { ':lua require("harpoon.ui").nav_prev()<cr>', "Harpoon Previous" },
-  --
-  -- },
-  f = {
-    name = "Find",
-    a = { ':lua require("harpoon.mark").add_file()<cr>', "Harpoon Add" },
-    m = { ':lua require("harpoon.ui").toggle_quick_menu()<cr>', "Harpoon Menu" },
-    f = { ":Telescope find_files<cr>", "Telescope Find Files" },
-    r = { ":Telescope live_grep<cr>", "Telescope Live Grep" },
-    F = { find_files_different_root, "Telescope Find Files" },
-    R = { grep_files_different_root, "Telescope Live Grep" },
-    b = { ":Telescope buffers<cr>", "Telescope Buffers" },
-    h = { ':Telescope harpoon marks<cr>', "Telescope Harpoon" },
-    d = { ":Telescope help_tags<cr>", "Telescope Help Tags" },
-    -- p = { ":redir @+ | echo expand('%:p') | redir END<CR>", "Current File Path" },
-    p = { ":echo expand('%:p')<CR>", "Current File Path" },
-    t = { get_filetype, "Current File Path" },
-    -- i = { harpoon_nav_file, "Harpoon Index" },
-  },
-  -- n = { ":Neotree toggle<cr>", "Neotree Toggle" },
-  -- n = { ":Lexplore<cr>", "Lexplore Toggle" },
-  n = { ":NvimTreeToggle<cr>", "Tree Toggle" },
-  -- p = { s = { ":w<bar>so %<bar>PackerSync<cr>", "PackerSync" } },
-  -- t = {name = '+terminal', t = {":FloatermNew --wintype=popup --height=6", "terminal"}},
-  l = {
-    name = "LSP",
-    i = { ":LspInfo<cr>", "Connected Language Servers" },
-    k = { "<cmd>lua vim.lsp.buf.signature_help()<cr>", "Signature Help" },
-    K = { "<cmd>lua vim.lsp.buf.hover()<cr>", "Hover Commands" },
-    w = {
-      '<cmd>lua vim.lsp.buf.add_workspace_folder()<cr>',
-      "Add Workspace Folder"
-    },
-    W = {
-      '<cmd>lua vim.lsp.buf.remove_workspace_folder()<cr>',
-      "Remove Workspace Folder"
-    },
-    l = {
-      '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<cr>',
-      "List Workspace Folders"
-    },
-    L = {
-      ':LspLog<cr>',
-      "LSP LOG"
-    },
-    t = { '<cmd>lua vim.lsp.buf.type_definition()<cr>', "Type Definition" },
-    e = { '<cmd>lua vim.diagnostic.open_float()<cr>', "Diag. Msg." },
-    d = { '<cmd>lua vim.lsp.buf.definition()<cr>', "Go To Definition" },
-    D = { '<cmd>vs<bar>lua vim.lsp.buf.definition()<cr>', "Go To Definition" },
-    -- D = {'<cmd>lua vim.lsp.buf.declaration()<cr>', "Go To Declaration"},
-    r = { '<cmd>lua vim.lsp.buf.references()<cr>', "References" },
-    R = { '<cmd>lua vim.lsp.buf.rename()<cr>', "Rename Variable" },
-    a = { '<cmd>lua vim.lsp.buf.code_action()<cr>', "Code Action" },
-    T = { ':lua require("lsp_lines").toggle()<cr>', "Toggle lsp_lines" },
-    z = { ':LspRestart<cr>', "LspRestart" },
-  },
-  r = {
-    name = "Run",
-    a = {
-    name = "Active",
-     p = { "<C-W>v<C-W>l<cmd>term python %<cr>", "python active file" },
-     i = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
-     j = { "<C-W>s<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "python3 active file" },
-     b = { "<C-W>v<C-W>l<cmd>term bash %<cr>", "bash active file" }
-    },
-    b = { ":vs <bar>term . build.sh<cr>", "./build.sh" },
-    p = {
-      -- b = { ":vs <bar>term cd ../.. && bash build.sh<cr>", "build psi4" },
-      b = { ":vs <bar>term cd .. && bash build.sh<cr>", "build psi4" },
-      p = { ":vs<bar>term psi4 input.dat<cr>", "psi4 input.dat" },
-      m = { "<C-W>v<C-W>l<cmd>term python3 mpi_jobs.py<cr>", "python3 mpi_jobs.py" },
-      a = { ":vs<bar>term psi4 -n8 /theoryfs2/ds/amwalla3/projects/test_asapt/asapt.dat<cr>", "psi4 asapt.dat" },
-      o = { ":vs<bar>e /theoryfs2/ds/amwalla3/projects/test_asapt/asapt.out<cr>", "psi4 asapt.dat" },
-      d = { ":vs<bar>term python3 ~/data/sapt_dft_testing/water_test.py<cr>", "saptdft testing" },
-    },
-    B = { ":vs <bar>term cd src/dispersion && bash build.sh<cr>", "./build.sh" },
-    d = { ":vs <bar>term make build_and_test<cr>", "dftd4 build and run" },
-    f = { ":vs <bar>term flask --app cdsg run --debug<cr>", "Run csdg" },
-    r = { ":vs <bar>term cargo run <cr>", "cargo run" },
-    s = { ":vs <bar>term swift %<cr>", "swift main.swift" },
-    j = { ":vs <bar>term julia main.jl<cr>", "julia main.jl" },
-    -- RUN TESTS
-    t = {
-      t = { "<C-W>v<C-W>l<cmd>term python3 tmp.py<cr>", "python3 tmp.py" },
-      p = { ":vs<bar>term pytest tests.py<cr>", "PyTest" },
-      k = { ":vs<bar>term pytest tests.py -k 'test_ATM_water'<cr>", "PyTest" },
-      l = { PytestPythonFunction, "PyTest Specific" },
-      o = { ":vs<bar>term python3 tests.py<cr>", "run tests.py" }
-    },
-    m = {
-      m = { ":vs<bar>term make<cr>", "make" },
-      d = { ":vs<bar>term make debug<cr>", "make" },
-      t = { ":vs<bar>term make t", "make" },
-
-    },
-    n = { initJypterSession, "Init Jupyter Session" },
-    I = {
-      ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --sf_components --verbosity=1 <cr>",
-      "mpiexec main.py"
-    },
-    i = {
-      a = {
-        "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 -u %<cr>",
-        "mpiexec active python3"
-      },
-      -- a = {
-      --   ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet_vina' --system='proteinHs_ligandPQR' --testing --verbosity=1<cr>",
-      --   "mpiexec main.py"
-      -- },
-      i = {
-        ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet' --system='proteinHs_ligandPQR' --testing <cr>",
-        "mpiexec main.py"
-      },
-      r = {
-        ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --verbosity=1 <cr>",
-        "mpiexec main.py"
-      },
-      c = {
-        ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --sf_components --verbosity=1 <cr>",
-        "mpiexec main.py"
-      },
-    },
-    c = {
-      ":vs<bar>term mpiexec -n 1 python3 -u create_db.py<cr>",
-      "mpiexec create_db.py"
-    },
-    h = {
-      ":vs<bar>term mpirun -n 8 --machinefile machineFile python3 -u mpi_jobs.py<cr>",
-      "mpiexec main.py"
-    },
-    u = {
-      ":vs<bar>term mpiexec -n 2 python3 -u main.py<cr>",
-      "mpiexec main.py"
-    },
-    k = {
-      ":vs<bar>term mpiexec -n 2 python3 -u %<cr>",
-      "mpiexec active"
-    },
-    A = { "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", "run active file" },
-    P = { "<C-W>v<C-W>l<cmd>term python3 main.py<cr>", "python3 main.py" },
-  },
-  s = {
-    name = '[S]earch', _ = 'which_key_ignore'
-  },
-  t = {
-    name = "Terminal",
-    t = { ":term<cr>", "Terminal" },
-    T = { ":vs<bar>term<cr>", "Split+Terminal" },
-    -- f = { toggle_float, "Floating Terminal" },
-    -- l = {toggle_lazygit, "LazyGit"},
-    -- y = { toggle_top, "top" },
-    -- m = {toggle_neomutt, "NeoMutt"},
-    d = {
-      ":!dftd4 tmp.xyz --json t.json --param 1.0 0.9171 0.3385 2.883<cr>",
-      "dftd4 test"
-    },
-    c = {
-      ":vs<bar>term lscpu | grep -E '^Thread|^Core|^Socket|^CPU\\('<cr>",
-      "lscpu grep"
-    },
-    r = { ':lua require("neotest").run.run()<CR>', "Neotest Pytest" },
-    a = { ':lua require("neotest").run.run(vim.fn.expand("%f"))<CR>', "Neotest Pytest Active" },
-    v = { ':lua require("neotest").run.attach()<CR>', "Neotest Attach" },
-    p = { ':lua require("neotest").output.open({enter = true})<CR>', "Neotest Output" },
-    o = { ':lua require("neotest").output_panel.toggle()<CR>', "Neotest Output" },
-    w = { ':lua require("neotest").watch.toggle()<CR>', "Neotest Watch" },
-    s = { ':lua require("neotest").summary.toggle()<CR>', "Neotest Summary" },
-  },
-  m = {
-    name = "Markdown and LaTex",
-    e = { "<cmd>EvalBlock<CR>", "EvalBlock" },
-    p = {
-      ":vs <bar> term pandoc -V geometry:margin=1in -C --bibliography=refs.bib --listings --csl=default.csl -s h.md -o h.pdf --pdf-engine=xelatex <CR>",
-      "pdflatex md"
-    },
-    f = {
-      "{jV}kgq", "Format Paragraph",
-    }
-  },
-  y = {
-    name = "Yank",
-    y = { '"+y', "Yank to clipboard" },
-    c = { YankCodeBlock, "Yank Code Block" },
-  },
-  -- nvimgp ChatGPT normal mode
-  p = {
-    c = { "<cmd>GpChatNew<cr>", "New Chat" },
-    p = { "<cmd>GpChatToggle<cr>", "Toggle Chat" },
-    f = { "<cmd>GpChatFinder<cr>", "Chat Finder" },
-
-    ["<C-x>"] = { "<cmd>GpChatNew split<cr>", "New Chat split" },
-    ["<C-v>"] = { "<cmd>GpChatNew vsplit<cr>", "New Chat vsplit" },
-    ["<C-t>"] = { "<cmd>GpChatNew tabnew<cr>", "New Chat tabnew" },
-
-    r = { "<cmd>GpRewrite<cr>", "Inline Rewrite" },
-    a = { "<cmd>GpAppend<cr>", "Append (after)" },
-    b = { "<cmd>GpPrepend<cr>", "Prepend (before)" },
-
-    g = {
-      name = "generate into new ..",
-      p = { "<cmd>GpPopup<cr>", "Popup" },
-      e = { "<cmd>GpEnew<cr>", "GpEnew" },
-      n = { "<cmd>GpNew<cr>", "GpNew" },
-      v = { "<cmd>GpVnew<cr>", "GpVnew" },
-      t = { "<cmd>GpTabnew<cr>", "GpTabnew" },
-    },
-
-    n = { "<cmd>GpNextAgent<cr>", "Next Agent" },
-    s = { "<cmd>GpStop<cr>", "GpStop" },
-    x = { "<cmd>GpContext<cr>", "Toggle GpContext" },
-  },
+  {
+    { "<leader>F", Formatter, desc = "Format Buffer" },
+    { "<leader>Q", ":wq<cr>", desc = "Save & Quit" },
+    { "<leader>d", group = "Database" },
+    { "<leader>df", "<Cmd>DBUIFindBuffer<Cr>", desc = "Find buffer" },
+    { "<leader>dq", "<Cmd>DBUILastQueryInfo<Cr>", desc = "Last query info" },
+    { "<leader>dr", "<Cmd>DBUIRenameBuffer<Cr>", desc = "Rename buffer" },
+    { "<leader>du", "<Cmd>DBUIToggle<Cr>", desc = "Toggle UI" },
+    { "<leader>e", group = "Edit Config" },
+    { "<leader>eE", ":vs<bar>e /storage/coda1/p-cs207/0/awallace43/.config/nvim/init.lua<cr>", desc = "Edit config" },
+    { "<leader>eL", ":vs<bar>e /storage/coda1/p-cs207/0/awallace43/.config/nvim/lua/lsp-setup.lua<cr>", desc = "Edit lsp (split)" },
+    { "<leader>eM", ":vs<bar>e /storage/coda1/p-cs207/0/awallace43/.config/nvim/lua/cmp-setup.lua<cr>", desc = "Edit cmp (split)" },
+    { "<leader>eO", ":vs<bar>e /storage/coda1/p-cs207/0/awallace43/.config/nvim/lua/options.lua<cr>", desc = "Edit Options" },
+    { "<leader>eP", ":vs<bar>e /storage/coda1/p-cs207/0/awallace43/.config/nvim/lua/custom/plugins<cr>", desc = "Edit Plugins" },
+    { "<leader>eS", ":vs<bar>e /storage/coda1/p-cs207/0/awallace43/.config/nvim/lua/luasnip-config.lua<bar>40<cr>", desc = "Edit Snippets" },
+    { "<leader>eW", ":vs<bar>e /storage/coda1/p-cs207/0/awallace43/.config/nvim/lua/whichkey-config/init.lua<cr>", desc = "Edit config" },
+    { "<leader>ec", ":e /storage/coda1/p-cs207/0/awallace43/.config/nvim/lua/chatgpt-config.lua<cr>", desc = "Edit config" },
+    { "<leader>ee", ":e /storage/coda1/p-cs207/0/awallace43/.config/nvim/init.lua<cr>", desc = "Edit config" },
+    { "<leader>ef", ":e /storage/coda1/p-cs207/0/awallace43/.config/nvim/nvim_simplified<cr>", desc = "Edit Last" },
+    { "<leader>el", ":e /storage/coda1/p-cs207/0/awallace43/.config/nvim/lua/lsp-setup.lua<cr>", desc = "Edit lsp" },
+    { "<leader>em", ":e /storage/coda1/p-cs207/0/awallace43/.config/nvim/lua/cmp-setup.lua<cr>", desc = "Edit cmp" },
+    { "<leader>eo", ":e /storage/coda1/p-cs207/0/awallace43/.config/nvim/lua/options.lua<cr>", desc = "Edit Options" },
+    { "<leader>ep", ":e /storage/coda1/p-cs207/0/awallace43/.config/nvim/lua/custom/plugins<cr>", desc = "Edit Plugins" },
+    { "<leader>es", ":e /storage/coda1/p-cs207/0/awallace43/.config/nvim/snippets<cr>", desc = "Edit config" },
+    { "<leader>f", group = "Find" },
+    { "<leader>fF", find_files_different_root, desc = "Telescope Find Files" },
+    { "<leader>fR", grep_files_different_root, desc = "Telescope Live Grep" },
+    { "<leader>fa", ':lua require("harpoon.mark").add_file()<cr>', desc = "Harpoon Add" },
+    { "<leader>fb", ":Telescope buffers<cr>", desc = "Telescope Buffers" },
+    { "<leader>fd", ":Telescope help_tags<cr>", desc = "Telescope Help Tags" },
+    { "<leader>ff", ":Telescope find_files<cr>", desc = "Telescope Find Files" },
+    { "<leader>fh", ":Telescope harpoon marks<cr>", desc = "Telescope Harpoon" },
+    { "<leader>fm", ':lua require("harpoon.ui").toggle_quick_menu()<cr>', desc = "Harpoon Menu" },
+    { "<leader>fp", ":echo expand('%:p')<CR>", desc = "Current File Path" },
+    { "<leader>fr", ":Telescope live_grep<cr>", desc = "Telescope Live Grep" },
+    { "<leader>ft", get_filetype, desc = "Current File Path" },
+    { "<leader>g", group = "Git" },
+    { "<leader>gP", ":Git push<cr>", desc = "Git Push" },
+    { "<leader>gS", ":lua require('neogit').open({ cwd = vim.fn.expand('%:p:h')})<CR>", desc = "Git Status" },
+    { "<leader>gaf", ":Gw<cr>", desc = "Add File" },
+    { "<leader>gb", ":Git blame<cr>", desc = "Git Blame" },
+    { "<leader>gc", ":Git commit<bar>:startinsert<cr>", desc = "Git Commit" },
+    { "<leader>gd", ":Git difftool<cr>", desc = "Git Diff" },
+    { "<leader>gs", ":lua require('neogit').open()<CR>", desc = "Git Status" },
+    { "<leader>i", group = "Insert" },
+    { "<leader>it", "o* [ ] ", desc = "Insert Task" },
+    { "<leader>l", group = "LSP" },
+    { "<leader>lD", "<cmd>vs<bar>lua vim.lsp.buf.definition()<cr>", desc = "Go To Definition" },
+    { "<leader>lK", "<cmd>lua vim.lsp.buf.hover()<cr>", desc = "Hover Commands" },
+    { "<leader>lL", ":LspLog<cr>", desc = "LSP LOG" },
+    { "<leader>lR", "<cmd>lua vim.lsp.buf.rename()<cr>", desc = "Rename Variable" },
+    { "<leader>lT", ':lua require("lsp_lines").toggle()<cr>', desc = "Toggle lsp_lines" },
+    { "<leader>lW", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<cr>", desc = "Remove Workspace Folder" },
+    { "<leader>la", "<cmd>lua vim.lsp.buf.code_action()<cr>", desc = "Code Action" },
+    { "<leader>ld", "<cmd>lua vim.lsp.buf.definition()<cr>", desc = "Go To Definition" },
+    { "<leader>le", "<cmd>lua vim.diagnostic.open_float()<cr>", desc = "Diag. Msg." },
+    { "<leader>li", ":LspInfo<cr>", desc = "Connected Language Servers" },
+    { "<leader>lk", "<cmd>lua vim.lsp.buf.signature_help()<cr>", desc = "Signature Help" },
+    { "<leader>ll", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<cr>", desc = "List Workspace Folders" },
+    { "<leader>lr", "<cmd>lua vim.lsp.buf.references()<cr>", desc = "References" },
+    { "<leader>lt", "<cmd>lua vim.lsp.buf.type_definition()<cr>", desc = "Type Definition" },
+    { "<leader>lw", "<cmd>lua vim.lsp.buf.add_workspace_folder()<cr>", desc = "Add Workspace Folder" },
+    { "<leader>lz", ":LspRestart<cr>", desc = "LspRestart" },
+    { "<leader>m", group = "Markdown and LaTex" },
+    { "<leader>me", "<cmd>EvalBlock<CR>", desc = "EvalBlock" },
+    { "<leader>mf", "{jV}kgq", desc = "Format Paragraph" },
+    { "<leader>mp", ":vs <bar> term pandoc -V geometry:margin=1in -C --bibliography=refs.bib --listings --csl=default.csl -s h.md -o h.pdf --pdf-engine=xelatex <CR>", desc = "pdflatex md" },
+    { "<leader>n", ":NvimTreeToggle<cr>", desc = "Tree Toggle" },
+    { "<leader>p<C-t>", "<cmd>GpChatNew tabnew<cr>", desc = "New Chat tabnew" },
+    { "<leader>p<C-v>", "<cmd>GpChatNew vsplit<cr>", desc = "New Chat vsplit" },
+    { "<leader>p<C-x>", "<cmd>GpChatNew split<cr>", desc = "New Chat split" },
+    { "<leader>pa", "<cmd>GpAppend<cr>", desc = "Append (after)" },
+    { "<leader>pb", "<cmd>GpPrepend<cr>", desc = "Prepend (before)" },
+    { "<leader>pc", "<cmd>GpChatNew<cr>", desc = "New Chat" },
+    { "<leader>pf", "<cmd>GpChatFinder<cr>", desc = "Chat Finder" },
+    { "<leader>pg", group = "generate into new .." },
+    { "<leader>pge", "<cmd>GpEnew<cr>", desc = "GpEnew" },
+    { "<leader>pgn", "<cmd>GpNew<cr>", desc = "GpNew" },
+    { "<leader>pgp", "<cmd>GpPopup<cr>", desc = "Popup" },
+    { "<leader>pgt", "<cmd>GpTabnew<cr>", desc = "GpTabnew" },
+    { "<leader>pgv", "<cmd>GpVnew<cr>", desc = "GpVnew" },
+    { "<leader>pn", "<cmd>GpNextAgent<cr>", desc = "Next Agent" },
+    { "<leader>pp", "<cmd>GpChatToggle<cr>", desc = "Toggle Chat" },
+    { "<leader>pr", "<cmd>GpRewrite<cr>", desc = "Inline Rewrite" },
+    { "<leader>ps", "<cmd>GpStop<cr>", desc = "GpStop" },
+    { "<leader>px", "<cmd>GpContext<cr>", desc = "Toggle GpContext" },
+    { "<leader>q", ":bn<bar>bd #<CR>", desc = "Close Buffer" },
+    { "<leader>r", group = "Run" },
+    { "<leader>rA", "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", desc = "run active file" },
+    { "<leader>rB", ":vs <bar>term cd src/dispersion && bash build.sh<cr>", desc = "./build.sh" },
+    { "<leader>rI", ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --sf_components --verbosity=1 <cr>", desc = "mpiexec main.py" },
+    { "<leader>rP", "<C-W>v<C-W>l<cmd>term python3 main.py<cr>", desc = "python3 main.py" },
+    { "<leader>ra", group = "Active" },
+    { "<leader>rab", "<C-W>v<C-W>l<cmd>term bash %<cr>", desc = "bash active file" },
+    { "<leader>rai", "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", desc = "python3 active file" },
+    { "<leader>raj", "<C-W>s<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>", desc = "python3 active file" },
+    { "<leader>rap", "<C-W>v<C-W>l<cmd>term python %<cr>", desc = "python active file" },
+    { "<leader>rb", ":vs <bar>term . build.sh<cr>", desc = "./build.sh" },
+    { "<leader>rc", ":vs<bar>term mpiexec -n 1 python3 -u create_db.py<cr>", desc = "mpiexec create_db.py" },
+    { "<leader>rd", ":vs <bar>term make build_and_test<cr>", desc = "dftd4 build and run" },
+    { "<leader>rf", ":vs <bar>term flask --app cdsg run --debug<cr>", desc = "Run csdg" },
+    { "<leader>rh", ":vs<bar>term mpirun -n 8 --machinefile machineFile python3 -u mpi_jobs.py<cr>", desc = "mpiexec main.py" },
+    { "<leader>ria", "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 -u %<cr>", desc = "mpiexec active python3" },
+    { "<leader>ric", ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --sf_components --verbosity=1 <cr>", desc = "mpiexec main.py" },
+    { "<leader>rii", ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='apnet' --system='proteinHs_ligandPQR' --testing <cr>", desc = "mpiexec main.py" },
+    { "<leader>rir", ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --verbosity=1 <cr>", desc = "mpiexec main.py" },
+    { "<leader>rj", ":vs <bar>term julia main.jl<cr>", desc = "julia main.jl" },
+    { "<leader>rk", ":vs<bar>term mpiexec -n 2 python3 -u %<cr>", desc = "mpiexec active" },
+    { "<leader>rmd", ":vs<bar>term make debug<cr>", desc = "make" },
+    { "<leader>rmm", ":vs<bar>term make<cr>", desc = "make" },
+    { "<leader>rmt", ":vs<bar>term make t", desc = "make" },
+    { "<leader>rn", initJypterSession, desc = "Init Jupyter Session" },
+    { "<leader>rpa", ":vs<bar>term psi4 -n8 /theoryfs2/ds/amwalla3/projects/test_asapt/asapt.dat<cr>", desc = "psi4 asapt.dat" },
+    { "<leader>rpb", ":vs <bar>term cd .. && bash build.sh<cr>", desc = "build psi4" },
+    { "<leader>rpd", ":vs<bar>term python3 ~/data/sapt_dft_testing/water_test.py<cr>", desc = "saptdft testing" },
+    { "<leader>rpm", "<C-W>v<C-W>l<cmd>term python3 mpi_jobs.py<cr>", desc = "python3 mpi_jobs.py" },
+    { "<leader>rpo", ":vs<bar>e /theoryfs2/ds/amwalla3/projects/test_asapt/asapt.out<cr>", desc = "psi4 asapt.dat" },
+    { "<leader>rpp", ":vs<bar>term psi4 input.dat<cr>", desc = "psi4 input.dat" },
+    { "<leader>rr", ":vs <bar>term cargo run <cr>", desc = "cargo run" },
+    { "<leader>rs", ":vs <bar>term swift %<cr>", desc = "swift main.swift" },
+    { "<leader>rtk", ":vs<bar>term pytest tests.py -k 'test_ATM_water'<cr>", desc = "PyTest" },
+    { "<leader>rtl", PytestPythonFunction, desc = "PyTest Specific" },
+    { "<leader>rto", ":vs<bar>term python3 tests.py<cr>", desc = "run tests.py" },
+    { "<leader>rtp", ":vs<bar>term pytest tests.py<cr>", desc = "PyTest" },
+    { "<leader>rtt", "<C-W>v<C-W>l<cmd>term python3 tmp.py<cr>", desc = "python3 tmp.py" },
+    { "<leader>ru", ":vs<bar>term mpiexec -n 2 python3 -u main.py<cr>", desc = "mpiexec main.py" },
+    { "<leader>s", group = "[S]earch" },
+    { "<leader>s_", hidden = true },
+    { "<leader>t", group = "Terminal" },
+    { "<leader>tT", ":vs<bar>term<cr>", desc = "Split+Terminal" },
+    { "<leader>ta", ':lua require("neotest").run.run(vim.fn.expand("%f"))<CR>', desc = "Neotest Pytest Active" },
+    { "<leader>tc", ":vs<bar>term lscpu | grep -E '^Thread|^Core|^Socket|^CPU\\('<cr>", desc = "lscpu grep" },
+    { "<leader>td", ":!dftd4 tmp.xyz --json t.json --param 1.0 0.9171 0.3385 2.883<cr>", desc = "dftd4 test" },
+    { "<leader>to", ':lua require("neotest").output_panel.toggle()<CR>', desc = "Neotest Output" },
+    { "<leader>tp", ':lua require("neotest").output.open({enter = true})<CR>', desc = "Neotest Output" },
+    { "<leader>tr", ':lua require("neotest").run.run()<CR>', desc = "Neotest Pytest" },
+    { "<leader>ts", ':lua require("neotest").summary.toggle()<CR>', desc = "Neotest Summary" },
+    { "<leader>tt", ":term<cr>", desc = "Terminal" },
+    { "<leader>tv", ':lua require("neotest").run.attach()<CR>', desc = "Neotest Attach" },
+    { "<leader>tw", ':lua require("neotest").watch.toggle()<CR>', desc = "Neotest Watch" },
+    { "<leader>x", ":bdelete<cr>", desc = "Close" },
+    { "<leader>y", group = "Yank" },
+    { "<leader>yc", "YankCodeBlock", desc = "Yank Code Block" },
+    { "<leader>yy", '"+y', desc = "Yank to clipboard" },
+  }
 }
 local opts = { prefix = '<leader>', mode = "n" }
-wk.register(normal_mappings, opts)
+wk.add(normal_mappings, opts)
 local visual_mappings = {
-  t = {
-    name = "LaTex",
-    r = { Round_number, "Round Number" },
-    c = { ":w !wc -w<CR>", "Word Count" },
-  },
-  -- nvimgp ChatGPT: visual mode
-      p = {
-        c = { ":<C-u>'<,'>GpChatNew<cr>", "Visual Chat New" },
-        p = { ":<C-u>'<,'>GpChatPaste<cr>", "Visual Chat Paste" },
-        t = { ":<C-u>'<,'>GpChatToggle<cr>", "Visual Toggle Chat" },
-
-        ["<C-x>"] = { ":<C-u>'<,'>GpChatNew split<cr>", "Visual Chat New split" },
-        ["<C-v>"] = { ":<C-u>'<,'>GpChatNew vsplit<cr>", "Visual Chat New vsplit" },
-        ["<C-t>"] = { ":<C-u>'<,'>GpChatNew tabnew<cr>", "Visual Chat New tabnew" },
-
-        r = { ":<C-u>'<,'>GpRewrite<cr>", "Visual Rewrite" },
-        a = { ":<C-u>'<,'>GpAppend<cr>", "Visual Append (after)" },
-        b = { ":<C-u>'<,'>GpPrepend<cr>", "Visual Prepend (before)" },
-        i = { ":<C-u>'<,'>GpImplement<cr>", "Implement selection" },
-
-        g = {
-            name = "generate into new ..",
-            p = { ":<C-u>'<,'>GpPopup<cr>", "Visual Popup" },
-            e = { ":<C-u>'<,'>GpEnew<cr>", "Visual GpEnew" },
-            n = { ":<C-u>'<,'>GpNew<cr>", "Visual GpNew" },
-            v = { ":<C-u>'<,'>GpVnew<cr>", "Visual GpVnew" },
-            t = { ":<C-u>'<,'>GpTabnew<cr>", "Visual GpTabnew" },
-        },
-
-        n = { "<cmd>GpNextAgent<cr>", "Next Agent" },
-        s = { "<cmd>GpStop<cr>", "GpStop" },
-        x = { ":<C-u>'<,'>GpContext<cr>", "Visual GpContext" },
+    {
+      mode = { "v" },
+      { "<leader>p<C-t>", ":<C-u>'<,'>GpChatNew tabnew<cr>", desc = "Visual Chat New tabnew" },
+      { "<leader>p<C-v>", ":<C-u>'<,'>GpChatNew vsplit<cr>", desc = "Visual Chat New vsplit" },
+      { "<leader>p<C-x>", ":<C-u>'<,'>GpChatNew split<cr>", desc = "Visual Chat New split" },
+      { "<leader>pa", ":<C-u>'<,'>GpAppend<cr>", desc = "Visual Append (after)" },
+      { "<leader>pb", ":<C-u>'<,'>GpPrepend<cr>", desc = "Visual Prepend (before)" },
+      { "<leader>pc", ":<C-u>'<,'>GpChatNew<cr>", desc = "Visual Chat New" },
+      { "<leader>pg", group = "generate into new .." },
+      { "<leader>pge", ":<C-u>'<,'>GpEnew<cr>", desc = "Visual GpEnew" },
+      { "<leader>pgn", ":<C-u>'<,'>GpNew<cr>", desc = "Visual GpNew" },
+      { "<leader>pgp", ":<C-u>'<,'>GpPopup<cr>", desc = "Visual Popup" },
+      { "<leader>pgt", ":<C-u>'<,'>GpTabnew<cr>", desc = "Visual GpTabnew" },
+      { "<leader>pgv", ":<C-u>'<,'>GpVnew<cr>", desc = "Visual GpVnew" },
+      { "<leader>pi", ":<C-u>'<,'>GpImplement<cr>", desc = "Implement selection" },
+      { "<leader>pn", "<cmd>GpNextAgent<cr>", desc = "Next Agent" },
+      { "<leader>pp", ":<C-u>'<,'>GpChatPaste<cr>", desc = "Visual Chat Paste" },
+      { "<leader>pr", ":<C-u>'<,'>GpRewrite<cr>", desc = "Visual Rewrite" },
+      { "<leader>ps", "<cmd>GpStop<cr>", desc = "GpStop" },
+      { "<leader>pt", ":<C-u>'<,'>GpChatToggle<cr>", desc = "Visual Toggle Chat" },
+      { "<leader>px", ":<C-u>'<,'>GpContext<cr>", desc = "Visual GpContext" },
+      { "<leader>t", group = "LaTex" },
+      { "<leader>tc", ":w !wc -w<CR>", desc = "Word Count" },
+      { "<leader>tr", Round_number, desc = "Round Number" },
     },
-}
+  }
+
 local opts_v = { prefix = '<leader>', mode = 'v' }
-wk.register(visual_mappings, opts_v)
+wk.add(visual_mappings, opts_v)
 
 local null_ls = require("null-ls")
 

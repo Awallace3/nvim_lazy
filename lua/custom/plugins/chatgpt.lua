@@ -31,12 +31,8 @@ return -- lazy.nvim
       -- required openai api key (string or table with command and arguments)
       openai_api_key =  {"gpg",  "--decrypt", vim.fn.expand("$HOME") .. "/secret.txt.gpg"},
       -- api endpoint (you can change this to azure endpoint)
-      openai_api_endpoint = "https://api.openai.com/v1/chat/completions",
-      -- openai_api_endpoint = "https://$URL.openai.azure.com/openai/deployments/{{model}}/chat/completions?api-version=2023-03-15-preview",
       -- prefix for all commands
       cmd_prefix = "Gp",
-      -- optional curl parameters (for proxy, etc.)
-      -- curl_params = { "--proxy", "http://X.X.X.X:XXXX" }
       curl_params = {},
 
       -- directory for persisting state dynamically changed by user (like model or persona)
@@ -71,38 +67,11 @@ return -- lazy.nvim
               -- .. " - If equation terms are defined outside of equation environments, please use dollar signs instead of \\( and \\).\n"
         },
         {
-          name = "ChatGPT3-5",
-          -- chat = true,
-          -- command = false,
-          -- -- string with model name or table with model name and parameters
-          -- model = { model = "gpt-3.5-turbo-1106", temperature = 1.1, top_p = 1 },
-          -- -- system prompt (use this to specify the persona/role of the AI)
-          -- system_prompt = "You are a computational chemistry research AI assistant.\n\n"
-          --     .. "The user provided the additional info about how they would like you to respond:\n\n"
-          --     .. "- If you're unsure don't guess and say you don't know instead.\n"
-          --     .. "- Ask question if you need clarification to provide better answer.\n"
-          --     .. "- Think deeply and carefully from first principles step by step.\n"
-          --     .. "- Use Socratic method to improve your thinking and coding skills.\n"
-          --     .. "- Don't elide any code from your output if the answer requires coding.\n"
-          --     .. "- Please create academic responses with citations when relevant, while ensuring that the citations are valid.\n",
-        },
-        {
           name = "CodeGPT4",
           chat = false,
           command = true,
           -- string with model name or table with model name and parameters
           model = { model = "gpt-4-1106-preview", temperature = 0.8, top_p = 1 },
-          -- system prompt (use this to specify the persona/role of the AI)
-          system_prompt = "You are an AI working as a code editor.\n\n"
-              .. "Please AVOID COMMENTARY OUTSIDE OF THE SNIPPET RESPONSE.\n"
-              .. "START AND END YOUR ANSWER WITH:\n\n```",
-        },
-        {
-          name = "CodeGPT3-5",
-          chat = false,
-          command = true,
-          -- string with model name or table with model name and parameters
-          model = { model = "gpt-3.5-turbo-1106", temperature = 0.8, top_p = 1 },
           -- system prompt (use this to specify the persona/role of the AI)
           system_prompt = "You are an AI working as a code editor.\n\n"
               .. "Please AVOID COMMENTARY OUTSIDE OF THE SNIPPET RESPONSE.\n"
@@ -190,115 +159,19 @@ return -- lazy.nvim
       -- by eliminating silence and speeding up the tempo of the recording
       -- we can reduce the cost by 50% or more and get the results faster
       -- directory for storing whisper files
-      whisper_dir = (os.getenv("TMPDIR") or os.getenv("TEMP") or "/tmp") .. "/gp_whisper",
+      -- whisper_dir = (os.getenv("TMPDIR") or os.getenv("TEMP") or "/tmp") .. "/gp_whisper",
       -- multiplier of RMS level dB for threshold used by sox to detect silence vs speech
       -- decibels are negative, the recording is normalized to -3dB =>
       -- increase this number to pick up more (weaker) sounds as possible speech
       -- decrease this number to pick up only louder sounds as possible speech
       -- you can disable silence trimming by setting this a very high number (like 1000.0)
-      whisper_silence = "1.75",
+      -- whisper_silence = "1.75",
       -- whisper tempo (1.0 is normal speed)
-      whisper_tempo = "1.75",
+      -- whisper_tempo = "1.75",
       -- The language of the input audio, in ISO-639-1 format.
-      whisper_language = "en",
+      -- whisper_language = "en",
 
-      -- image generation settings
-      -- image prompt prefix for asking user for input (supports {{agent}} template variable)
-      image_prompt_prefix_template = "🖌️ {{agent}} ~ ",
-      -- image prompt prefix for asking location to save the image
-      image_prompt_save = "🖌️💾 ~ ",
-      -- default folder for saving images
-      image_dir = (os.getenv("TMPDIR") or os.getenv("TEMP") or "/tmp") .. "/gp_images",
-      -- default image agents (model + settings)
       -- to remove some default agent completely set it just with the name like:
-      -- image_agents = {  { name = "DALL-E-3-1024x1792-vivid" }, ... },
-      image_agents = {
-        {
-          name = "DALL-E-3-1024x1024-vivid",
-          model = "dall-e-3",
-          quality = "standard",
-          style = "vivid",
-          size = "1024x1024",
-        },
-        {
-          name = "DALL-E-3-1792x1024-vivid",
-          model = "dall-e-3",
-          quality = "standard",
-          style = "vivid",
-          size = "1792x1024",
-        },
-        {
-          name = "DALL-E-3-1024x1792-vivid",
-          model = "dall-e-3",
-          quality = "standard",
-          style = "vivid",
-          size = "1024x1792",
-        },
-        {
-          name = "DALL-E-3-1024x1024-natural",
-          model = "dall-e-3",
-          quality = "standard",
-          style = "natural",
-          size = "1024x1024",
-        },
-        {
-          name = "DALL-E-3-1792x1024-natural",
-          model = "dall-e-3",
-          quality = "standard",
-          style = "natural",
-          size = "1792x1024",
-        },
-        {
-          name = "DALL-E-3-1024x1792-natural",
-          model = "dall-e-3",
-          quality = "standard",
-          style = "natural",
-          size = "1024x1792",
-        },
-        {
-          name = "DALL-E-3-1024x1024-vivid-hd",
-          model = "dall-e-3",
-          quality = "hd",
-          style = "vivid",
-          size = "1024x1024",
-        },
-        {
-          name = "DALL-E-3-1792x1024-vivid-hd",
-          model = "dall-e-3",
-          quality = "hd",
-          style = "vivid",
-          size = "1792x1024",
-        },
-        {
-          name = "DALL-E-3-1024x1792-vivid-hd",
-          model = "dall-e-3",
-          quality = "hd",
-          style = "vivid",
-          size = "1024x1792",
-        },
-        {
-          name = "DALL-E-3-1024x1024-natural-hd",
-          model = "dall-e-3",
-          quality = "hd",
-          style = "natural",
-          size = "1024x1024",
-        },
-        {
-          name = "DALL-E-3-1792x1024-natural-hd",
-          model = "dall-e-3",
-          quality = "hd",
-          style = "natural",
-          size = "1792x1024",
-        },
-        {
-          name = "DALL-E-3-1024x1792-natural-hd",
-          model = "dall-e-3",
-          quality = "hd",
-          style = "natural",
-          size = "1024x1792",
-        },
-      },
-
       -- example hook functions (see Extend functionality section in the README)
       hooks = {
         InspectPlugin = function(plugin, params)
