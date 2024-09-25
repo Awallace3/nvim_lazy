@@ -9,6 +9,14 @@ vim.defer_fn(function()
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
+    is_supported = function ()
+      if vim.fn.strwidth(vim.fn.getline('.')) > 1000
+        or vim.fn.getfsize(vim.fn.expand('%')) > 1024 * 1024 then
+        return false
+      else
+        return true
+      end
+    end,
 
     highlight = {
       enable = true,
