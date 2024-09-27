@@ -717,7 +717,7 @@ local normal_mappings = {
     { "<leader>me",     "<cmd>EvalBlock<CR>",                                                                                                                                              desc = "EvalBlock" },
     { "<leader>mf",     "{jV}kgq",                                                                                                                                                         desc = "Format Paragraph" },
     { "<leader>mp",     ":vs <bar> term pandoc -V geometry:margin=1in -C --bibliography=refs.bib --listings --csl=default.csl -s h.md -o h.pdf --pdf-engine=xelatex <CR>",                 desc = "pdflatex md" },
-    { "<leader>n",      ":NvimTreeToggle<cr>",                                                                                                                                             desc = "Tree Toggle" },
+    { "<leader>n",      ":Oil<cr>",                                                                                                                                             desc = "Tree Toggle" },
     { "<leader>p<C-t>", "<cmd>GpChatNew tabnew<cr>",                                                                                                                                       desc = "New Chat tabnew" },
     { "<leader>p<C-v>", "<cmd>GpChatNew vsplit<cr>",                                                                                                                                       desc = "New Chat vsplit" },
     { "<leader>p<C-x>", "<cmd>GpChatNew split<cr>",                                                                                                                                        desc = "New Chat split" },
