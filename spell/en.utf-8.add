@@ -1222,6 +1222,9 @@ Preprocess
 homomultimers
 ICML
 MolMIM
+XGBoost
+F12a
+kcalmol
 luarocks
 AtomModel
 NumPy
