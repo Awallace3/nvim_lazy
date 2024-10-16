@@ -823,6 +823,7 @@ local visual_mappings = {
     { "<leader>t",      group = "LaTex" },
     { "<leader>tc",     ":w !wc -w<CR>",                   desc = "Word Count" },
     { "<leader>tr",     Round_number,                      desc = "Round Number" },
+    { "<leader>vp",     Pymol_visual_xyz,                  desc = "Pymol Visual" },
   },
 }
 
