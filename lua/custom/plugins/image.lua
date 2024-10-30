@@ -7,6 +7,7 @@ return {
     -- if not, do not require images
     local magick_ok, magick = pcall(require, "magick")
     if not magick_ok then
+      print("magick not installed, images will not be rendered")
       return
     end
     require("image").setup({
@@ -36,7 +37,7 @@ return {
       max_width = nil,
       max_height = nil,
       max_width_window_percentage = nil,
-      max_height_window_percentage = 50,
+      max_height_window_percentage = 75,
       window_overlap_clear_enabled = false,                                           -- toggles images when windows are overlapped
       window_overlap_clear_ft_ignore = { "cmp_menu", "cmp_docs", "" },
       editor_only_render_when_focused = false,                                        -- auto show/hide images when the editor gains/looses focus
