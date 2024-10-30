@@ -700,6 +700,7 @@ local normal_mappings = {
     { "<leader>lD",     "<cmd>vs<bar>lua vim.lsp.buf.definition()<cr>",                                                                                                                    desc = "Go To Definition" },
     { "<leader>lK",     "<cmd>lua vim.lsp.buf.hover()<cr>",                                                                                                                                desc = "Hover Commands" },
     { "<leader>lL",     ":LspLog<cr>",                                                                                                                                                     desc = "LSP LOG" },
+    { "<leader>ls",     ":LspStop<cr>",                                                                                                                                                     desc = "LSP Stop" },
     { "<leader>lR",     "<cmd>lua vim.lsp.buf.rename()<cr>",                                                                                                                               desc = "Rename Variable" },
     { "<leader>lT",     ':lua require("lsp_lines").toggle()<cr>',                                                                                                                          desc = "Toggle lsp_lines" },
     { "<leader>lW",     "<cmd>lua vim.lsp.buf.remove_workspace_folder()<cr>",                                                                                                              desc = "Remove Workspace Folder" },
