@@ -211,6 +211,7 @@ UserHome = vim.fn.expand("$HOME")
 
 
 function Get_visual_selection()
+  -- 0.52917721067
   local s_start = vim.fn.getpos("'<")
   local s_end = vim.fn.getpos("'>")
   local n_lines = math.abs(s_end[2] - s_start[2]) + 1
@@ -245,6 +246,7 @@ function Write_coords_to_tmp_xyz(coords)
   file:close()
 end
 
+
 function Jmol_visual_xyz()
   local coords = Get_visual_selection()
   Write_coords_to_tmp_xyz(coords)
@@ -253,6 +255,8 @@ function Jmol_visual_xyz()
   io.popen("jmol tmp.xyz")
 end
 
+helper = require("helper")
+
 function Pymol_visual_xyz()
   local coords = Get_visual_selection()
   Write_coords_to_tmp_xyz(coords)
@@ -260,7 +264,74 @@ function Pymol_visual_xyz()
   print("pymol tmp.xyz")
   vim.cmd [[
         vs
-        term pymol tmp.xyz
+        " term pymol tmp.xyz
+        term pymol ~/default_pymol.pml
+    ]]
+end
+
+function Pymol_visual_xyz_convert()
+  local coords = Get_visual_selection()
+  local new_coords = ""
+  for line in coords:gmatch("[^\r\n]+") do
+    local el, x, y, z = line:match("([%d])%s+([%d%.%-]+)%s+([%d%.%-]+)%s+([%d%.%-]+)")
+    el = helper.atomic_number_to_element(tonumber(el))
+    x = x * 1
+    y = y * 1
+    z = z * 1
+    new_coords = new_coords .. el .. " " .. x .. " " .. y .. " " .. z .. "\n"
+  end
+  Write_coords_to_tmp_xyz(new_coords)
+  print("Running Pymol")
+  print("pymol tmp.xyz")
+  vim.cmd [[
+        vs
+        term pymol ~/default_pymol.pml
+    ]]
+end
+
+
+function Pymol_visual_xyz_bohr_convert()
+  local coords = Get_visual_selection()
+  -- need to convert bohr to angstrom
+  -- 1 bohr = 0.52917721067 angstrom
+  local bohr_to_angstrom = 0.52917721067
+  local new_coords = ""
+  for line in coords:gmatch("[^\r\n]+") do
+    local el, x, y, z = line:match("([%d])%s+([%d%.%-]+)%s+([%d%.%-]+)%s+([%d%.%-]+)")
+    el = helper.atomic_number_to_element(tonumber(el))
+    x = x * bohr_to_angstrom
+    y = y * bohr_to_angstrom
+    z = z * bohr_to_angstrom
+    new_coords = new_coords .. el .. " " .. x .. " " .. y .. " " .. z .. "\n"
+  end
+  Write_coords_to_tmp_xyz(new_coords)
+  print("Running Pymol")
+  print("pymol tmp.xyz")
+  vim.cmd [[
+        vs
+        term pymol ~/default_pymol.pml
+    ]]
+end
+
+function Pymol_visual_xyz_bohr()
+  local coords = Get_visual_selection()
+  -- need to convert bohr to angstrom
+  -- 1 bohr = 0.52917721067 angstrom
+  local bohr_to_angstrom = 0.52917721067
+  local new_coords = ""
+  for line in coords:gmatch("[^\r\n]+") do
+    local el, x, y, z = line:match("([%d])%s+([%d%.%-]+)%s+([%d%.%-]+)%s+([%d%.%-]+)")
+    x = x * bohr_to_angstrom
+    y = y * bohr_to_angstrom
+    z = z * bohr_to_angstrom
+    new_coords = new_coords .. el .. " " .. x .. " " .. y .. " " .. z .. "\n"
+  end
+  Write_coords_to_tmp_xyz(new_coords)
+  print("Running Pymol")
+  print("pymol tmp.xyz")
+  vim.cmd [[
+        vs
+        term pymol ~/default_pymol.pml
     ]]
 end
 
@@ -378,14 +449,14 @@ mason_lspconfig.setup_handlers {
           },
           diagnosticsDelay = 300,
           latexFormatter = 'latexindent',
-          -- latexindent = {
-          --   extra_args = { "-l", vim.fn.expand("$HOME/.indentconfig.yaml"), "-m" },
-          --   -- lua get from $HOME/latexindent.yaml
-          --   -- ['local'] = vim.fn.expand("$HOME/latexindent.yaml"),
-          --   -- ['local'] = UserHome .. "/latexindent.yaml",
-          -- },
-          -- bibtexFormatter = 'texlab',
-          -- formatterLineLength = 30,
+          latexindent = {
+            extra_args = { "-l", vim.fn.expand("$HOME/.indentconfig.yaml"), "-m" },
+            -- lua get from $HOME/latexindent.yaml
+            -- ['local'] = vim.fn.expand("$HOME/latexindent.yaml"),
+            -- ['local'] = UserHome .. "/latexindent.yaml",
+          },
+          bibtexFormatter = 'texlab',
+          formatterLineLength = 30,
         },
       },
     }
@@ -799,6 +870,11 @@ local normal_mappings = {
     { "<leader>y",      group = "Yank" },
     { "<leader>yc",     "YankCodeBlock",                                                                                                                                                   desc = "Yank Code Block" },
     { "<leader>yy",     '"+y',                                                                                                                                                             desc = "Yank to clipboard" },
+
+    { "<leader>vpe",     Pymol_visual_xyz,                  desc = "Pymol Visual" },
+    { "<leader>vpc",     Pymol_visual_xyz_convert,                  desc = "Pymol Visual Convert" },
+    { "<leader>vpb",     Pymol_visual_xyz_bohr,             desc = "Pymol Visual Bohr" },
+    { "<leader>vpbc",     Pymol_visual_xyz_bohr_convert,             desc = "Pymol Visual Bohr Convert" },
   }
 }
 local opts = { prefix = '<leader>', mode = "n" }
@@ -828,7 +904,10 @@ local visual_mappings = {
     { "<leader>t",      group = "LaTex" },
     { "<leader>tc",     ":w !wc -w<CR>",                   desc = "Word Count" },
     { "<leader>tr",     Round_number,                      desc = "Round Number" },
-    { "<leader>vp",     Pymol_visual_xyz,                  desc = "Pymol Visual" },
+    { "<leader>vpe",     Pymol_visual_xyz,                  desc = "Pymol Visual" },
+    { "<leader>vpc",     Pymol_visual_xyz_convert,                  desc = "Pymol Visual Convert" },
+    { "<leader>vpb",     Pymol_visual_xyz_bohr,             desc = "Pymol Visual Bohr" },
+    { "<leader>vpbc",     Pymol_visual_xyz_bohr_convert,             desc = "Pymol Visual Bohr Convert" },
   },
 }
 
