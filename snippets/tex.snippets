@@ -379,6 +379,18 @@ snippet frameimgtwo frame environment
 		\end{figure}
 		\end{minipage}
 	\\end{frame}
+
+snippet mini frame environment
+	\\begin{minipage}[c]{${1:0.48}\linewidth}
+		\begin{figure}
+		    \includegraphics[width=0.95\textwidth]{./figures${3:/f1.png}}
+		\end{figure}
+		\end{minipage}
+		\begin{minipage}[c]{${2:0.48}\linewidth}
+		\begin{figure}
+		    \includegraphics[width=0.95\textwidth]{./figures${4:/f2.png}}
+		\end{figure}
+	\\end{minipage}
 snippet leftitemize itemize environment
 	{
 		\setlength{\leftmargini}{0pt}
@@ -496,3 +508,7 @@ snippet ra rightarrow
 snippet lra longrightarrow
 	\\longrightarrow {$0}
 
+snippet onslide onslide
+	\\onslide<${1}->{
+	${0}
+	}
