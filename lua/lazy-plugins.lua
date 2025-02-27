@@ -82,9 +82,13 @@ require('lazy').setup({
   },
 
   -- Useful plugin to show you pending keybinds.
-  { 'folke/which-key.nvim',  opts = {}, dependencies = {
-    "echasnovski/mini.icons",
-  } },
+  {
+    'folke/which-key.nvim',
+    opts = {},
+    dependencies = {
+      "echasnovski/mini.icons",
+    }
+  },
   {
     -- Adds git related signs to the gutter, as well as utilities for managing changes
     'lewis6991/gitsigns.nvim',
@@ -181,7 +185,7 @@ require('lazy').setup({
   },
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  { 'numToStr/Comment.nvim',  opts = {} },
 
   -- Fuzzy Finder (files, lsp, etc)
   {
@@ -226,11 +230,11 @@ require('lazy').setup({
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
   --
-  {
-    "github/copilot.vim",
-    config = function()
-    end
-  },
+  -- {
+  --   "github/copilot.vim",
+  --   config = function()
+  --   end
+  -- },
   { 'ThePrimeagen/harpoon' },
   { import = 'custom.plugins' },
 }, {})
