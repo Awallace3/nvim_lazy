@@ -107,10 +107,12 @@ Words = collect_words()
 
 local servers = {
   clangd = {},
+  denols = {},
   rust_analyzer = {},
   julials = {},
   ltex = {},
   texlab = {},
+  fortls = {},
   -- yamlls = {},
   lua_ls = {
     Lua = {
@@ -646,7 +648,7 @@ Formatter = function()
   --   vim.cmd("e!")
   if filetype == "htmldjango" or filetype == "html" then
     vim.cmd("write")
-    local cmd = nvim_mason_bin .. "djlint" .. " --reformat --indent 4 " .. vim.fn.expand("%:p")
+    local cmd = nvim_mason_bin .. "djlint " .. vim.fn.expand("%:p") .. " --reformat --indent 2"
     print(cmd)
     vim.cmd(cmd)
     vim.cmd("e!")
@@ -867,6 +869,8 @@ local normal_mappings = {
     { "<leader>rc",   ":vs<bar>term mpiexec -n 1 python3 -u create_db.py<cr>",                                                                                                           desc = "mpiexec create_db.py" },
     { "<leader>rd",   ":vs <bar>term make build_and_test<cr>",                                                                                                                           desc = "dftd4 build and run" },
     { "<leader>rf",   ":vs <bar>term flask --app cdsg run --debug<cr>",                                                                                                                  desc = "Run csdg" },
+    { "<leader>ry",   ":vs <bar>term yarn run start<cr>",                                                                                                                  desc = "yarn run start" },
+    { "<leader>rN",   ":vs <bar>term npm run start<cr>",                                                                                                                  desc = "npm run start" },
     { "<leader>rh",   ":vs<bar>term mpirun -n 8 --machinefile machineFile python3 -u mpi_jobs.py<cr>",                                                                                   desc = "mpiexec main.py" },
     { "<leader>ria",  "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 -u %<cr>",                                                                                                             desc = "mpiexec active python3" },
     { "<leader>ric",  ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --sf_components --verbosity=1 <cr>", desc = "mpiexec main.py" },
