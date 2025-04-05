@@ -9,6 +9,14 @@ snippet imps
 	from qm_tools_aw import tools
 	import hrcl_jobs as hrcl
 
+snippet pdprint
+	import pandas as pd
+	from pprint import pprint
+
+	df = pd.read_pickle("${1:filename}")
+	print(df)
+	pprint(df.columns.tolist())
+
 snippet main
 	def ${2}():
 	    ${0}
