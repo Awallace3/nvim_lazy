@@ -107,10 +107,12 @@ Words = collect_words()
 
 local servers = {
   clangd = {},
+  denols = {},
   rust_analyzer = {},
   julials = {},
   ltex = {},
   texlab = {},
+  fortls = {},
   -- yamlls = {},
   lua_ls = {
     Lua = {
@@ -646,7 +648,7 @@ Formatter = function()
   --   vim.cmd("e!")
   if filetype == "htmldjango" or filetype == "html" then
     vim.cmd("write")
-    local cmd = nvim_mason_bin .. "djlint" .. " --reformat --indent 4 " .. vim.fn.expand("%:p")
+    local cmd = nvim_mason_bin .. "djlint " .. vim.fn.expand("%:p") .. " --reformat --indent 2"
     print(cmd)
     vim.cmd(cmd)
     vim.cmd("e!")
@@ -716,6 +718,7 @@ function initJypterSession()
 end
 
 local nvim_config_path = os.getenv("XDG_CONFIG_HOME") .. "/nvim"
+local mcp_config_path = os.getenv("XDG_CONFIG_HOME") .. "/mcp-hub"
 
 local insert_mappings = {
   { "<C-k>", '<cmd>lua vim.lsp.buf.hover()<cr>', desc = 'Hover Commands' }
@@ -772,16 +775,17 @@ local normal_mappings = {
     { "<leader>eE",   ":vs<bar>e " .. nvim_config_path .. "/init.lua<cr>",                                                                                                               desc = "init.lua (split)" },
     { "<leader>eZ",   ":vs<bar>e " .. "~/.zshrc<cr>",                                                                                                               desc = "zshrc (split)" },
     { "<leader>eL",   ":vs<bar>e " .. nvim_config_path .. "/lsp-setup.lua<cr>",                                                                                                          desc = "Edit lsp (split)" },
-    { "<leader>eM",   ":vs<bar>e" .. nvim_config_path .. "/lua/cmp-setup.lua<cr>",                                                                                                       desc = "Edit cmp (split)" },
+    -- { "<leader>eM",   ":vs<bar>e" .. nvim_config_path .. "/lua/cmp-setup.lua<cr>",                                                                                                       desc = "Edit cmp (split)" },
     { "<leader>eO",   ":vs<bar>e" .. nvim_config_path .. "/lua/options.lua<cr>",                                                                                                         desc = "Edit Options (split)" },
     { "<leader>eP",   ":vs<bar>e" .. nvim_config_path .. "/lua/custom/plugins<cr>",                                                                                                      desc = "Edit Plugins (split)" },
     { "<leader>eS",   ":vs<bar>e" .. nvim_config_path .. "/lua/luasnip-config.lua<bar>40<cr>",                                                                                           desc = "Edit Snippets (split)" },
     { "<leader>ec",   ":e" .. nvim_config_path .. "/lua/chatgpt-config.lua<cr>",                                                                                                         desc = "Edit config" },
     { "<leader>ee",   ":e" .. nvim_config_path .. "/init.lua<cr>",                                                                                                                       desc = "Edit config" },
     { "<leader>ez",   ":e" .. "~/.zshrc<cr>",                                                                                                                       desc = "Edit zshrc" },
+    { "<leader>em",   ":e" .. mcp_config_path .. "/mcp-servers.json<cr>",                                                                                                                       desc = "Edit mcp-servers.json" },
     { "<leader>ef",   ":e" .. nvim_config_path .. "/nvim_simplified<cr>",                                                                                                                desc = "Edit Last" },
     { "<leader>el",   ":e" .. nvim_config_path .. "/lua/lsp-setup.lua<cr>",                                                                                                              desc = "Edit lsp" },
-    { "<leader>em",   ":e" .. nvim_config_path .. "/lua/cmp-setup.lua<cr>",                                                                                                              desc = "Edit cmp" },
+    -- { "<leader>em",   ":e" .. nvim_config_path .. "/lua/cmp-setup.lua<cr>",                                                                                                              desc = "Edit cmp" },
     { "<leader>eo",   ":e" .. nvim_config_path .. "/lua/options.lua<cr>",                                                                                                                desc = "Edit Options" },
     { "<leader>ep",   ":e" .. nvim_config_path .. "/lua/custom/plugins<cr>",                                                                                                             desc = "Edit Plugins" },
     { "<leader>es",   ":e" .. nvim_config_path .. "/snippets<cr>",                                                                                                                       desc = "Edit config" },
@@ -826,12 +830,14 @@ local normal_mappings = {
     { "<leader>lw",   "<cmd>lua vim.lsp.buf.add_workspace_folder()<cr>",                                                                                                                 desc = "Add Workspace Folder" },
     { "<leader>lz",   ":LspRestart<cr>",                                                                                                                                                 desc = "LspRestart" },
     { "<leader>m",    group = "Markdown and LaTex" },
-    { "<leader>me",   "<cmd>EvalBlock<CR>",                                                                                                                                              desc = "EvalBlock" },
+    { "<leader>me",                           "<cmd>lua require 'mdeval'.eval_code_block()<CR>",                                                                                                                                              desc = "EvalBlock" },
     { "<leader>mf",   "{jV}kgq",                                                                                                                                                         desc = "Format Paragraph" },
     { "<leader>mp",   ":vs <bar> term pandoc -V geometry:margin=1in -C --bibliography=refs.bib --listings --csl=default.csl -s h.md -o h.pdf --pdf-engine=xelatex <CR>",                 desc = "pdflatex md" },
     { "<leader>n",    ":Oil<cr>",                                                                                                                                                        desc = "Tree Toggle" },
-    { "<leader>pa",   "<cmd>CodeCompanionActions<cr>",                                                                                                                                   desc = "CodeCompanionActions" },
-    { "<leader>pp",   "<cmd>CodeCompanion<cr>",                                                                                                                                          desc = "CodeCompanion" },
+    -- { "<leader>pa",   "<cmd>CodeCompanionActions<cr>",                                                                                                                                   desc = "CodeCompanionActions" },
+    -- { "<leader>pp",   "<cmd>CodeCompanion<cr>",                                                                                                                                          desc = "CodeCompanion" },
+    { "<leader>pa", "<cmd>AvanteAsk<cr>",                                                                                                                                       desc = "AvanteAsk" },
+    { "<leader>ph", "<cmd>MCPHub<cr>",                                                                                                                                       desc = "MCPHub" },
     -- { "<leader>p<C-t>", "<cmd>GpChatNew tabnew<cr>",                                                                                                                                       desc = "New Chat tabnew" },
     -- { "<leader>p<C-v>", "<cmd>GpChatNew vsplit<cr>",                                                                                                                                       desc = "New Chat vsplit" },
     -- { "<leader>p<C-x>", "<cmd>GpChatNew split<cr>",                                                                                                                                        desc = "New Chat split" },
@@ -869,6 +875,8 @@ local normal_mappings = {
     { "<leader>rc",   ":vs<bar>term mpiexec -n 1 python3 -u create_db.py<cr>",                                                                                                           desc = "mpiexec create_db.py" },
     { "<leader>rd",   ":vs <bar>term make build_and_test<cr>",                                                                                                                           desc = "dftd4 build and run" },
     { "<leader>rf",   ":vs <bar>term flask --app cdsg run --debug<cr>",                                                                                                                  desc = "Run csdg" },
+    { "<leader>ry",   ":vs <bar>term yarn run start<cr>",                                                                                                                  desc = "yarn run start" },
+    { "<leader>rN",   ":vs <bar>term npm run start<cr>",                                                                                                                  desc = "npm run start" },
     { "<leader>rh",   ":vs<bar>term mpirun -n 8 --machinefile machineFile python3 -u mpi_jobs.py<cr>",                                                                                   desc = "mpiexec main.py" },
     { "<leader>ria",  "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 -u %<cr>",                                                                                                             desc = "mpiexec active python3" },
     { "<leader>ric",  ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --sf_components --verbosity=1 <cr>", desc = "mpiexec main.py" },
