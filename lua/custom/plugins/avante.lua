@@ -4,34 +4,33 @@ return {
     event = "VeryLazy",
     version = false, -- Never set this value to "*"! Never!
     opts = {
-      provider = "claude",
-      cursor_applying_provider = "claude",
-      claude = {
-        endpoint = "https://api.anthropic.com",
-        model = "claude-3-5-sonnet-20241022",
-        timeout = 30000, -- Timeout in milliseconds
-        temperature = 0,
-        max_tokens = 4096,
-        disable_tools = true, -- disable tools!
-      }
+      -- provider = "claude",
+      -- cursor_applying_provider = "claude",
+      -- claude = {
+      --   endpoint = "https://api.anthropic.com",
+      --   model = "claude-3-5-sonnet-20241022",
+      --   timeout = 30000, -- Timeout in milliseconds
+      --   temperature = 0,
+      --   max_tokens = 4096,
+      --   disable_tools = true, -- disable tools!
+      -- }
 
       -- add any opts here
-      -- for example
-      -- provider = "openai",
-      -- cursor_applying_provider = "openai",
-      -- provider = "",
       -- behaviour = {
       --     --- ... existing behaviours
       --     -- enable_cursor_planning_mode = true, -- enable cursor planning mode!
       -- },
-      -- openai = {
-      --   -- endpoint = "https://api.openai.com/v1",
-      --   -- model = "gpt-4o", -- your desired model (or use gpt-4o, etc.)
-      --   timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
-      --   temperature = 0,
-      --   max_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
-      --   --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
-      -- },
+      -- for example
+      provider = "openai",
+      cursor_applying_provider = "openai",
+      openai = {
+        endpoint = "https://api.openai.com/v1",
+        model = "4o-mini", -- your desired model (or use gpt-4o, etc.)
+        timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
+        temperature = 0,
+        max_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
+        --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
+      },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
     build = "make",
