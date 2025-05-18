@@ -4,32 +4,48 @@ return {
     event = "VeryLazy",
     version = false, -- Never set this value to "*"! Never!
     opts = {
-      -- provider = "claude",
-      -- cursor_applying_provider = "claude",
-      -- claude = {
-      --   endpoint = "https://api.anthropic.com",
-      --   model = "claude-3-5-sonnet-20241022",
-      --   timeout = 30000, -- Timeout in milliseconds
-      --   temperature = 0,
-      --   max_tokens = 4096,
-      --   disable_tools = true, -- disable tools!
-      -- }
-
+      provider = "claude",
+      cursor_applying_provider = "claude",
+      claude = {
+        endpoint = "https://api.anthropic.com",
+        model = "claude-3-5-sonnet-20241022",
+        timeout = 30000, -- Timeout in milliseconds
+        temperature = 0,
+        max_tokens = 4096,
+        disable_tools = true, -- disable tools!
+      },
       -- add any opts here
       -- behaviour = {
       --     --- ... existing behaviours
       --     -- enable_cursor_planning_mode = true, -- enable cursor planning mode!
       -- },
       -- for example
-      provider = "openai",
-      cursor_applying_provider = "openai",
+      --   provider = "openai",
+      --   cursor_applying_provider = "openai",
+      --   openai = {
+      --     endpoint = "https://api.openai.com/v1",
+      --     model = "4o-mini", -- your desired model (or use gpt-4o, etc.)
+      --     timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
+      --     temperature = 0,
+      --     max_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
+      --     --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
+      --   },
+      -- },
+      -- provider = "openai",
       openai = {
         endpoint = "https://api.openai.com/v1",
-        model = "4o-mini", -- your desired model (or use gpt-4o, etc.)
-        timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
+        model = "gpt-4o",             -- your desired model (or use gpt-4o, etc.)
+        timeout = 30000,              -- Timeout in milliseconds, increase this for reasoning models
         temperature = 0,
-        max_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
+        max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
         --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
+      },
+      gemini = {
+       endpoint = "https://generativelanguage.googleapis.com/v1beta/models",
+       model = "gemini-2.5-pro-preview-03-25",
+       timeout = 30000,
+       temperature = 0,
+       max_tokens = 8192,
       },
     },
     -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
@@ -41,12 +57,14 @@ return {
       "nvim-lua/plenary.nvim",
       "MunifTanjim/nui.nvim",
       --- The below dependencies are optional,
-      "echasnovski/mini.pick",       -- for file_selector provider mini.pick
+      "echasnovski/mini.pick",         -- for file_selector provider mini.pick
       "nvim-telescope/telescope.nvim", -- for file_selector provider telescope
-      "hrsh7th/nvim-cmp",            -- autocompletion for avante commands and mentions
-      "ibhagwan/fzf-lua",            -- for file_selector provider fzf
-      "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-      "zbirenbaum/copilot.lua",      -- for providers='copilot'
+      "hrsh7th/nvim-cmp",              -- autocompletion for avante commands and mentions
+      "ibhagwan/fzf-lua",              -- for file_selector provider fzf
+      "nvim-tree/nvim-web-devicons",   -- or echasnovski/mini.icons
+      "zbirenbaum/copilot.lua",        -- for providers='copilot'
+      -- my deps
+      "ravitemer/mcphub.nvim",
       {
         -- support for image pasting
         "HakonHarnes/img-clip.nvim",
@@ -77,9 +95,6 @@ return {
       require("avante").setup({
         system_prompt = function()
           local hub = require("mcphub").get_hub_instance()
-          if hub == nil then
-            return "You are not connected to a server. Please connect to a server."
-          end
           return hub:get_active_servers_prompt()
         end,
         -- The custom_tools type supports both a list and a function that returns a list. Using a function here prevents requiring mcphub before it's loaded
@@ -88,6 +103,19 @@ return {
             require("mcphub.extensions.avante").mcp_tool(),
           }
         end,
+        disabled_tools = {
+          "list_files",
+          "search_files",
+          "read_file",
+          "create_file",
+          "rename_file",
+          "delete_file",
+          "create_dir",
+          "rename_dir",
+          "delete_dir",
+          "bash",
+        },
+
       })
     end,
   }

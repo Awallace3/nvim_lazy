@@ -123,7 +123,7 @@ local servers = {
     },
   },
   -- jedi_language_server = {},
-  pylsp = {},
+  -- pylsp = {},
   ruff = {},
 }
 
@@ -337,171 +337,171 @@ function Pymol_visual_xyz_bohr()
     ]]
 end
 
-mason_lspconfig.setup_handlers {
-  function(server_name)
-    require('lspconfig')[server_name].setup {
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = servers[server_name],
-      filetypes = (servers[server_name] or {}).filetypes,
-    }
-  end,
+-- mason_lspconfig.setup_handlers {
+--   function(server_name)
+    -- require('lspconfig')[server_name].setup {
+    --   capabilities = capabilities,
+    --   on_attach = on_attach,
+    --   settings = servers[server_name],
+    --   filetypes = (servers[server_name] or {}).filetypes,
+    -- }
+  -- end,
   -- ["ruff"] = function()
   --   lspconfig.ruff.setup {
   --     on_attach = on_attach,
   --     capabilities = capabilities,
   --   }
   -- end,
-  ["pylsp"] = function()
-    lspconfig.pylsp.setup {
-      on_attach = on_attach,
-      capabilities = capabilities,
-      settings = {
-        pylsp = {
-          plugins = {
-            pycodestyle = { enabled = false },
-            pyflakes = { enabled = false },
-            pylint = { enabled = false },
-            -- yapf = { enabled = false },
-            -- flake8 = { enabled = false },
-            -- mypy = { enabled = false },
-            -- isort = { enabled = false },
-            -- jedi_completion = { enabled = false },
-            -- jedi_definition = { enabled = false },
-            -- jedi_hover = { enabled = false },
-            -- jedi_references = { enabled = false },
-            -- jedi_signature_help = { enabled = false },
-            -- jedi_symbols = { enabled = false },
-            -- mccabe = { enabled = false },
-            -- pydocstyle = { enabled = false },
-            -- rope_completion = { enabled = false },
-            -- rope_definition = { enabled = false },
-            -- rope_hover = { enabled = false },
-            -- rope_references = { enabled = false },
-            -- rope_signature_help = { enabled = false },
-          },
-        },
+  -- ["pylsp"] = function()
+-- lspconfig.pylsp.setup {
+--   on_attach = on_attach,
+--   capabilities = capabilities,
+--   settings = {
+--     pylsp = {
+--       plugins = {
+--         pycodestyle = { enabled = false },
+--         pyflakes = { enabled = false },
+--         pylint = { enabled = false },
+--         -- yapf = { enabled = false },
+--         -- flake8 = { enabled = false },
+--         -- mypy = { enabled = false },
+--         -- isort = { enabled = false },
+--         -- jedi_completion = { enabled = false },
+--         -- jedi_definition = { enabled = false },
+--         -- jedi_hover = { enabled = false },
+--         -- jedi_references = { enabled = false },
+--         -- jedi_signature_help = { enabled = false },
+--         -- jedi_symbols = { enabled = false },
+--         -- mccabe = { enabled = false },
+--         -- pydocstyle = { enabled = false },
+--         -- rope_completion = { enabled = false },
+--         -- rope_definition = { enabled = false },
+--         -- rope_hover = { enabled = false },
+--         -- rope_references = { enabled = false },
+--         -- rope_signature_help = { enabled = false },
+--       },
+--     },
+--   },
+-- }
+  -- end,
+  -- ["lua_ls"] = function()
+lspconfig.lua_ls.setup {
+  capabilities = capabilities,
+  settings = {
+    Lua = {
+      runtime = {
+        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+        version = 'LuaJIT',
+        -- Setup your lua path
+        path = vim.split(package.path, ';')
       },
-    }
-  end,
-  ["lua_ls"] = function()
-    lspconfig.lua_ls.setup {
-      capabilities = capabilities,
-      settings = {
-        Lua = {
-          runtime = {
-            -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-            version = 'LuaJIT',
-            -- Setup your lua path
-            path = vim.split(package.path, ';')
-          },
-          diagnostics = {
-            -- Get the language server to recognize the `vim` global
-            globals = { 'vim' }
-          },
-          workspace = {
-            -- Make the server aware of Neovim runtime files
-            library = {
-              [vim.fn.expand('$VIMRUNTIME/lua')] = true,
-              [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true
-            }
-          }
+      diagnostics = {
+        -- Get the language server to recognize the `vim` global
+        globals = { 'vim' }
+      },
+      workspace = {
+        -- Make the server aware of Neovim runtime files
+        library = {
+          [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+          [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true
         }
       }
     }
-  end,
-  ["rust_analyzer"] = function()
-    lspconfig.rust_analyzer.setup {
-      on_attach = function(client, bufnr)
-        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
-      end,
-      settings = {
-        ["rust-analyzer"] = {
-          imports = {
-            granularity = {
-              group = "module",
-            },
-            prefix = "self",
-          },
-          cargo = {
-            buildScripts = {
-              enable = true,
-            },
-          },
-          procMacro = {
-            enable = true
-          },
-        }
-      }
-    }
-  end,
-  ["julials"] = function()
-    lspconfig.julials.setup {
-      on_new_config = function(new_config, _)
-        local julia = vim.fn.expand("~/.julia/environments/nvim-lspconfig/bin/julia")
-        -- local julia = vim.fn.expand("~/gits/julia/julia")
-        local sysimage_arg = "--sysimage=" ..
-            vim.fn.expand("~/.julia/environments/nvim-lspconfig/languageserver.so")
-        local sysimage_native = "--sysimage-native-code=yes"
-        if false then
-          new_config.cmd[5] = (new_config.cmd[5]):gsub("using LanguageServer",
-            "using Revise; using LanguageServer; if isdefined(LanguageServer, :USE_REVISE); LanguageServer.USE_REVISE[] = true; end")
-        elseif require 'lspconfig'.util.path.is_file(julia) then
-          vim.notify("Julia LSP Engaged!")
-          new_config.cmd[1] = julia
-          if new_config.cmd[2] ~= sysimage_arg then
-            table.insert(new_config.cmd, 2, sysimage_arg)
-            table.insert(new_config.cmd, 3, sysimage_native)
-          end
-        end
-      end,
-      -- This just adds dirname(fname) as a fallback (see nvim-lspconfig#1768).
-      root_dir = function(fname)
-        local util = require 'lspconfig.util'
-        return util.root_pattern 'Project.toml' (fname) or util.find_git_ancestor(fname) or
-            util.path.dirname(fname)
-      end,
-      on_attach = on_attach,
-      capabilities = capabilities,
-    }
-  end,
-  ['texlab'] = function()
-    lspconfig.texlab.setup {
-      on_attach = on_attach,
-      capabilities = capabilities,
-      settings = {
-        texlab = {
-          rootDirectory = nil,
-          build = {
-            executable = 'latexmk',
-            args = { '-pdf', '-interaction=nonstopmode', '-synctex=1', '%f' },
-            onSave = false,
-            forwardSearchAfter = false,
-          },
-          auxDirectory = '.',
-          forwardSearch = {
-            executable = nil,
-            args = {},
-          },
-          chktex = {
-            onOpenAndSave = false,
-            onEdit = false,
-          },
-          diagnosticsDelay = 300,
-          latexFormatter = 'latexindent',
-          latexindent = {
-            extra_args = { "-l", vim.fn.expand("$HOME/.indentconfig.yaml"), "-m" },
-            -- lua get from $HOME/latexindent.yaml
-            -- ['local'] = vim.fn.expand("$HOME/latexindent.yaml"),
-            -- ['local'] = UserHome .. "/latexindent.yaml",
-          },
-          bibtexFormatter = 'texlab',
-          formatterLineLength = 30,
-        },
-      },
-    }
-  end,
+  }
 }
+  -- end,
+  -- ["rust_analyzer"] = function()
+lspconfig.rust_analyzer.setup {
+  on_attach = function(client, bufnr)
+    vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+  end,
+  settings = {
+    ["rust-analyzer"] = {
+      imports = {
+        granularity = {
+          group = "module",
+        },
+        prefix = "self",
+      },
+      cargo = {
+        buildScripts = {
+          enable = true,
+        },
+      },
+      procMacro = {
+        enable = true
+      },
+    }
+  }
+}
+  -- end,
+  -- ["julials"] = function()
+lspconfig.julials.setup {
+  on_new_config = function(new_config, _)
+    local julia = vim.fn.expand("~/.julia/environments/nvim-lspconfig/bin/julia")
+    -- local julia = vim.fn.expand("~/gits/julia/julia")
+    local sysimage_arg = "--sysimage=" ..
+        vim.fn.expand("~/.julia/environments/nvim-lspconfig/languageserver.so")
+    local sysimage_native = "--sysimage-native-code=yes"
+    if false then
+      new_config.cmd[5] = (new_config.cmd[5]):gsub("using LanguageServer",
+        "using Revise; using LanguageServer; if isdefined(LanguageServer, :USE_REVISE); LanguageServer.USE_REVISE[] = true; end")
+    elseif require 'lspconfig'.util.path.is_file(julia) then
+      vim.notify("Julia LSP Engaged!")
+      new_config.cmd[1] = julia
+      if new_config.cmd[2] ~= sysimage_arg then
+        table.insert(new_config.cmd, 2, sysimage_arg)
+        table.insert(new_config.cmd, 3, sysimage_native)
+      end
+    end
+  end,
+  -- This just adds dirname(fname) as a fallback (see nvim-lspconfig#1768).
+  root_dir = function(fname)
+    local util = require 'lspconfig.util'
+    return util.root_pattern 'Project.toml' (fname) or util.find_git_ancestor(fname) or
+        util.path.dirname(fname)
+  end,
+  on_attach = on_attach,
+  capabilities = capabilities,
+}
+  -- end,
+  -- ['texlab'] = function()
+lspconfig.texlab.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  settings = {
+    texlab = {
+      rootDirectory = nil,
+      build = {
+        executable = 'latexmk',
+        args = { '-pdf', '-interaction=nonstopmode', '-synctex=1', '%f' },
+        onSave = false,
+        forwardSearchAfter = false,
+      },
+      auxDirectory = '.',
+      forwardSearch = {
+        executable = nil,
+        args = {},
+      },
+      chktex = {
+        onOpenAndSave = false,
+        onEdit = false,
+      },
+      diagnosticsDelay = 300,
+      latexFormatter = 'latexindent',
+      latexindent = {
+        extra_args = { "-l", vim.fn.expand("$HOME/.indentconfig.yaml"), "-m" },
+        -- lua get from $HOME/latexindent.yaml
+        -- ['local'] = vim.fn.expand("$HOME/latexindent.yaml"),
+        -- ['local'] = UserHome .. "/latexindent.yaml",
+      },
+      bibtexFormatter = 'texlab',
+      formatterLineLength = 30,
+    },
+  },
+}
+--   end,
+-- }
 
 lspconfig.ltex.setup {
   enabled = {
@@ -648,7 +648,7 @@ Formatter = function()
   --   vim.cmd("e!")
   if filetype == "htmldjango" or filetype == "html" then
     vim.cmd("write")
-    local cmd = nvim_mason_bin .. "djlint " .. vim.fn.expand("%:p") .. " --reformat --indent 2"
+    local cmd = nvim_mason_bin .. "djlint " .. vim.fn.expand("%:p") -- .. " --reformat --indent 2"
     print(cmd)
     vim.cmd(cmd)
     vim.cmd("e!")
