@@ -3,52 +3,6 @@ return {
     "yetone/avante.nvim",
     event = "VeryLazy",
     version = false, -- Never set this value to "*"! Never!
-    opts = {
-      provider = "claude",
-      cursor_applying_provider = "claude",
-      claude = {
-        endpoint = "https://api.anthropic.com",
-        model = "claude-3-5-sonnet-20241022",
-        timeout = 30000, -- Timeout in milliseconds
-        temperature = 0,
-        max_tokens = 4096,
-        disable_tools = true, -- disable tools!
-      },
-      -- add any opts here
-      -- behaviour = {
-      --     --- ... existing behaviours
-      --     -- enable_cursor_planning_mode = true, -- enable cursor planning mode!
-      -- },
-      -- for example
-      --   provider = "openai",
-      --   cursor_applying_provider = "openai",
-      --   openai = {
-      --     endpoint = "https://api.openai.com/v1",
-      --     model = "4o-mini", -- your desired model (or use gpt-4o, etc.)
-      --     timeout = 30000, -- Timeout in milliseconds, increase this for reasoning models
-      --     temperature = 0,
-      --     max_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
-      --     --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
-      --   },
-      -- },
-      -- provider = "openai",
-      openai = {
-        endpoint = "https://api.openai.com/v1",
-        model = "gpt-4o",             -- your desired model (or use gpt-4o, etc.)
-        timeout = 30000,              -- Timeout in milliseconds, increase this for reasoning models
-        temperature = 0,
-        max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
-        --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
-      },
-      gemini = {
-       endpoint = "https://generativelanguage.googleapis.com/v1beta/models",
-       model = "gemini-2.5-pro-preview-03-25",
-       timeout = 30000,
-       temperature = 0,
-       max_tokens = 8192,
-      },
-    },
-    -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
     build = "make",
     -- build = "powershell -ExecutionPolicy Bypass -File Build.ps1 -BuildFromSource false" -- for windows
     dependencies = {
@@ -115,7 +69,32 @@ return {
           "delete_dir",
           "bash",
         },
-
+        provider = "claude",
+        cursor_applying_provider = "claude",
+        claude = {
+          endpoint = "https://api.anthropic.com",
+          model = "claude-3-7-sonnet-20250219",
+          timeout = 30000, -- Timeout in milliseconds
+          temperature = 0,
+          max_tokens = 4096,
+          disable_tools = true, -- disable tools!
+        },
+        -- provider = "openai",
+        openai = {
+          endpoint = "https://api.openai.com/v1",
+          model = "gpt-4.1-mini",       -- your desired model (or use gpt-4o, etc.)
+          timeout = 30000,              -- Timeout in milliseconds, increase this for reasoning models
+          temperature = 0,
+          max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
+          --reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
+        },
+        gemini = {
+          endpoint = "https://generativelanguage.googleapis.com/v1beta/models",
+          model = "gemini-2.5-pro-preview-03-25",
+          timeout = 30000,
+          temperature = 0,
+          max_tokens = 8192,
+        },
       })
     end,
   }
