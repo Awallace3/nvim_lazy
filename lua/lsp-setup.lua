@@ -675,6 +675,10 @@ local find_files_different_root = function()
   require("telescope.builtin").find_files({ cwd = vim.fn.expand("%:p:h") })
 end
 
+local find_document_symbols = function()
+  require("telescope.builtin").lsp_document_symbols({ cwd = vim.fn.expand("%:p:h") })
+end
+
 local grep_files_different_root = function()
   require("telescope.builtin").live_grep({ cwd = vim.fn.expand("%:p:h") })
 end
@@ -791,6 +795,7 @@ local normal_mappings = {
     { "<leader>es",   ":e" .. nvim_config_path .. "/snippets<cr>",                                                                                                                       desc = "Edit config" },
     { "<leader>f",    group = "Find" },
     { "<leader>fF",   find_files_different_root,                                                                                                                                         desc = "Telescope Find Files" },
+    { "<leader>fs",   find_document_symbols,                                                                                                                                         desc = "Telescope Doc Symbols" },
     { "<leader>fR",   grep_files_different_root,                                                                                                                                         desc = "Telescope Live Grep" },
     { "<leader>fa",   ':lua require("harpoon.mark").add_file()<cr>',                                                                                                                     desc = "Harpoon Add" },
     { "<leader>fb",   ":Telescope buffers<cr>",                                                                                                                                          desc = "Telescope Buffers" },

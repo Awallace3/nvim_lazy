@@ -23,7 +23,7 @@ vim.defer_fn(function()
       disable = { "latex" },
       additional_vim_regex_highlighting = { "latex", "markdown" },
     },
-    indent = { enable = true },
+    indent = { enable = true, disable = { 'python'} },
     incremental_selection = {
       enable = true,
       keymaps = {

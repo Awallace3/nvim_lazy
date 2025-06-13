@@ -22,6 +22,12 @@ return {
           make_slash_commands = true, -- make /slash commands from MCP server prompts
         }
       },
+      log = {
+        level = vim.log.levels.DEBUG,               -- More verbose logging
+        to_file = true,                             -- Enable file logging
+        file_path = "/home/amwalla3/.local/state/mcp.log",   -- Custom log path
+        prefix = "MCPHub",                          -- Log prefix
+      },
     })
   end,
 }
