@@ -51,13 +51,37 @@ cmp.setup {
     end, { 'i', 's' }),
   },
   sources = {
-    -- { name = "copilot", group_index = 2 },
-    { name = 'nvim_lsp', group_index = 2  },
-    { name = 'luasnip', group_index = 2  },
-    { name = "vimtex", group_index = 2  },
+    per_filetype = {
+      codecompanion = { "codecompanion" },
+    },
+    { name = "copilot",  group_index = 2 },
+    { name = 'nvim_lsp', group_index = 2 },
+    { name = 'luasnip',  group_index = 2 },
+    { name = "vimtex",   group_index = 2 },
     -- { name = "nvim_lsp_signature_help" },
-    { name = "path", group_index = 2  },
+    { name = "path",     group_index = 2 },
   },
 }
 
+-- `/` cmdline setup.
+cmp.setup.cmdline('/', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = {
+    { name = 'buffer' }
+  }
+})
+-- `:` cmdline setup.
+cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({
+    { name = 'path' }
+  }, {
+    {
+      name = 'cmdline',
+      option = {
+        ignore_cmds = { 'Man', '!' }
+      }
+    }
+  })
+})
 -- vim: ts=2 sts=2 sw=2 et

@@ -79,6 +79,8 @@ require('lazy').setup({
       -- Adds a number of user-friendly snippets
       'rafamadriz/friendly-snippets',
       'hrsh7th/cmp-path',
+      -- Commands completion
+      'hrsh7th/cmp-cmdline',
     },
   },
 

@@ -12,21 +12,16 @@ return {
     require("mcphub").setup({
       port = 3000,
       config = os.getenv("HOME") .. "/.config/mcp-hub/mcp-servers.json",
-      -- on_ready = function(hub)
-      --     vim.notify(string.format("MCP Hub is ready. %s servers active", #vim.tbl_filter(function(s)
-      --         return s.status == "connected"
-      --     end, hub:get_state().server_state.servers or {})), vim.log.levels.INFO)
-      -- end
       extensions = {
-        avante = {
-          make_slash_commands = true, -- make /slash commands from MCP server prompts
-        }
+        -- avante = {
+        --   make_slash_commands = true, -- make /slash commands from MCP server prompts
+        -- }
       },
       log = {
-        level = vim.log.levels.DEBUG,               -- More verbose logging
-        to_file = true,                             -- Enable file logging
-        file_path = "/home/amwalla3/.local/state/mcp.log",   -- Custom log path
-        prefix = "MCPHub",                          -- Log prefix
+        level = vim.log.levels.DEBUG,                      -- More verbose logging
+        to_file = true,                                    -- Enable file logging
+        file_path = "/home/amwalla3/.local/state/mcp.log", -- Custom log path
+        prefix = "MCPHub",                                 -- Log prefix
       },
     })
   end,
