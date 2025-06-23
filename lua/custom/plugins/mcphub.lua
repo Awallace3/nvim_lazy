@@ -20,7 +20,7 @@ return {
       log = {
         level = vim.log.levels.DEBUG,                      -- More verbose logging
         to_file = true,                                    -- Enable file logging
-        file_path = "/home/amwalla3/.local/state/mcp.log", -- Custom log path
+        file_path = os.getenv("HOME") .. "/.local/state/mcp.log", -- Custom log path
         prefix = "MCPHub",                                 -- Log prefix
       },
     })
