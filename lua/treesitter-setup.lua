@@ -9,9 +9,9 @@ vim.defer_fn(function()
 
     -- Autoinstall languages that are not installed. Defaults to false (but you can change for yourself!)
     auto_install = false,
-    is_supported = function ()
+    is_supported = function()
       if vim.fn.strwidth(vim.fn.getline('.')) > 1000
-        or vim.fn.getfsize(vim.fn.expand('%')) > 1024 * 1024 then
+          or vim.fn.getfsize(vim.fn.expand('%')) > 1024 * 1024 then
         return false
       else
         return true
@@ -23,7 +23,9 @@ vim.defer_fn(function()
       disable = { "latex" },
       additional_vim_regex_highlighting = { "latex", "markdown" },
     },
-    indent = { enable = true, disable = { 'python'} },
+    indent = { enable = true,
+      -- disable = { 'python' }
+    },
     incremental_selection = {
       enable = true,
       keymaps = {

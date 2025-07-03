@@ -11,6 +11,8 @@ return {
         preview = {
           filetypes = { "markdown", "codecompanion" },
           ignore_buftypes = {},
+          hybrid_modes = {'n'},
+          linewise_hybrid_mode = false,
         },
         latex = {
           enable = true,
@@ -190,6 +192,6 @@ return {
     vim.keymap.set({ "n", "v" }, "<C-a>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
     vim.keymap.set({ "n", "v" }, "<M-a>", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
     vim.keymap.set("v", "ga", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
-    vim.cmd([[cab cc CodeCompanion]])
+    -- vim.cmd([[cab cc CodeCompanion]])
   end
 }
