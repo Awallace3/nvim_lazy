@@ -140,6 +140,7 @@ local formatters = {
   ruff = {},
   stylua = {},
   clang_format = {},
+  beautysh = {},
 }
 
 local ensure_installed = vim.tbl_keys(servers)
@@ -655,6 +656,12 @@ Formatter = function()
   elseif filetype == "css" then
     vim.cmd("write")
     local cmd = nvim_mason_bin .. "stylelint" .. " --fix " .. vim.fn.expand("%:p")
+    print(cmd)
+    vim.cmd(cmd)
+    vim.cmd("e!")
+  elseif filetype == "sh" then
+    vim.cmd("write")
+    local cmd = nvim_mason_bin .. "beautysh " .. vim.fn.expand("%:p")
     print(cmd)
     vim.cmd(cmd)
     vim.cmd("e!")
