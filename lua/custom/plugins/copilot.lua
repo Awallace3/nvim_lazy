@@ -4,13 +4,13 @@ return {
   cmd = "Copilot",
   event = "InsertEnter",
   dependencies = {
-    "zbirenbaum/copilot-cmp",
+    -- "zbirenbaum/copilot-cmp",
   },
   config = function()
     require("copilot").setup({
       panel = {
         enabled = true,
-        auto_refresh = false,
+        auto_refresh = true,
         keymap = {
           jump_prev = "[[",
           jump_next = "]]",
@@ -26,7 +26,7 @@ return {
       },
       suggestion = {
         enabled = true,
-        auto_trigger = false,
+        auto_trigger = true,
         hide_during_completion = true,
         debounce = 75,
         trigger_on_accept = true,
@@ -40,7 +40,7 @@ return {
         },
       },
     })
-    require("copilot_cmp").setup()
+    -- require("copilot_cmp").setup()
     -- local map = vim.keymap.set
     -- map("i", "<C-f>", "copilot#Accept('<CR>')", { noremap = true, silent = true, expr = true, replace_keycodes = false })
     -- map('i', '<M-k>', '<Plug>(copilot-next)')

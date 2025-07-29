@@ -27,6 +27,8 @@ vim.keymap.set('n', ']b', ':bnext<cr>', opts)
 vim.keymap.set('n', '<c-w>v', ':vsplit<cr><c-w>l', opts)
 -- vim.keymap.set('c', 'vs', 'vs<cr><c-w>l', opts)
 
+vim.keymap.set('n', 'hs', '<cmd>lua require"gitsigns".stage_hunk()<CR>', opts)
+vim.keymap.set('n', 'hu', '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>', opts)
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`

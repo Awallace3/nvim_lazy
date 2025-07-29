@@ -195,4 +195,16 @@ vim.api.nvim_create_autocmd('TermOpen', {
   command = 'setlocal scrollback=100000'
 })
 
+-- open last cursor position when reopening a file
+vim.api.nvim_create_autocmd("BufReadPost", {
+  pattern = "*",
+  callback = function()
+    local mark = vim.api.nvim_buf_get_mark(0, '"')
+    local line = mark[1]
+    if line > 0 and line <= vim.api.nvim_buf_line_count(0) then
+      vim.api.nvim_win_set_cursor(0, mark)
+    end
+  end,
+})
+
 -- vim: ts=2 sts=2 sw=2 et
