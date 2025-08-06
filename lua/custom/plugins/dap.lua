@@ -3,6 +3,7 @@ return {
   dependencies = {
     "rcarriga/nvim-dap-ui",
     "theHamsta/nvim-dap-virtual-text",
+    'mfussenegger/nvim-dap-python',
   },
   config = function()
     local dap = require("dap")
@@ -36,6 +37,21 @@ return {
         },
       },
     }
+
+    require("dap-python").setup("uv")
+
+    dap.configurations.python = {
+      {
+        type = 'python';
+        request = 'launch';
+        name = "Launch file";
+        program = "${file}";
+        -- pythonPath = function()
+        --   return '/usr/bin/python'
+        -- end;
+      },
+    }
+
 
     dap.configurations.c = dap.configurations.cpp
     dap.configurations.rust = dap.configurations.cpp
