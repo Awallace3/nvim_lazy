@@ -1,3 +1,4 @@
+local using_psi4 = false
 return {
   "mfussenegger/nvim-dap",
   dependencies = {
@@ -12,19 +13,37 @@ return {
     dap.adapters.cppdbg = {
       id = 'cppdbg',
       type = 'executable',
-      command = '/usr/OpenDebugAD7/extension/debugAdapters/bin/OpenDebugAD7',
+      command = vim.fn.stdpath('data') .. '/mason/bin/OpenDebugAD7',
       options = {
         detached = false
       }
     }
-
     dap.configurations.cpp = {
       {
         name = "Launch with GDB",
         type = "cppdbg",
         request = "launch",
         program = function()
-          return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+          -- get input if psi4 or not. Default psi4
+          local psi4 = vim.fn.input("Use psi4? (y/n): ", "y", "customlist,psi4")
+          using_psi4 = psi4:lower() == 'y'
+          if using_psi4 then
+            conda_prefix = os.getenv("CONDA_PREFIX")
+            return conda_prefix .. "/bin/python3"
+          else
+            return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
+          end
+        end,
+        args = function()
+          print("using_psi4: " .. tostring(using_psi4))
+          if using_psi4 then
+            return {
+              "/home/awallace43/gits/psi4/build_saptdft_ein/stage/bin/psi4",
+              "tests/pytests/test_saptdft.py"
+            }
+          else
+            return {}
+          end
         end,
         cwd = '${workspaceFolder}',
         stopOnEntry = false,
