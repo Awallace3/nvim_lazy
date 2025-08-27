@@ -83,7 +83,7 @@ return {
             model = "claude-3-7-sonnet-20250219",
             timeout = 30000, -- Timeout in milliseconds
             extra_request_body = {
-              temperature = 0,
+              temperature = 1,
               max_tokens = 8192,
             },
           },
@@ -93,7 +93,7 @@ return {
             model = "gpt-5-mini-2025-08-07", -- your desired model (or use gpt-4o, etc.)
             timeout = 30000,        -- Timeout in milliseconds, increase this for reasoning models
             extra_request_body = {
-              temperature = 0,
+              temperature = 1,
               max_completion_tokens = 8192, -- Increase this to include reasoning tokens (for reasoning models)
               reasoning_effort = "medium", -- low|medium|high, only used for reasoning models
             }
