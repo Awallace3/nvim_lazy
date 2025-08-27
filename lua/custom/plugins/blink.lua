@@ -23,6 +23,9 @@
 --   },
 return {
 	'saghen/blink.nvim',
+	-- dependencies = {
+	-- 	"lukas-reineke/indent-blankline.nvim"
+	-- },
 	keys = {
 		-- chartoggle
 		{
@@ -52,12 +55,12 @@ return {
 	opts = {
 		chartoggle = { enabled = true },
 		delimiters = { enabled = true },
-		indent = {
-			enabled = true,
-			blocked = {
-				filetypes = { 'dbout' }
-			}
-		},
+		-- indent = {
+		-- 	enabled = true,
+		-- 	blocked = {
+		-- 		filetypes = { 'dbout' }
+		-- 	}
+		-- },
 		tree = { enabled = true }
 	}
 }
