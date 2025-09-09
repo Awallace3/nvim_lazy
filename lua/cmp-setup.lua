@@ -51,9 +51,9 @@ cmp.setup {
     end, { 'i', 's' }),
   },
   sources = {
-    per_filetype = {
-      codecompanion = { "codecompanion" },
-    },
+    -- per_filetype = {
+    --   codecompanion = { "codecompanion" },
+    -- },
     -- { name = "copilot",  group_index = 2 },
     { name = 'nvim_lsp', group_index = 2 },
     { name = 'luasnip',  group_index = 2 },
@@ -83,5 +83,13 @@ cmp.setup.cmdline(':', {
       }
     }
   })
+})
+
+-- This is for vimtex integration with bibtex citations that have ":" in them
+cmp.setup.filetype({ 'tex', 'plaintex' }, {
+  completion = {
+    -- Vim regex: treat ":" as part of a keyword token
+    keyword_pattern = [[\%(\k\|:\)\+]],
+  },
 })
 -- vim: ts=2 sts=2 sw=2 et

@@ -23,6 +23,11 @@ return {
       return file
     end
 
+    -- setlocal on tex file types
+    vim.cmd [[
+      autocmd FileType tex setlocal iskeyword+=:
+    ]]
+
     vim.g.vimtex_compiler_generic = {
       command = "pdflatex",
       -- hooks = {fileName()},
