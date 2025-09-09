@@ -518,6 +518,11 @@ lspconfig.ltex.setup {
       dictionary = {
         ["en-US"] = Words,
       },
+      enabled = {
+        'latex',
+        'tex',
+        'markdown',
+      },
       disabledRules = {
         ['en-US'] = {
           "ARROWS",

@@ -84,4 +84,12 @@ cmp.setup.cmdline(':', {
     }
   })
 })
+
+cmp.setup.filetype({ 'tex', 'plaintex' }, {
+  completion = {
+    -- Vim regex: treat ":" as part of a keyword token
+    keyword_pattern = [[\%(\k\|:\)\+]],
+  },
+})
+
 -- vim: ts=2 sts=2 sw=2 et

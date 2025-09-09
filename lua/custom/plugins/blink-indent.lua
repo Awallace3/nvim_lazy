@@ -6,7 +6,7 @@ return {
     -- or disable with `vim.g.indent_guide = false` (global) or `vim.b.indent_guide = false` (per-buffer)
     blocked = {
       buftypes = {},
-      filetypes = {},
+      filetypes = {'tex', 'maintex', 'latex', 'bib'},
     },
     static = {
       enabled = true,
@@ -17,7 +17,7 @@ return {
       highlights = { 'BlinkIndent' },
     },
     scope = {
-      enabled = true,
+      enabled = false,
       char = '▎',
       priority = 1024,
       -- set this to a single highlight, such as 'BlinkIndent' to disable rainbow-style indent guides

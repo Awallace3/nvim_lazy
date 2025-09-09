@@ -69,7 +69,8 @@ return {
           "delete_dir",
           "bash",
         },
-        provider = "openai",
+        -- provider = "openai",
+        provider = "claude",
         -- provider = "ollama",
         -- cursor_applying_provider = "ollama",
         providers = {
