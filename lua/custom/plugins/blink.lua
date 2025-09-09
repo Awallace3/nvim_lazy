@@ -55,12 +55,12 @@ return {
 	opts = {
 		chartoggle = { enabled = true },
 		delimiters = { enabled = true },
-		-- indent = {
-		-- 	enabled = true,
-		-- 	blocked = {
-		-- 		filetypes = { 'dbout' }
-		-- 	}
-		-- },
+		indent = {
+			enabled = false,
+			blocked = {
+				filetypes = { 'dbout' }
+			}
+		},
 		tree = { enabled = true }
 	}
 }

@@ -6,18 +6,18 @@ return {
   --   -- or disable with `vim.g.indent_guide = false` (global) or `vim.b.indent_guide = false` (per-buffer)
   --   blocked = {
   --     buftypes = {},
-  --     filetypes = {'tex', 'bib', 'plaintex'},
+  --     filetypes = {'tex', 'maintex', 'latex', 'bib'},
   --   },
   --   static = {
   --     enabled = true,
   --     char = '▎',
   --     priority = 1,
   --     -- specify multiple highlights here for rainbow-style indent guides
-  --     highlights = { 'BlinkIndentRed', 'BlinkIndentOrange', 'BlinkIndentYellow', 'BlinkIndentGreen', 'BlinkIndentViolet', 'BlinkIndentCyan' },
-  --     -- highlights = { 'BlinkIndent' },
+  --     -- highlights = { 'BlinkIndentRed', 'BlinkIndentOrange', 'BlinkIndentYellow', 'BlinkIndentGreen', 'BlinkIndentViolet', 'BlinkIndentCyan' },
+  --     highlights = { 'BlinkIndent' },
   --   },
   --   scope = {
-  --     enabled = true,
+  --     enabled = false,
   --     char = '▎',
   --     priority = 1024,
   --     -- set this to a single highlight, such as 'BlinkIndent' to disable rainbow-style indent guides
@@ -26,10 +26,10 @@ return {
   --       'BlinkIndentOrange',
   --       'BlinkIndentViolet',
   --       'BlinkIndentBlue',
-  --       'BlinkIndentRed',
-  --       'BlinkIndentCyan',
-  --       'BlinkIndentYellow',
-  --       'BlinkIndentGreen',
+  --       -- 'BlinkIndentRed',
+  --       -- 'BlinkIndentCyan',
+  --       -- 'BlinkIndentYellow',
+  --       -- 'BlinkIndentGreen',
   --     },
   --     underline = {
   --       -- enable to show underlines on the line above the current scope
@@ -38,10 +38,10 @@ return {
   --         'BlinkIndentOrangeUnderline',
   --         'BlinkIndentVioletUnderline',
   --         'BlinkIndentBlueUnderline',
-  --         'BlinkIndentRedUnderline',
-  --         'BlinkIndentCyanUnderline',
-  --         'BlinkIndentYellowUnderline',
-  --         'BlinkIndentGreenUnderline',
+  --         -- 'BlinkIndentRedUnderline',
+  --         -- 'BlinkIndentCyanUnderline',
+  --         -- 'BlinkIndentYellowUnderline',
+  --         -- 'BlinkIndentGreenUnderline',
   --       },
   --     },
   --   },

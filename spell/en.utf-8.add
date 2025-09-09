@@ -1504,3 +1504,9 @@ ALMO
 perturbative
 singlepoint
 agentic
+x80
+aug-cc-pVDZ
+BFDB-Ext
+M1
+M2
+finetuned
