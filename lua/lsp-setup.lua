@@ -506,7 +506,7 @@ lspconfig.texlab.setup {
 
 lspconfig.ltex.setup {
   enabled = {
-    "latex", "tex", "bib",
+    "latex", "tex",
     -- "markdown",
   },
   on_attach = on_attach,
