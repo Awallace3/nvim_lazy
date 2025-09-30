@@ -340,20 +340,20 @@ end
 
 -- mason_lspconfig.setup_handlers {
 --   function(server_name)
-    -- require('lspconfig')[server_name].setup {
-    --   capabilities = capabilities,
-    --   on_attach = on_attach,
-    --   settings = servers[server_name],
-    --   filetypes = (servers[server_name] or {}).filetypes,
-    -- }
-  -- end,
-  -- ["ruff"] = function()
-  --   lspconfig.ruff.setup {
-  --     on_attach = on_attach,
-  --     capabilities = capabilities,
-  --   }
-  -- end,
-  -- ["pylsp"] = function()
+-- require('lspconfig')[server_name].setup {
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   settings = servers[server_name],
+--   filetypes = (servers[server_name] or {}).filetypes,
+-- }
+-- end,
+-- ["ruff"] = function()
+--   lspconfig.ruff.setup {
+--     on_attach = on_attach,
+--     capabilities = capabilities,
+--   }
+-- end,
+-- ["pylsp"] = function()
 -- lspconfig.pylsp.setup {
 --   on_attach = on_attach,
 --   capabilities = capabilities,
@@ -384,8 +384,8 @@ end
 --     },
 --   },
 -- }
-  -- end,
-  -- ["lua_ls"] = function()
+-- end,
+-- ["lua_ls"] = function()
 lspconfig.lua_ls.setup {
   capabilities = capabilities,
   settings = {
@@ -410,8 +410,8 @@ lspconfig.lua_ls.setup {
     }
   }
 }
-  -- end,
-  -- ["rust_analyzer"] = function()
+-- end,
+-- ["rust_analyzer"] = function()
 lspconfig.rust_analyzer.setup {
   on_attach = function(client, bufnr)
     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
@@ -435,8 +435,8 @@ lspconfig.rust_analyzer.setup {
     }
   }
 }
-  -- end,
-  -- ["julials"] = function()
+-- end,
+-- ["julials"] = function()
 lspconfig.julials.setup {
   on_new_config = function(new_config, _)
     local julia = vim.fn.expand("~/.julia/environments/nvim-lspconfig/bin/julia")
@@ -465,8 +465,8 @@ lspconfig.julials.setup {
   on_attach = on_attach,
   capabilities = capabilities,
 }
-  -- end,
-  -- ['texlab'] = function()
+-- end,
+-- ['texlab'] = function()
 lspconfig.texlab.setup {
   on_attach = on_attach,
   capabilities = capabilities,
@@ -735,6 +735,7 @@ end
 
 local nvim_config_path = os.getenv("XDG_CONFIG_HOME") .. "/nvim"
 local mcp_config_path = os.getenv("XDG_CONFIG_HOME") .. "/mcp-hub"
+local opencode_config_path = os.getenv("XDG_CONFIG_HOME") .. "/opencode"
 
 local insert_mappings = {
   { "<C-k>", '<cmd>lua vim.lsp.buf.hover()<cr>', desc = 'Hover Commands' }
@@ -789,25 +790,25 @@ local normal_mappings = {
     { "<leader>du",   "<Cmd>DBUIToggle<Cr>",                                                                                                                                             desc = "Toggle UI" },
     { "<leader>e",    group = "Edit Config" },
     { "<leader>eE",   ":vs<bar>e " .. nvim_config_path .. "/init.lua<cr>",                                                                                                               desc = "init.lua (split)" },
-    { "<leader>eZ",   ":vs<bar>e " .. "~/.zshrc<cr>",                                                                                                               desc = "zshrc (split)" },
+    { "<leader>eZ",   ":vs<bar>e " .. "~/.zshrc<cr>",                                                                                                                                    desc = "zshrc (split)" },
     { "<leader>eL",   ":vs<bar>e " .. nvim_config_path .. "/lsp-setup.lua<cr>",                                                                                                          desc = "Edit lsp (split)" },
     -- { "<leader>eM",   ":vs<bar>e" .. nvim_config_path .. "/lua/cmp-setup.lua<cr>",                                                                                                       desc = "Edit cmp (split)" },
-    { "<leader>eO",   ":vs<bar>e" .. nvim_config_path .. "/lua/options.lua<cr>",                                                                                                         desc = "Edit Options (split)" },
+    { "<leader>eO",   ":vs<bar>e" .. opencode_config_path .. "/opencode.jsonc<cr>",                                                                                                         desc = "Edit Opencode (split)" },
     { "<leader>eP",   ":vs<bar>e" .. nvim_config_path .. "/lua/custom/plugins<cr>",                                                                                                      desc = "Edit Plugins (split)" },
     { "<leader>eS",   ":vs<bar>e" .. nvim_config_path .. "/lua/luasnip-config.lua<bar>40<cr>",                                                                                           desc = "Edit Snippets (split)" },
     { "<leader>ec",   ":e" .. nvim_config_path .. "/lua/chatgpt-config.lua<cr>",                                                                                                         desc = "Edit config" },
     { "<leader>ee",   ":e" .. nvim_config_path .. "/init.lua<cr>",                                                                                                                       desc = "Edit config" },
-    { "<leader>ez",   ":e" .. "~/.zshrc<cr>",                                                                                                                       desc = "Edit zshrc" },
-    { "<leader>em",   ":e" .. mcp_config_path .. "/mcp-servers.json<cr>",                                                                                                                       desc = "Edit mcp-servers.json" },
+    { "<leader>ez",   ":e" .. "~/.zshrc<cr>",                                                                                                                                            desc = "Edit zshrc" },
+    { "<leader>em",   ":e" .. mcp_config_path .. "/mcp-servers.json<cr>",                                                                                                                desc = "Edit mcp-servers.json" },
     { "<leader>ef",   ":e" .. nvim_config_path .. "/nvim_simplified<cr>",                                                                                                                desc = "Edit Last" },
     { "<leader>el",   ":e" .. nvim_config_path .. "/lua/lsp-setup.lua<cr>",                                                                                                              desc = "Edit lsp" },
     -- { "<leader>em",   ":e" .. nvim_config_path .. "/lua/cmp-setup.lua<cr>",                                                                                                              desc = "Edit cmp" },
-    { "<leader>eo",   ":e" .. nvim_config_path .. "/lua/options.lua<cr>",                                                                                                                desc = "Edit Options" },
+    { "<leader>eo",   ":e" .. opencode_config_path .. "/opencode.jsonc<cr>",                                                                                                                desc = "Edit Options" },
     { "<leader>ep",   ":e" .. nvim_config_path .. "/lua/custom/plugins<cr>",                                                                                                             desc = "Edit Plugins" },
     { "<leader>es",   ":e" .. nvim_config_path .. "/snippets<cr>",                                                                                                                       desc = "Edit config" },
     { "<leader>f",    group = "Find" },
     { "<leader>fF",   find_files_different_root,                                                                                                                                         desc = "Telescope Find Files" },
-    { "<leader>fs",   find_document_symbols,                                                                                                                                         desc = "Telescope Doc Symbols" },
+    { "<leader>fs",   find_document_symbols,                                                                                                                                             desc = "Telescope Doc Symbols" },
     { "<leader>fR",   grep_files_different_root,                                                                                                                                         desc = "Telescope Live Grep" },
     { "<leader>fa",   ':lua require("harpoon.mark").add_file()<cr>',                                                                                                                     desc = "Harpoon Add" },
     { "<leader>fb",   ":Telescope buffers<cr>",                                                                                                                                          desc = "Telescope Buffers" },
@@ -848,14 +849,14 @@ local normal_mappings = {
     { "<leader>lw",   "<cmd>lua vim.lsp.buf.add_workspace_folder()<cr>",                                                                                                                 desc = "Add Workspace Folder" },
     { "<leader>lz",   ":LspRestart<cr>",                                                                                                                                                 desc = "LspRestart" },
     { "<leader>m",    group = "Markdown and LaTex" },
-    { "<leader>me",                           "<cmd>lua require 'mdeval'.eval_code_block()<CR>",                                                                                                                                              desc = "EvalBlock" },
+    { "<leader>me",   "<cmd>lua require 'mdeval'.eval_code_block()<CR>",                                                                                                                 desc = "EvalBlock" },
     { "<leader>mf",   "{jV}kgq",                                                                                                                                                         desc = "Format Paragraph" },
     { "<leader>mp",   ":vs <bar> term pandoc -V geometry:margin=1in -C --bibliography=refs.bib --listings --csl=default.csl -s h.md -o h.pdf --pdf-engine=xelatex <CR>",                 desc = "pdflatex md" },
     { "<leader>n",    ":Oil<cr>",                                                                                                                                                        desc = "Tree Toggle" },
     -- { "<leader>pa",   "<cmd>CodeCompanionActions<cr>",                                                                                                                                   desc = "CodeCompanionActions" },
     -- { "<leader>pp",   "<cmd>CodeCompanion<cr>",                                                                                                                                          desc = "CodeCompanion" },
-    { "<leader>pa", "<cmd>AvanteAsk<cr>",                                                                                                                                       desc = "AvanteAsk" },
-    { "<leader>ph", "<cmd>MCPHub<cr>",                                                                                                                                       desc = "MCPHub" },
+    { "<leader>pa",   "<cmd>AvanteAsk<cr>",                                                                                                                                              desc = "AvanteAsk" },
+    { "<leader>ph",   "<cmd>MCPHub<cr>",                                                                                                                                                 desc = "MCPHub" },
     -- { "<leader>p<C-t>", "<cmd>GpChatNew tabnew<cr>",                                                                                                                                       desc = "New Chat tabnew" },
     -- { "<leader>p<C-v>", "<cmd>GpChatNew vsplit<cr>",                                                                                                                                       desc = "New Chat vsplit" },
     -- { "<leader>p<C-x>", "<cmd>GpChatNew split<cr>",                                                                                                                                        desc = "New Chat split" },
@@ -893,8 +894,8 @@ local normal_mappings = {
     { "<leader>rc",   ":vs<bar>term mpiexec -n 1 python3 -u create_db.py<cr>",                                                                                                           desc = "mpiexec create_db.py" },
     { "<leader>rd",   ":vs <bar>term make build_and_test<cr>",                                                                                                                           desc = "dftd4 build and run" },
     { "<leader>rf",   ":vs <bar>term flask --app cdsg run --debug<cr>",                                                                                                                  desc = "Run csdg" },
-    { "<leader>ry",   ":vs <bar>term yarn run start<cr>",                                                                                                                  desc = "yarn run start" },
-    { "<leader>rN",   ":vs <bar>term npm run start<cr>",                                                                                                                  desc = "npm run start" },
+    { "<leader>ry",   ":vs <bar>term yarn run start<cr>",                                                                                                                                desc = "yarn run start" },
+    { "<leader>rN",   ":vs <bar>term npm run start<cr>",                                                                                                                                 desc = "npm run start" },
     { "<leader>rh",   ":vs<bar>term mpirun -n 8 --machinefile machineFile python3 -u mpi_jobs.py<cr>",                                                                                   desc = "mpiexec main.py" },
     { "<leader>ria",  "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 -u %<cr>",                                                                                                             desc = "mpiexec active python3" },
     { "<leader>ric",  ":vs<bar>term mpiexec -n 1 python3 -u mpi_jobs.py --serial --scoring_function='vina' --system='proteinHs_ligandPQR' --testing --sf_components --verbosity=1 <cr>", desc = "mpiexec main.py" },
