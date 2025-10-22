@@ -39,7 +39,7 @@ return {
           if using_psi4 then
             return {
               "/home/awallace43/gits/psi4/build_saptdft_ein/stage/bin/psi4",
-              "tests/pytests/test_saptdft.py"
+              "/home/awallace43/gits/psi4/tests/pytests/test_saptdft.py"
             }
           else
             return {}
@@ -71,13 +71,14 @@ return {
       },
     }
 
+    dapui.setup()
 
     dap.configurations.c = dap.configurations.cpp
     dap.configurations.rust = dap.configurations.cpp
 
     dap.listeners.after.event_initialized["dapui_config"] = function() dapui.open() end
-    dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
-    dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
+    -- dap.listeners.before.event_terminated["dapui_config"] = function() dapui.close() end
+    -- dap.listeners.before.event_exited["dapui_config"] = function() dapui.close() end
 
     vim.keymap.set("n", "<F5>", dap.continue)
     vim.keymap.set("n", "<F10>", dap.step_over)
