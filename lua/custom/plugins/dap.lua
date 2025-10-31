@@ -39,7 +39,8 @@ return {
           if using_psi4 then
             return {
               "/home/awallace43/gits/psi4/build_saptdft_ein/stage/bin/psi4",
-              "/home/awallace43/gits/psi4/tests/pytests/test_saptdft.py"
+              -- "/home/awallace43/gits/psi4/tests/pytests/test_saptdft.py"
+              "/home/awallace43/gits/psi4/tests/pytests/test_fsaptdft.py"
             }
           else
             return {}
