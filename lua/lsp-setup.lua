@@ -150,11 +150,14 @@ mason_lspconfig.setup {
 }
 
 MainPythonFile = "main.py"
+MainPythonFileSet = false
 UpdateMainPython = function()
   -- get active buffer's file path and name and update global variable MainPythonFile (should be absolute path)
   MainPythonFile = vim.fn.expand("%:p")
+  MainPythonFileSet = true
   print("Main Python File Updated to: " .. MainPythonFile)
 end
+
 
 RunMainPython = function()
   print("Running Main Python File: " .. MainPythonFile)
@@ -168,11 +171,32 @@ RunMainPython = function()
 end
 
 MainbashFile = "run.sh"
+MainbashFileSet = false
 UpdateMainbash = function()
   -- get active buffer's file path and name and update global variable MainbashFile
   MainbashFile = vim.fn.expand("%:t")
+  MainbashFileSet = true
   print("Main bash File Updated to: " .. MainbashFile)
 end
+
+-- Auto-update main files when opening Python or Bash files (only once)
+vim.api.nvim_create_autocmd("BufEnter", {
+  pattern = "*.py",
+  callback = function()
+    if not MainPythonFileSet then
+      UpdateMainPython()
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufEnter", {
+  pattern = "*.sh",
+  callback = function()
+    if not MainbashFileSet then
+      UpdateMainbash()
+    end
+  end,
+})
 
 RunMainbash = function()
   print("Running Main bash File: " .. MainbashFile)
