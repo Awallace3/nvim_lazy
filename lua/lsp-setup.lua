@@ -758,6 +758,8 @@ function initJypterSession()
 end
 
 local nvim_config_path = os.getenv("XDG_CONFIG_HOME") .. "/nvim"
+local hyprland_config_path = os.getenv("XDG_CONFIG_HOME") .. "/hypr"
+local waybar_config_path = os.getenv("XDG_CONFIG_HOME") .. "/waybar"
 local mcp_config_path = os.getenv("XDG_CONFIG_HOME") .. "/mcp-hub"
 local opencode_config_path = os.getenv("XDG_CONFIG_HOME") .. "/opencode"
 
@@ -822,6 +824,10 @@ local normal_mappings = {
     { "<leader>eS",   ":vs<bar>e" .. nvim_config_path .. "/lua/luasnip-config.lua<bar>40<cr>",                                                                                           desc = "Edit Snippets (split)" },
     { "<leader>ec",   ":e" .. nvim_config_path .. "/lua/chatgpt-config.lua<cr>",                                                                                                         desc = "Edit config" },
     { "<leader>ee",   ":e" .. nvim_config_path .. "/init.lua<cr>",                                                                                                                       desc = "Edit config" },
+    { "<leader>eh",   ":e" .. hyprland_config_path .. "/hyprland.conf<cr>",                                                                                                                       desc = "Edit hypr config" },
+    { "<leader>eH",   ":e" .. hyprland_config_path .. "/hyprland.conf<cr>",                                                                                                                       desc = "Edit hypr config (split)" },
+    { "<leader>ew",   ":e" .. waybar_config_path .. "/config<cr>",                                                                                                                       desc = "Edit waybar config" },
+    { "<leader>eW",   ":e" .. waybar_config_path .. "/config<cr>",                                                                                                                       desc = "Edit waybar config (split)" },
     { "<leader>ez",   ":e" .. "~/.zshrc<cr>",                                                                                                                                            desc = "Edit zshrc" },
     { "<leader>em",   ":e" .. mcp_config_path .. "/mcp-servers.json<cr>",                                                                                                                desc = "Edit mcp-servers.json" },
     { "<leader>ef",   ":e" .. nvim_config_path .. "/nvim_simplified<cr>",                                                                                                                desc = "Edit Last" },
