@@ -88,7 +88,16 @@ return {
             t({ "<!-- target: " }), i(1, "targ"),
             t({ "-->", "```python", "import sympy as sp", "", "" }),
             i(0, "start coding"), t({ "", "", "```" })
-        }), s({
+        }), 
+s({
+            trig = "del",
+            namr = "partialDerivatives",
+            dscr = "partial derivatives thermo"
+        }, {
+            t({ "\\frac{\\partial " }), i(1, "num"), t({ "}{\\partial " }),
+            i(2, "den"), t({ "}" }), i(0)
+        }),
+            s({
             trig = "partials",
             namr = "partialDerivatives",
             dscr = "partial derivatives thermo"
