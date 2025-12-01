@@ -5,6 +5,7 @@ return {
     require('opencode').setup({
       preferred_picker = 'snacks',        -- 'telescope', 'fzf', 'mini.pick', 'snacks', 'select', if nil, it will use the best available picker. Note mini.pick does not support multiple selections
       preferred_completion = 'nvim-cmp',    -- 'blink', 'nvim-cmp','vim_complete' if nil, it will use the best available completion
+      -- preferred_completion = 'blink',    -- 'blink', 'nvim-cmp','vim_complete' if nil, it will use the best available completion
       default_global_keymaps = true, -- If false, disables all default global keymaps
       default_mode = 'build',        -- 'build' or 'plan' or any custom configured. @see [OpenCode Agents](https://opencode.ai/docs/modes/)
       keymap_prefix = '<leader>o',   -- Default keymap prefix for global keymaps change to your preferred prefix and it will be applied to all keymaps starting with <leader>o
