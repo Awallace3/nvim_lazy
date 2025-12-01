@@ -4,7 +4,8 @@ return {
     -- Default configuration with all available options
     require('opencode').setup({
       preferred_picker = 'snacks',        -- 'telescope', 'fzf', 'mini.pick', 'snacks', 'select', if nil, it will use the best available picker. Note mini.pick does not support multiple selections
-      preferred_completion = 'blink',    -- 'blink', 'nvim-cmp','vim_complete' if nil, it will use the best available completion
+      -- preferred_completion = 'nvim-cmp',    -- 'blink', 'nvim-cmp','vim_complete' if nil, it will use the best available completion
+      preferred_completion = nil,    -- 'blink', 'nvim-cmp','vim_complete' if nil, it will use the best available completion
       default_global_keymaps = true, -- If false, disables all default global keymaps
       default_mode = 'build',        -- 'build' or 'plan' or any custom configured. @see [OpenCode Agents](https://opencode.ai/docs/modes/)
       keymap_prefix = '<leader>o',   -- Default keymap prefix for global keymaps change to your preferred prefix and it will be applied to all keymaps starting with <leader>o
@@ -48,7 +49,7 @@ return {
           ['<tab>'] = { 'toggle_pane', mode = { 'n', 'i' } },          -- Toggle between input and output panes
           ['<up>'] = { 'prev_prompt_history', mode = { 'n', 'i' } },   -- Navigate to previous prompt in history
           ['<down>'] = { 'next_prompt_history', mode = { 'n', 'i' } }, -- Navigate to next prompt in history
-          ['<M-m>'] = { 'switch_mode' },                               -- Switch between modes (build/plan)
+          ['<C-m>'] = { 'switch_mode' },                               -- Switch between modes (build/plan)
         },
         output_window = {
           ['<esc>'] = { 'close' },                            -- Close UI windows
@@ -102,7 +103,7 @@ return {
         },
         input = {
           text = {
-            wrap = false, -- Wraps text inside input window
+            wrap = true, -- Wraps text inside input window
           },
         },
         completion = {
@@ -178,10 +179,10 @@ return {
     -- 'hrsh7th/nvim-cmp',
 
     -- Optional, for file mentions picker, pick only one
-    'folke/snacks.nvim',
+    -- 'folke/snacks.nvim',
     -- 'nvim-telescope/telescope.nvim',
     -- 'ibhagwan/fzf-lua',
-    -- 'nvim_mini/mini.nvim',
+    'nvim_mini/mini.nvim',
   },
 }
 -- OG opencode plugin
