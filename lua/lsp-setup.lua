@@ -75,7 +75,7 @@ local on_attach = function(_, bufnr)
 end
 
 local lspconfig = require('lspconfig')
-
+-- local lspconfig = vim.lsp.config
 
 -- document existing key chains
 
@@ -410,7 +410,8 @@ end
 -- }
 -- end,
 -- ["lua_ls"] = function()
-lspconfig.lua_ls.setup {
+-- lspconfig.lua_ls.setup {
+vim.lsp.config('lua_ls',  {
   capabilities = capabilities,
   settings = {
     Lua = {
@@ -434,9 +435,10 @@ lspconfig.lua_ls.setup {
     }
   }
 }
+)
 -- end,
 -- ["rust_analyzer"] = function()
-lspconfig.rust_analyzer.setup {
+vim.lsp.config('rust_analyzer', {
   on_attach = function(client, bufnr)
     vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
   end,
@@ -458,10 +460,11 @@ lspconfig.rust_analyzer.setup {
       },
     }
   }
-}
+})
+
 -- end,
 -- ["julials"] = function()
-lspconfig.julials.setup {
+vim.lsp.config('julials', {
   on_new_config = function(new_config, _)
     local julia = vim.fn.expand("~/.julia/environments/nvim-lspconfig/bin/julia")
     -- local julia = vim.fn.expand("~/gits/julia/julia")
@@ -488,10 +491,10 @@ lspconfig.julials.setup {
   end,
   on_attach = on_attach,
   capabilities = capabilities,
-}
+})
 -- end,
 -- ['texlab'] = function()
-lspconfig.texlab.setup {
+vim.lsp.config('texlab', {
   on_attach = on_attach,
   capabilities = capabilities,
   settings = {
@@ -524,11 +527,11 @@ lspconfig.texlab.setup {
       formatterLineLength = 30,
     },
   },
-}
+})
 --   end,
 -- }
 
-lspconfig.ltex.setup {
+vim.lsp.config('ltex', {
   enabled = {
     "latex", "tex",
     -- "markdown",
@@ -576,10 +579,10 @@ lspconfig.ltex.setup {
       }
     },
   },
-}
+})
 
 
-lspconfig.clangd.setup {
+vim.lsp.config('clangd', {
   cmd = {
     "clangd",
     "--log=verbose",
@@ -589,7 +592,8 @@ lspconfig.clangd.setup {
     "--query-driver=/usr/bin/g++," .. conda_cpp,
   },
   capabilities = capabilities
-}
+})
+
 
 require('which-key').add {
   { "<leader>c",  group = "[C]ode" },
