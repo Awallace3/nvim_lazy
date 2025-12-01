@@ -48,7 +48,7 @@ return {
           ['<tab>'] = { 'toggle_pane', mode = { 'n', 'i' } },          -- Toggle between input and output panes
           ['<up>'] = { 'prev_prompt_history', mode = { 'n', 'i' } },   -- Navigate to previous prompt in history
           ['<down>'] = { 'next_prompt_history', mode = { 'n', 'i' } }, -- Navigate to next prompt in history
-          ['<M-m>'] = { 'switch_mode' },                               -- Switch between modes (build/plan)
+          ['<C-m>'] = { 'switch_mode' },                               -- Switch between modes (build/plan)
         },
         output_window = {
           ['<esc>'] = { 'close' },                            -- Close UI windows
@@ -102,7 +102,7 @@ return {
         },
         input = {
           text = {
-            wrap = false, -- Wraps text inside input window
+            wrap = true, -- Wraps text inside input window
           },
         },
         completion = {
