@@ -808,6 +808,40 @@ local function capture_and_copy(cmd)
   vim.fn.setreg('+', output)
 end
 
+-- Function to open file under cursor with okular
+OpenFileWithOkular = function()
+  -- Get the filename under cursor (similar to what gf uses)
+  local cfile = vim.fn.expand('<cfile>')
+  
+  if cfile == "" then
+    print("No file under cursor")
+    return
+  end
+  
+  -- Check if file exists, if not try to make it an absolute path
+  local filepath = cfile
+  if vim.fn.filereadable(filepath) == 0 then
+    -- Try relative to current file's directory
+    local current_dir = vim.fn.expand('%:p:h')
+    filepath = current_dir .. '/' .. cfile
+    
+    if vim.fn.filereadable(filepath) == 0 then
+      -- Try relative to current working directory
+      filepath = vim.fn.getcwd() .. '/' .. cfile
+      
+      if vim.fn.filereadable(filepath) == 0 then
+        print("File not found: " .. cfile)
+        return
+      end
+    end
+  end
+  
+  -- Open with okular in background
+  local cmd = string.format("okular '%s' &", filepath)
+  vim.fn.system(cmd)
+  print("Opening with okular: " .. filepath)
+end
+
 
 local normal_mappings = {
   {
@@ -862,6 +896,7 @@ local normal_mappings = {
     { "<leader>gdo",   ":DiffviewOpen<cr>",                                                                                                                                               desc = "Git Diff Open" },
     { "<leader>gdc",   ":DiffviewClose<cr>",                                                                                                                                               desc = "Git Diff Close" },
     { "<leader>gs",   ":lua require('neogit').open()<CR>",                                                                                                                               desc = "Git Status" },
+    { "go",           OpenFileWithOkular,                                                                                                                                            desc = "Open file with Okular" },
     { "<leader>i",    group = "Insert" },
     { "<leader>it",   "o* [ ] ",                                                                                                                                                         desc = "Insert Task" },
     { "<leader>l",    group = "LSP" },
