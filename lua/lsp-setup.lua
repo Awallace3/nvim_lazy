@@ -240,17 +240,39 @@ UserHome = vim.fn.expand("$HOME")
 
 
 function Get_visual_selection()
-  -- 0.52917721067
+  -- Get the visual selection marks
   local s_start = vim.fn.getpos("'<")
   local s_end = vim.fn.getpos("'>")
+  
+  -- Check if marks are valid
+  if s_start[2] == 0 or s_end[2] == 0 then
+    return ""
+  end
+  
   local n_lines = math.abs(s_end[2] - s_start[2]) + 1
   local lines = vim.api.nvim_buf_get_lines(0, s_start[2] - 1, s_end[2], false)
-  lines[1] = string.sub(lines[1], s_start[3], -1)
-  if n_lines == 1 then
-    lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3] - s_start[3] + 1)
-  else
-    lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3])
+  
+  -- Check if we got any lines
+  if #lines == 0 then
+    return ""
   end
+  
+  -- Handle first line
+  if lines[1] then
+    lines[1] = string.sub(lines[1], s_start[3], -1)
+  end
+  
+  -- Handle last line
+  if n_lines == 1 then
+    if lines[n_lines] then
+      lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3] - s_start[3] + 1)
+    end
+  else
+    if lines[n_lines] then
+      lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3])
+    end
+  end
+  
   return table.concat(lines, '\n')
 end
 
@@ -287,79 +309,96 @@ helper = require("helper")
 
 function Pymol_visual_xyz()
   local coords = Get_visual_selection()
+  if coords == "" then
+    print("No selection")
+    return
+  end
   Write_coords_to_tmp_xyz(coords)
   print("Running Pymol")
-  print("pymol tmp.xyz")
-  vim.cmd [[
-        vs
-        " term pymol tmp.xyz
-        term pymol ~/default_pymol.pml
-    ]]
+  -- Use bash -c to expand aliases and run pymol
+  vim.cmd("vs")
+  vim.cmd("wincmd l")
+  vim.cmd("term conda run -n pymol pymol ~/default_pymol.pml")
 end
 
 function Pymol_visual_xyz_convert()
   local coords = Get_visual_selection()
+  if coords == "" then
+    print("No selection")
+    return
+  end
   local new_coords = ""
   for line in coords:gmatch("[^\r\n]+") do
-    local el, x, y, z = line:match("([%d])%s+([%d%.%-]+)%s+([%d%.%-]+)%s+([%d%.%-]+)")
-    el = helper.atomic_number_to_element(tonumber(el))
-    x = x * 1
-    y = y * 1
-    z = z * 1
-    new_coords = new_coords .. el .. " " .. x .. " " .. y .. " " .. z .. "\n"
+    local el, x, y, z = line:match("([%d]+)%s+([%d%.%-]+)%s+([%d%.%-]+)%s+([%d%.%-]+)")
+    if el and x and y and z then
+      el = helper.atomic_number_to_element(tonumber(el))
+      x = tonumber(x)
+      y = tonumber(y)
+      z = tonumber(z)
+      new_coords = new_coords .. el .. " " .. x .. " " .. y .. " " .. z .. "\n"
+    end
   end
   Write_coords_to_tmp_xyz(new_coords)
   print("Running Pymol")
-  print("pymol tmp.xyz")
-  vim.cmd [[
-        vs
-        term pymol ~/default_pymol.pml
-    ]]
+  -- Use bash -c to expand aliases and run pymol
+  vim.cmd("vs")
+  vim.cmd("wincmd l")
+  vim.cmd("term conda run -n pymol pymol ~/default_pymol.pml")
 end
 
 function Pymol_visual_xyz_bohr_convert()
   local coords = Get_visual_selection()
+  if coords == "" then
+    print("No selection")
+    return
+  end
   -- need to convert bohr to angstrom
   -- 1 bohr = 0.52917721067 angstrom
   local bohr_to_angstrom = 0.52917721067
   local new_coords = ""
   for line in coords:gmatch("[^\r\n]+") do
-    local el, x, y, z = line:match("([%d])%s+([%d%.%-]+)%s+([%d%.%-]+)%s+([%d%.%-]+)")
-    el = helper.atomic_number_to_element(tonumber(el))
-    x = x * bohr_to_angstrom
-    y = y * bohr_to_angstrom
-    z = z * bohr_to_angstrom
-    new_coords = new_coords .. el .. " " .. x .. " " .. y .. " " .. z .. "\n"
+    local el, x, y, z = line:match("([%d]+)%s+([%d%.%-]+)%s+([%d%.%-]+)%s+([%d%.%-]+)")
+    if el and x and y and z then
+      el = helper.atomic_number_to_element(tonumber(el))
+      x = tonumber(x) * bohr_to_angstrom
+      y = tonumber(y) * bohr_to_angstrom
+      z = tonumber(z) * bohr_to_angstrom
+      new_coords = new_coords .. el .. " " .. x .. " " .. y .. " " .. z .. "\n"
+    end
   end
   Write_coords_to_tmp_xyz(new_coords)
   print("Running Pymol")
-  print("pymol tmp.xyz")
-  vim.cmd [[
-        vs
-        term pymol ~/default_pymol.pml
-    ]]
+  -- Use bash -c to expand aliases and run pymol
+  vim.cmd("vs")
+  vim.cmd("wincmd l")
+  vim.cmd("term conda run -n pymol pymol ~/default_pymol.pml")
 end
 
 function Pymol_visual_xyz_bohr()
   local coords = Get_visual_selection()
+  if coords == "" then
+    print("No selection")
+    return
+  end
   -- need to convert bohr to angstrom
   -- 1 bohr = 0.52917721067 angstrom
   local bohr_to_angstrom = 0.52917721067
   local new_coords = ""
   for line in coords:gmatch("[^\r\n]+") do
-    local el, x, y, z = line:match("([%d])%s+([%d%.%-]+)%s+([%d%.%-]+)%s+([%d%.%-]+)")
-    x = x * bohr_to_angstrom
-    y = y * bohr_to_angstrom
-    z = z * bohr_to_angstrom
-    new_coords = new_coords .. el .. " " .. x .. " " .. y .. " " .. z .. "\n"
+    local el, x, y, z = line:match("([%d]+)%s+([%d%.%-]+)%s+([%d%.%-]+)%s+([%d%.%-]+)")
+    if el and x and y and z then
+      x = tonumber(x) * bohr_to_angstrom
+      y = tonumber(y) * bohr_to_angstrom
+      z = tonumber(z) * bohr_to_angstrom
+      new_coords = new_coords .. el .. " " .. x .. " " .. y .. " " .. z .. "\n"
+    end
   end
   Write_coords_to_tmp_xyz(new_coords)
   print("Running Pymol")
-  print("pymol tmp.xyz")
-  vim.cmd [[
-        vs
-        term pymol ~/default_pymol.pml
-    ]]
+  -- Use bash -c to expand aliases and run pymol
+  vim.cmd("vs")
+  vim.cmd("wincmd l")
+  vim.cmd("term conda run -n pymol pymol ~/default_pymol.pml")
 end
 
 -- mason_lspconfig.setup_handlers {
@@ -1043,10 +1082,10 @@ local visual_mappings = {
     { "<leader>t",    group = "LaTex" },
     { "<leader>tc",   ":w !wc -w<CR>",               desc = "Word Count" },
     { "<leader>tr",   Round_number,                  desc = "Round Number" },
-    { "<leader>vpe",  Pymol_visual_xyz,              desc = "Pymol Visual" },
-    { "<leader>vpc",  Pymol_visual_xyz_convert,      desc = "Pymol Visual Convert" },
-    { "<leader>vpb",  Pymol_visual_xyz_bohr,         desc = "Pymol Visual Bohr" },
-    { "<leader>vpbc", Pymol_visual_xyz_bohr_convert, desc = "Pymol Visual Bohr Convert" },
+    { "<leader>pe",  ":<C-u>lua Pymol_visual_xyz()<CR>",              desc = "Pymol Visual" },
+    { "<leader>pc",  ":<C-u>lua Pymol_visual_xyz_convert()<CR>",      desc = "Pymol Visual Convert" },
+    { "<leader>pb",  ":<C-u>lua Pymol_visual_xyz_bohr()<CR>",         desc = "Pymol Visual Bohr" },
+    { "<leader>pbc", ":<C-u>lua Pymol_visual_xyz_bohr_convert()<CR>", desc = "Pymol Visual Bohr Convert" },
   },
 }
 
