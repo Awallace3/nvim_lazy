@@ -39,12 +39,26 @@ return {
           dismiss = "<M-]>",
         },
       },
-      should_attach = function(_, bufname)
-        if string.match(bufname, "ipynb") then
+      filetypes = {
+        markdown = function()
+          local bufname = vim.api.nvim_buf_get_name(0)
+          if string.match(bufname, '%.ipynb$') then
+            print("Copilot enabled for ipynb file")
+            return true
+          end
+          print("Copilot disabled for markdown file")
+          return false
+        end,
+        sh = function()
+          local bufname = vim.api.nvim_buf_get_name(0)
+          if string.match(vim.fs.basename(bufname), '^%.env.*') then
+            -- disable for .env files
+            print("Copilot disabled for .env file")
+            return false
+          end
           return true
-        end
-        return true
-      end
+        end,
+      }
     })
     -- require("copilot_cmp").setup()
     -- local map = vim.keymap.set
@@ -53,23 +67,5 @@ return {
     -- map('i', '<M-j>', '<Plug>(copilot-previous)')
     -- map('i', '<M-l>', '<Plug>(copilot-select)')
     -- vim.g.copilot_no_tab_map = true
-    vim.g.copilot_filetypes = {
-      markdown = function()
-        if string.match(vim.fs.basename(vim.api.nvim_buf_get_name(0)), '%.ipynb$') then
-          -- echo "enable for ipynb files"
-          vim.notify("Copilot enabled for ipynb file")
-          return true
-        end
-        vim.notify("Copilot disabled for markdown file")
-        return false
-      end,
-      sh = function()
-        if string.match(vim.fs.basename(vim.api.nvim_buf_get_name(0)), '^%.env.*') then
-          -- disable for .env files
-          return false
-        end
-        return true
-      end,
-    }
   end
 }
