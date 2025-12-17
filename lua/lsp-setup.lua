@@ -243,25 +243,25 @@ function Get_visual_selection()
   -- Get the visual selection marks
   local s_start = vim.fn.getpos("'<")
   local s_end = vim.fn.getpos("'>")
-  
+
   -- Check if marks are valid
   if s_start[2] == 0 or s_end[2] == 0 then
     return ""
   end
-  
+
   local n_lines = math.abs(s_end[2] - s_start[2]) + 1
   local lines = vim.api.nvim_buf_get_lines(0, s_start[2] - 1, s_end[2], false)
-  
+
   -- Check if we got any lines
   if #lines == 0 then
     return ""
   end
-  
+
   -- Handle first line
   if lines[1] then
     lines[1] = string.sub(lines[1], s_start[3], -1)
   end
-  
+
   -- Handle last line
   if n_lines == 1 then
     if lines[n_lines] then
@@ -272,7 +272,7 @@ function Get_visual_selection()
       lines[n_lines] = string.sub(lines[n_lines], 1, s_end[3])
     end
   end
-  
+
   return table.concat(lines, '\n')
 end
 
@@ -401,56 +401,8 @@ function Pymol_visual_xyz_bohr()
   vim.cmd("term conda run -n pymol pymol ~/default_pymol.pml")
 end
 
--- mason_lspconfig.setup_handlers {
---   function(server_name)
--- require('lspconfig')[server_name].setup {
---   capabilities = capabilities,
---   on_attach = on_attach,
---   settings = servers[server_name],
---   filetypes = (servers[server_name] or {}).filetypes,
--- }
--- end,
--- ["ruff"] = function()
---   lspconfig.ruff.setup {
---     on_attach = on_attach,
---     capabilities = capabilities,
---   }
--- end,
--- ["pylsp"] = function()
--- lspconfig.pylsp.setup {
---   on_attach = on_attach,
---   capabilities = capabilities,
---   settings = {
---     pylsp = {
---       plugins = {
---         pycodestyle = { enabled = false },
---         pyflakes = { enabled = false },
---         pylint = { enabled = false },
---         -- yapf = { enabled = false },
---         -- flake8 = { enabled = false },
---         -- mypy = { enabled = false },
---         -- isort = { enabled = false },
---         -- jedi_completion = { enabled = false },
---         -- jedi_definition = { enabled = false },
---         -- jedi_hover = { enabled = false },
---         -- jedi_references = { enabled = false },
---         -- jedi_signature_help = { enabled = false },
---         -- jedi_symbols = { enabled = false },
---         -- mccabe = { enabled = false },
---         -- pydocstyle = { enabled = false },
---         -- rope_completion = { enabled = false },
---         -- rope_definition = { enabled = false },
---         -- rope_hover = { enabled = false },
---         -- rope_references = { enabled = false },
---         -- rope_signature_help = { enabled = false },
---       },
---     },
---   },
--- }
--- end,
--- ["lua_ls"] = function()
 -- lspconfig.lua_ls.setup {
-vim.lsp.config('lua_ls',  {
+vim.lsp.config('lua_ls', {
   capabilities = capabilities,
   settings = {
     Lua = {
@@ -782,23 +734,25 @@ function Round_number()
   vim.cmd(str_cmd)
   vim.api.nvim_input("<esc>")
 end
-
-function initJypterSession()
-  local file_extension = vim.fn.expand("%:e")
-  local conda_env = os.getenv("CONDA_PREFIX")
-  print(conda_env)
-  if file_extension ~= 'ipynb' and file_extension ~= 'py' then
-    print(file_extension)
-    print("Not a Jupyter Notebook")
-    return
-  end
-  if file_extension == 'ipynb' then
-    vim.cmd(':call jukit#convert#notebook_convert("jupyter-notebook")')
-  end
-  local cmd = "JukitOut conda activate " .. conda_env
-  print(cmd)
-  vim.cmd(cmd)
-end
+--
+-- function initJypterSession()
+--   -- if using jukit...
+--   -- local file_extension = vim.fn.expand("%:e")
+--   -- local conda_env = os.getenv("CONDA_PREFIX")
+--   -- print(conda_env)
+--   -- if file_extension ~= 'ipynb' and file_extension ~= 'py' then
+--   --   print(file_extension)
+--   --   print("Not a Jupyter Notebook")
+--   --   return
+--   -- end
+--   -- if file_extension == 'ipynb' then
+--   --   vim.cmd(':call jukit#convert#notebook_convert("jupyter-notebook")')
+--   -- end
+--   -- local cmd = "JukitOut conda activate " .. conda_env
+--   -- print(cmd)
+--   -- vim.cmd(cmd)
+--   --
+-- end
 
 local nvim_config_path = os.getenv("XDG_CONFIG_HOME") .. "/nvim"
 local hyprland_config_path = os.getenv("XDG_CONFIG_HOME") .. "/hypr"
@@ -812,69 +766,34 @@ local insert_mappings = {
 local insert_opts = { mode = "i" }
 wk.add(insert_mappings, insert_opts)
 
-local function patternReplaceIncrement()
-  -- Prompt the user for the pattern and replacement text
-  local pattern = vim.fn.input("Pattern to replace: ")
-
-  -- Initialize the increment variable
-  local i = 1
-
-  -- Define a function to perform the replacement
-  local function replace_line(line_num)
-    local line = vim.fn.getline(line_num)
-    if line:find(pattern) then
-      -- Create the replacement text with the current increment
-      local replacement = pattern .. "_" .. i
-      -- Perform the substitution in the line
-      local new_line = line:gsub(pattern, replacement)
-      vim.fn.setline(line_num, new_line)
-      -- Increment the counter
-      i = i + 1
-    end
-  end
-
-  -- Iterate over all lines in the buffer
-  for line_num = 1, vim.fn.line('$') do
-    replace_line(line_num)
-  end
-end
-
-local function capture_and_copy(cmd)
-  -- Create a command to redirect the output to a variable
-  local output = vim.api.nvim_exec(cmd, true)
-
-  -- Copy the output to the clipboard
-  vim.fn.setreg('+', output)
-end
-
 -- Function to open file under cursor with okular
 OpenFileWithOkular = function()
   -- Get the filename under cursor (similar to what gf uses)
   local cfile = vim.fn.expand('<cfile>')
-  
+
   if cfile == "" then
     print("No file under cursor")
     return
   end
-  
+
   -- Check if file exists, if not try to make it an absolute path
   local filepath = cfile
   if vim.fn.filereadable(filepath) == 0 then
     -- Try relative to current file's directory
     local current_dir = vim.fn.expand('%:p:h')
     filepath = current_dir .. '/' .. cfile
-    
+
     if vim.fn.filereadable(filepath) == 0 then
       -- Try relative to current working directory
       filepath = vim.fn.getcwd() .. '/' .. cfile
-      
+
       if vim.fn.filereadable(filepath) == 0 then
         print("File not found: " .. cfile)
         return
       end
     end
   end
-  
+
   -- Open with okular in background
   local cmd = string.format("okular '%s' &", filepath)
   vim.fn.system(cmd)
@@ -895,14 +814,13 @@ local normal_mappings = {
     { "<leader>eE",   ":vs<bar>e " .. nvim_config_path .. "/init.lua<cr>",                                                                                                               desc = "init.lua (split)" },
     { "<leader>eZ",   ":vs<bar>e " .. "~/.zshrc<cr>",                                                                                                                                    desc = "zshrc (split)" },
     { "<leader>eL",   ":vs<bar>e " .. nvim_config_path .. "/lsp-setup.lua<cr>",                                                                                                          desc = "Edit lsp (split)" },
-    -- { "<leader>eM",   ":vs<bar>e" .. nvim_config_path .. "/lua/cmp-setup.lua<cr>",                                                                                                       desc = "Edit cmp (split)" },
-    { "<leader>eO",   ":vs<bar>e" .. opencode_config_path .. "/opencode.jsonc<cr>",                                                                                                         desc = "Edit Opencode (split)" },
+    { "<leader>eO",   ":vs<bar>e" .. opencode_config_path .. "/opencode.jsonc<cr>",                                                                                                      desc = "Edit Opencode (split)" },
     { "<leader>eP",   ":vs<bar>e" .. nvim_config_path .. "/lua/custom/plugins<cr>",                                                                                                      desc = "Edit Plugins (split)" },
     { "<leader>eS",   ":vs<bar>e" .. nvim_config_path .. "/lua/luasnip-config.lua<bar>40<cr>",                                                                                           desc = "Edit Snippets (split)" },
-    { "<leader>ec",   ":e" .. nvim_config_path .. "/lua/cmp-setup.lua<cr>",                                                                                                         desc = "Edit config" },
+    { "<leader>ec",   ":e" .. nvim_config_path .. "/lua/cmp-setup.lua<cr>",                                                                                                              desc = "Edit config" },
     { "<leader>ee",   ":e" .. nvim_config_path .. "/init.lua<cr>",                                                                                                                       desc = "Edit config" },
-    { "<leader>eh",   ":e" .. hyprland_config_path .. "/hyprland.conf<cr>",                                                                                                                       desc = "Edit hypr config" },
-    { "<leader>eH",   ":e" .. hyprland_config_path .. "/hyprland.conf<cr>",                                                                                                                       desc = "Edit hypr config (split)" },
+    { "<leader>eh",   ":e" .. hyprland_config_path .. "/hyprland.conf<cr>",                                                                                                              desc = "Edit hypr config" },
+    { "<leader>eH",   ":e" .. hyprland_config_path .. "/hyprland.conf<cr>",                                                                                                              desc = "Edit hypr config (split)" },
     { "<leader>ew",   ":e" .. waybar_config_path .. "/config<cr>",                                                                                                                       desc = "Edit waybar config" },
     { "<leader>eW",   ":e" .. waybar_config_path .. "/config<cr>",                                                                                                                       desc = "Edit waybar config (split)" },
     { "<leader>ez",   ":e" .. "~/.zshrc<cr>",                                                                                                                                            desc = "Edit zshrc" },
@@ -910,7 +828,7 @@ local normal_mappings = {
     { "<leader>ef",   ":e" .. nvim_config_path .. "/nvim_simplified<cr>",                                                                                                                desc = "Edit Last" },
     { "<leader>el",   ":e" .. nvim_config_path .. "/lua/lsp-setup.lua<cr>",                                                                                                              desc = "Edit lsp" },
     -- { "<leader>em",   ":e" .. nvim_config_path .. "/lua/cmp-setup.lua<cr>",                                                                                                              desc = "Edit cmp" },
-    { "<leader>eo",   ":e" .. nvim_config_path .. "/lua/custom/plugins/opencode.lua<cr>",                                                                                                                desc = "E opencode nvim" },
+    { "<leader>eo",   ":e" .. nvim_config_path .. "/lua/custom/plugins/opencode.lua<cr>",                                                                                                desc = "E opencode nvim" },
     { "<leader>ep",   ":e" .. nvim_config_path .. "/lua/custom/plugins<cr>",                                                                                                             desc = "Edit Plugins" },
     { "<leader>es",   ":e" .. nvim_config_path .. "/snippets<cr>",                                                                                                                       desc = "Edit config" },
     { "<leader>f",    group = "Find" },
@@ -932,10 +850,10 @@ local normal_mappings = {
     { "<leader>gaf",  ":Gw<cr>",                                                                                                                                                         desc = "Add File" },
     { "<leader>gb",   ":Git blame<cr>",                                                                                                                                                  desc = "Git Blame" },
     { "<leader>gc",   ":Git commit<bar>:startinsert<cr>",                                                                                                                                desc = "Git Commit" },
-    { "<leader>gdo",   ":DiffviewOpen<cr>",                                                                                                                                               desc = "Git Diff Open" },
-    { "<leader>gdc",   ":DiffviewClose<cr>",                                                                                                                                               desc = "Git Diff Close" },
+    { "<leader>gdo",  ":DiffviewOpen<cr>",                                                                                                                                               desc = "Git Diff Open" },
+    { "<leader>gdc",  ":DiffviewClose<cr>",                                                                                                                                              desc = "Git Diff Close" },
     { "<leader>gs",   ":lua require('neogit').open()<CR>",                                                                                                                               desc = "Git Status" },
-    { "go",           OpenFileWithOkular,                                                                                                                                            desc = "Open file with Okular" },
+    { "go",           OpenFileWithOkular,                                                                                                                                                desc = "Open file with Okular" },
     { "<leader>i",    group = "Insert" },
     { "<leader>it",   "o* [ ] ",                                                                                                                                                         desc = "Insert Task" },
     { "<leader>l",    group = "LSP" },
@@ -961,28 +879,8 @@ local normal_mappings = {
     { "<leader>mf",   "{jV}kgq",                                                                                                                                                         desc = "Format Paragraph" },
     { "<leader>mp",   ":vs <bar> term pandoc -V geometry:margin=1in -C --bibliography=refs.bib --listings --csl=default.csl -s h.md -o h.pdf --pdf-engine=xelatex <CR>",                 desc = "pdflatex md" },
     { "<leader>n",    ":Oil<cr>",                                                                                                                                                        desc = "Tree Toggle" },
-    -- { "<leader>pa",   "<cmd>CodeCompanionActions<cr>",                                                                                                                                   desc = "CodeCompanionActions" },
-    -- { "<leader>pp",   "<cmd>CodeCompanion<cr>",                                                                                                                                          desc = "CodeCompanion" },
     { "<leader>pa",   "<cmd>AvanteAsk<cr>",                                                                                                                                              desc = "AvanteAsk" },
     { "<leader>ph",   "<cmd>MCPHub<cr>",                                                                                                                                                 desc = "MCPHub" },
-    -- { "<leader>p<C-t>", "<cmd>GpChatNew tabnew<cr>",                                                                                                                                       desc = "New Chat tabnew" },
-    -- { "<leader>p<C-v>", "<cmd>GpChatNew vsplit<cr>",                                                                                                                                       desc = "New Chat vsplit" },
-    -- { "<leader>p<C-x>", "<cmd>GpChatNew split<cr>",                                                                                                                                        desc = "New Chat split" },
-    -- { "<leader>pa",     "<cmd>GpAppend<cr>",                                                                                                                                               desc = "Append (after)" },
-    -- { "<leader>pb",     "<cmd>GpPrepend<cr>",                                                                                                                                              desc = "Prepend (before)" },
-    -- { "<leader>pc",     "<cmd>GpChatNew<cr>",                                                                                                                                              desc = "New Chat" },
-    -- { "<leader>pf",     "<cmd>GpChatFinder<cr>",                                                                                                                                           desc = "Chat Finder" },
-    -- { "<leader>pg",     group = "generate into new .." },
-    -- { "<leader>pge",    "<cmd>GpEnew<cr>",                                                                                                                                                 desc = "GpEnew" },
-    -- { "<leader>pgn",    "<cmd>GpNew<cr>",                                                                                                                                                  desc = "GpNew" },
-    -- { "<leader>pgp",    "<cmd>GpPopup<cr>",                                                                                                                                                desc = "Popup" },
-    -- { "<leader>pgt",    "<cmd>GpTabnew<cr>",                                                                                                                                               desc = "GpTabnew" },
-    -- { "<leader>pgv",    "<cmd>GpVnew<cr>",                                                                                                                                                 desc = "GpVnew" },
-    -- { "<leader>pn",     "<cmd>GpNextAgent<cr>",                                                                                                                                            desc = "Next Agent" },
-    -- { "<leader>pp",     "<cmd>GpChatToggle<cr>",                                                                                                                                           desc = "Toggle Chat" },
-    -- { "<leader>pr",     "<cmd>GpRewrite<cr>",                                                                                                                                              desc = "Inline Rewrite" },
-    -- { "<leader>ps",     "<cmd>GpStop<cr>",                                                                                                                                                 desc = "GpStop" },
-    -- { "<leader>px",     "<cmd>GpContext<cr>",                                                                                                                                              desc = "Toggle GpContext" },
     { "<leader>q",    ":bn<bar>bd #<CR>",                                                                                                                                                desc = "Close Buffer" },
     { "<leader>r",    group = "Run" },
     { "<leader>rA",   "<C-W>v<C-W>l<cmd>term mpiexec -n 1 python3 %<cr>",                                                                                                                desc = "run active file" },
@@ -1014,7 +912,9 @@ local normal_mappings = {
     { "<leader>rmd",  ":vs<bar>term make debug<cr>",                                                                                                                                     desc = "make" },
     { "<leader>rmm",  ":vs<bar>term make<cr>",                                                                                                                                           desc = "make" },
     { "<leader>rmt",  ":vs<bar>term make t",                                                                                                                                             desc = "make" },
-    { "<leader>rn",   initJypterSession,                                                                                                                                                 desc = "Init Jupyter Session" },
+    -- { "<leader>rn",   initJypterSession,                                                                                                                                                 desc = "Init Jupyter Session" },
+    -- { "<leader>mi",   ":MoltenInit<cr>",                                                                                                                                                 desc = "Molten Init" },
+    -- { "<leader>mI",   ":MoltenInfo<cr>",                                                                                                                                                 desc = "Molten Info" },
     { "<leader>rpa",  ":vs<bar>term psi4 -n8 /theoryfs2/ds/amwalla3/projects/test_asapt/asapt.dat<cr>",                                                                                  desc = "psi4 asapt.dat" },
     { "<leader>rpb",  ":vs <bar>term cd .. && bash build.sh<cr>",                                                                                                                        desc = "build psi4" },
     { "<leader>rpd",  ":vs<bar>term python3 ~/data/sapt_dft_testing/water_test.py<cr>",                                                                                                  desc = "saptdft testing" },
@@ -1060,28 +960,9 @@ wk.add(normal_mappings, opts)
 local visual_mappings = {
   {
     mode = { "v" },
-    -- { "<leader>p<C-t>", ":<C-u>'<,'>GpChatNew tabnew<cr>", desc = "Visual Chat New tabnew" },
-    -- { "<leader>p<C-v>", ":<C-u>'<,'>GpChatNew vsplit<cr>", desc = "Visual Chat New vsplit" },
-    -- { "<leader>p<C-x>", ":<C-u>'<,'>GpChatNew split<cr>",  desc = "Visual Chat New split" },
-    -- { "<leader>pa",     ":<C-u>'<,'>GpAppend<cr>",         desc = "Visual Append (after)" },
-    -- { "<leader>pb",     ":<C-u>'<,'>GpPrepend<cr>",        desc = "Visual Prepend (before)" },
-    -- { "<leader>pc",     ":<C-u>'<,'>GpChatNew<cr>",        desc = "Visual Chat New" },
-    -- { "<leader>pg",     group = "generate into new .." },
-    -- { "<leader>pge",    ":<C-u>'<,'>GpEnew<cr>",           desc = "Visual GpEnew" },
-    -- { "<leader>pgn",    ":<C-u>'<,'>GpNew<cr>",            desc = "Visual GpNew" },
-    -- { "<leader>pgp",    ":<C-u>'<,'>GpPopup<cr>",          desc = "Visual Popup" },
-    -- { "<leader>pgt",    ":<C-u>'<,'>GpTabnew<cr>",         desc = "Visual GpTabnew" },
-    -- { "<leader>pgv",    ":<C-u>'<,'>GpVnew<cr>",           desc = "Visual GpVnew" },
-    -- { "<leader>pi",     ":<C-u>'<,'>GpImplement<cr>",      desc = "Implement selection" },
-    -- { "<leader>pn",     "<cmd>GpNextAgent<cr>",            desc = "Next Agent" },
-    -- { "<leader>pp",     ":<C-u>'<,'>GpChatPaste<cr>",      desc = "Visual Chat Paste" },
-    -- { "<leader>pr",     ":<C-u>'<,'>GpRewrite<cr>",        desc = "Visual Rewrite" },
-    -- { "<leader>ps",     "<cmd>GpStop<cr>",                 desc = "GpStop" },
-    -- { "<leader>pt",     ":<C-u>'<,'>GpChatToggle<cr>",     desc = "Visual Toggle Chat" },
-    -- { "<leader>px",     ":<C-u>'<,'>GpContext<cr>",        desc = "Visual GpContext" },
-    { "<leader>t",    group = "LaTex" },
-    { "<leader>tc",   ":w !wc -w<CR>",               desc = "Word Count" },
-    { "<leader>tr",   Round_number,                  desc = "Round Number" },
+    { "<leader>t",   group = "LaTex" },
+    { "<leader>tc",  ":w !wc -w<CR>",                                 desc = "Word Count" },
+    { "<leader>tr",  Round_number,                                    desc = "Round Number" },
     { "<leader>pe",  ":<C-u>lua Pymol_visual_xyz()<CR>",              desc = "Pymol Visual" },
     { "<leader>pc",  ":<C-u>lua Pymol_visual_xyz_convert()<CR>",      desc = "Pymol Visual Convert" },
     { "<leader>pb",  ":<C-u>lua Pymol_visual_xyz_bohr()<CR>",         desc = "Pymol Visual Bohr" },
@@ -1119,7 +1000,4 @@ end
 -- Automatically check line count on BufEnter event
 vim.cmd([[autocmd BufEnter * lua Check_line_count()]])
 
--- null_ls.builtins.formatting.latexindent.with({
---   extra_args = { "-l", UserHome .. "/.indentconfig.yaml", "-m" },
--- })
 -- vim: ts=2 sts=2 sw=2 et

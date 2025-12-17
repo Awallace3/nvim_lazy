@@ -81,7 +81,15 @@ return {
             t({ "#### Q " }), i(1, "a"), t({ "):", "", "", "#### A " }), i(2, "a"),
             t({ ":", "" }), i(0)
         }), s({
-            trig = "python",
+            trig = "py",
+            namr = "pythoncodeblock",
+            dscr = "Create Markdown Python codeblock"
+        }, {
+            
+            t({"```python", "", }),
+            i(0, "start coding"), t({ "", "```" })
+        }), s({
+            trig = "pythonsp",
             namr = "pythoncodeblock",
             dscr = "Create Markdown Python codeblock"
         }, {
@@ -156,49 +164,49 @@ return {
                 t({ "# " }),
                 f(date, {}),
                 i(0, "firstLast"),
-                t({"\n### Organization\n1. AI summary and record?:\n    -\n2. What is org and title?:\n    -" }), i(1)
---                 t({ [[
--- 3. Do you use QC for QC or for applications like FF developement, materials research, ML models, etc.?:
---     -
--- 4. What atomistic software ecosystem do you feel you fall under?:
---     -
--- 5. How would you define your role in interacting with QCSchema or structured atomistic data in general?:
---     -
---
---
--- ### Experiences
--- 1. Previously used structured QC data? If not, how expect it to be used?:
---     -
---     1. What types of structured data? (cclib, QCSchema, CML, FCHK, Molden, Trexio, NWChem database):
---         -
--- 2. Which QC programs have you gotten structured data from? (Possibly from own manipulations). Which have you wanted structured data from?:
---     -
--- 3. Do you believe in a QM data standard or do you think it inherently is too diverse?:
---     -
---
--- ### Governance
--- 1. Who do you trust to define a standard? (MolSSI, governing board, time-boxed voiding by anyone?):
---     -
--- 2. Are you interested in participating?:
---     -
---
--- ### Security
--- 1. Do you have any security concerns of malicious data being injected into QCSchema from another software integrated in your ecosystem?:
---     -
---
--- ### Usage
--- 1. What QM info do you need to store? Any unique/nonstandard properties that you often use?:
---     -
--- 2. Any killer applications?:
---     -
---
--- ### Closing
--- 1. What else should we have asked you?:
---     -
--- 2. (Industry) what would you pay for?
--- 3. Who else should we talk to? Can we get an introduction?
--- 4. May we contact you for another interview later on?
---                 ]] }),
+                t({ "\n### Organization\n1. AI summary and record?:\n    -\n2. What is org and title?:\n    -" }), i(1)
+                --                 t({ [[
+                -- 3. Do you use QC for QC or for applications like FF developement, materials research, ML models, etc.?:
+                --     -
+                -- 4. What atomistic software ecosystem do you feel you fall under?:
+                --     -
+                -- 5. How would you define your role in interacting with QCSchema or structured atomistic data in general?:
+                --     -
+                --
+                --
+                -- ### Experiences
+                -- 1. Previously used structured QC data? If not, how expect it to be used?:
+                --     -
+                --     1. What types of structured data? (cclib, QCSchema, CML, FCHK, Molden, Trexio, NWChem database):
+                --         -
+                -- 2. Which QC programs have you gotten structured data from? (Possibly from own manipulations). Which have you wanted structured data from?:
+                --     -
+                -- 3. Do you believe in a QM data standard or do you think it inherently is too diverse?:
+                --     -
+                --
+                -- ### Governance
+                -- 1. Who do you trust to define a standard? (MolSSI, governing board, time-boxed voiding by anyone?):
+                --     -
+                -- 2. Are you interested in participating?:
+                --     -
+                --
+                -- ### Security
+                -- 1. Do you have any security concerns of malicious data being injected into QCSchema from another software integrated in your ecosystem?:
+                --     -
+                --
+                -- ### Usage
+                -- 1. What QM info do you need to store? Any unique/nonstandard properties that you often use?:
+                --     -
+                -- 2. Any killer applications?:
+                --     -
+                --
+                -- ### Closing
+                -- 1. What else should we have asked you?:
+                --     -
+                -- 2. (Industry) what would you pay for?
+                -- 3. Who else should we talk to? Can we get an introduction?
+                -- 4. May we contact you for another interview later on?
+                --                 ]] }),
             })
 
         }, { key = 'markdown' })

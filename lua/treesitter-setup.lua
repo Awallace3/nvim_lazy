@@ -47,6 +47,8 @@ vim.defer_fn(function()
           ['if'] = '@function.inner',
           ['ac'] = '@class.outer',
           ['ic'] = '@class.inner',
+          ["iB"] = { query = "@code_cell.inner", desc = "in block" },
+          ["aB"] = { query = "@code_cell.outer", desc = "around block" },
         },
       },
       move = {
@@ -55,6 +57,7 @@ vim.defer_fn(function()
         goto_next_start = {
           [']m'] = '@function.outer',
           [']]'] = '@class.outer',
+          ["]B"] = { query = "@code_cell.inner", desc = "next code block" },
         },
         goto_next_end = {
           [']M'] = '@function.outer',
@@ -63,6 +66,7 @@ vim.defer_fn(function()
         goto_previous_start = {
           ['[m'] = '@function.outer',
           ['[['] = '@class.outer',
+          ["[B"] = { query = "@code_cell.inner", desc = "previous code block" },
         },
         goto_previous_end = {
           ['[M'] = '@function.outer',
@@ -73,9 +77,11 @@ vim.defer_fn(function()
         enable = true,
         swap_next = {
           ['<leader>a'] = '@parameter.inner',
+          ["<leader>sbl"] = "@code_cell.outer",
         },
         swap_previous = {
           ['<leader>A'] = '@parameter.inner',
+          ["<leader>sBh"] = "@code_cell.outer",
         },
       },
     },
