@@ -49,6 +49,30 @@ return {
           print("Copilot disabled for markdown file")
           return false
         end,
+        cpp = function()
+          local bufname = vim.api.nvim_buf_get_name(0)
+          if string.match(bufname, 'leetcode') then
+            print("Copilot disabled for leetcode file")
+            return false
+          end
+          return true
+        end,
+        python = function()
+          local bufname = vim.api.nvim_buf_get_name(0)
+          if string.match(bufname, 'leetcode') then
+            print("Copilot disabled for leetcode file")
+            return false
+          end
+          return true
+        end,
+        rust = function()
+          local bufname = vim.api.nvim_buf_get_name(0)
+          if string.match(bufname, 'leetcode') then
+            print("Copilot disabled for leetcode file")
+            return false
+          end
+          return true
+        end,
         sh = function()
           local bufname = vim.api.nvim_buf_get_name(0)
           if string.match(vim.fs.basename(bufname), '^%.env.*') then
