@@ -721,12 +721,6 @@ local function get_filetype()
   return filetype
 end
 
--- require("telescope").load_extension('harpoon')
--- local function harpoon_nav_file()
---     local ind = tonumber(vim.fn.input("Harpoon Index: "))
---     require("harpoon.ui").nav_file(ind)
--- end
-
 function Round_number()
   local precision = vim.fn.input("Precision: ", "")
   local str_cmd = "'<,'>s/\\d\\+\\.\\d\\+/\\=printf('%." .. precision .. "f', str2float(submatch(0)))/g"
@@ -734,24 +728,23 @@ function Round_number()
   vim.cmd(str_cmd)
   vim.api.nvim_input("<esc>")
 end
---
+
 -- function initJypterSession()
---   -- if using jukit...
---   -- local file_extension = vim.fn.expand("%:e")
---   -- local conda_env = os.getenv("CONDA_PREFIX")
---   -- print(conda_env)
---   -- if file_extension ~= 'ipynb' and file_extension ~= 'py' then
---   --   print(file_extension)
---   --   print("Not a Jupyter Notebook")
---   --   return
---   -- end
---   -- if file_extension == 'ipynb' then
---   --   vim.cmd(':call jukit#convert#notebook_convert("jupyter-notebook")')
---   -- end
---   -- local cmd = "JukitOut conda activate " .. conda_env
---   -- print(cmd)
---   -- vim.cmd(cmd)
---   --
+--    if using jukit...
+--    local file_extension = vim.fn.expand("%:e")
+--    local conda_env = os.getenv("CONDA_PREFIX")
+--    print(conda_env)
+--    if file_extension ~= 'ipynb' and file_extension ~= 'py' then
+--      print(file_extension)
+--      print("Not a Jupyter Notebook")
+--      return
+--    end
+--    if file_extension == 'ipynb' then
+--      vim.cmd(':call jukit#convert#notebook_convert("jupyter-notebook")')
+--    end
+--    local cmd = "JukitOut conda activate " .. conda_env
+--    print(cmd)
+--    vim.cmd(cmd)
 -- end
 
 local nvim_config_path = os.getenv("XDG_CONFIG_HOME") .. "/nvim"
@@ -953,6 +946,16 @@ local normal_mappings = {
     { "<leader>vpc",  Pymol_visual_xyz_convert,                                                                                                                                          desc = "Pymol Visual Convert" },
     { "<leader>vpb",  Pymol_visual_xyz_bohr,                                                                                                                                             desc = "Pymol Visual Bohr" },
     { "<leader>vpbc", Pymol_visual_xyz_bohr_convert,                                                                                                                                     desc = "Pymol Visual Bohr Convert" },
+    { "<leader>Lr",   ":Leet<cr>",                                                                                                                                                       desc = "Leet" },
+    { "<leader>Lr",   ":Leet run<cr>",                                                                                                                                                   desc = "Leet Run" },
+    { "<leader>LR",   ":Leet random<cr>",                                                                                                                                                desc = "Leet Random" },
+    { "<leader>Lc",   ":Leet console<cr>",                                                                                                                                               desc = "Leet Console" },
+    { "<leader>Ls",   ":Leet submit<cr>",                                                                                                                                                desc = "Leet Submit" },
+    { "<leader>LL",   ":Leet lang<cr>",                                                                                                                                                  desc = "Leet Lang" },
+    { "<leader>Ll",   ":Leet list<cr>",                                                                                                                                                  desc = "Leet List" },
+    { "<leader>Lu",   ":Leet list<cr>",                                                                                                                                                  desc = "Leet list" },
+    { "<leader>Lh",   ":Leet hint<cr>",                                                                                                                                                  desc = "Leet Hint" },
+    { "<leader>Lh",   ":Leet hint<cr>",                                                                                                                                                  desc = "Leet Hint" },
   }
 }
 local opts = { prefix = '<leader>', mode = "n" }
