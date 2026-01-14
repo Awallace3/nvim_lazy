@@ -2,6 +2,9 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = '\\'
 
+-- Set global LSP config early (required for blink.cmp compatibility before lazy loads)
+vim.lsp.config('*', {})
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 require('lazy-bootstrap')
 require('lazy-plugins')
