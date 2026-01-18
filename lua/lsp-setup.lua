@@ -767,28 +767,45 @@ wk.add(insert_mappings, insert_opts)
 
 -- Function to open file under cursor with okular
 OpenFileWithOkular = function()
-  -- Get the filename under cursor (similar to what gf uses)
-  local cfile = vim.fn.expand('<cfile>')
+  local filepath = nil
 
-  if cfile == "" then
-    print("No file under cursor")
-    return
-  end
+  -- Check if we're in an Oil buffer
+  local ok, oil = pcall(require, "oil")
+  if ok and vim.bo.filetype == "oil" then
+    -- Get the current directory from Oil
+    local oil_dir = oil.get_current_dir()
+    -- Get the entry under cursor
+    local entry = oil.get_cursor_entry()
+    if entry and entry.name then
+      filepath = oil_dir .. entry.name
+    else
+      print("No file under cursor in Oil")
+      return
+    end
+  else
+    -- Get the filename under cursor (similar to what gf uses)
+    local cfile = vim.fn.expand('<cfile>')
 
-  -- Check if file exists, if not try to make it an absolute path
-  local filepath = cfile
-  if vim.fn.filereadable(filepath) == 0 then
-    -- Try relative to current file's directory
-    local current_dir = vim.fn.expand('%:p:h')
-    filepath = current_dir .. '/' .. cfile
+    if cfile == "" then
+      print("No file under cursor")
+      return
+    end
 
+    -- Check if file exists, if not try to make it an absolute path
+    filepath = cfile
     if vim.fn.filereadable(filepath) == 0 then
-      -- Try relative to current working directory
-      filepath = vim.fn.getcwd() .. '/' .. cfile
+      -- Try relative to current file's directory
+      local current_dir = vim.fn.expand('%:p:h')
+      filepath = current_dir .. '/' .. cfile
 
       if vim.fn.filereadable(filepath) == 0 then
-        print("File not found: " .. cfile)
-        return
+        -- Try relative to current working directory
+        filepath = vim.fn.getcwd() .. '/' .. cfile
+
+        if vim.fn.filereadable(filepath) == 0 then
+          print("File not found: " .. cfile)
+          return
+        end
       end
     end
   end
@@ -800,28 +817,45 @@ OpenFileWithOkular = function()
 end
 
 OpenFileWithfirefox = function()
-  -- Get the filename under cursor (similar to what gf uses)
-  local cfile = vim.fn.expand('<cfile>')
+  local filepath = nil
 
-  if cfile == "" then
-    print("No file under cursor")
-    return
-  end
+  -- Check if we're in an Oil buffer
+  local ok, oil = pcall(require, "oil")
+  if ok and vim.bo.filetype == "oil" then
+    -- Get the current directory from Oil
+    local oil_dir = oil.get_current_dir()
+    -- Get the entry under cursor
+    local entry = oil.get_cursor_entry()
+    if entry and entry.name then
+      filepath = oil_dir .. entry.name
+    else
+      print("No file under cursor in Oil")
+      return
+    end
+  else
+    -- Get the filename under cursor (similar to what gf uses)
+    local cfile = vim.fn.expand('<cfile>')
 
-  -- Check if file exists, if not try to make it an absolute path
-  local filepath = cfile
-  if vim.fn.filereadable(filepath) == 0 then
-    -- Try relative to current file's directory
-    local current_dir = vim.fn.expand('%:p:h')
-    filepath = current_dir .. '/' .. cfile
+    if cfile == "" then
+      print("No file under cursor")
+      return
+    end
 
+    -- Check if file exists, if not try to make it an absolute path
+    filepath = cfile
     if vim.fn.filereadable(filepath) == 0 then
-      -- Try relative to current working directory
-      filepath = vim.fn.getcwd() .. '/' .. cfile
+      -- Try relative to current file's directory
+      local current_dir = vim.fn.expand('%:p:h')
+      filepath = current_dir .. '/' .. cfile
 
       if vim.fn.filereadable(filepath) == 0 then
-        print("File not found: " .. cfile)
-        return
+        -- Try relative to current working directory
+        filepath = vim.fn.getcwd() .. '/' .. cfile
+
+        if vim.fn.filereadable(filepath) == 0 then
+          print("File not found: " .. cfile)
+          return
+        end
       end
     end
   end
