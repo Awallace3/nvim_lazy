@@ -168,6 +168,8 @@ RunMainPython = function()
   vim.cmd("wincmd l")
   -- run python file
   vim.cmd("term python " .. MainPythonFile)
+  -- follow bottom of terminal
+  vim.cmd("normal! G")
 end
 
 MainbashFile = "run.sh"
