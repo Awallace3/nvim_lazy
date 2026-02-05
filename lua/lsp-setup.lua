@@ -173,6 +173,8 @@ RunMainPython = function()
   vim.cmd("wincmd l")
   -- run python file
   vim.cmd("term python " .. MainPythonFile)
+  -- follow bottom of terminal
+  vim.cmd("normal! G")
 end
 
 MainbashFile = "run.sh"
@@ -212,6 +214,8 @@ RunMainbash = function()
   vim.cmd("wincmd l")
   -- run bash file
   vim.cmd("term bash " .. MainbashFile)
+  -- follow bottom of terminal
+  vim.cmd("normal! G")
 end
 
 
@@ -880,7 +884,7 @@ local normal_mappings = {
     { "<leader>eE",   ":vs<bar>e " .. nvim_config_path .. "/init.lua<cr>",                                                                                                               desc = "init.lua (split)" },
     { "<leader>eZ",   ":vs<bar>e " .. "~/.zshrc<cr>",                                                                                                                                    desc = "zshrc (split)" },
     { "<leader>eL",   ":vs<bar>e " .. nvim_config_path .. "/lsp-setup.lua<cr>",                                                                                                          desc = "Edit lsp (split)" },
-    { "<leader>eO",   ":vs<bar>e" .. opencode_config_path .. "/opencode.jsonc<cr>",                                                                                                      desc = "Edit Opencode (split)" },
+    { "<leader>eO",   ":e" .. opencode_config_path .. "/opencode.json<cr>",                                                                                                      desc = "Edit Opencode (split)" },
     { "<leader>eP",   ":vs<bar>e" .. nvim_config_path .. "/lua/custom/plugins<cr>",                                                                                                      desc = "Edit Plugins (split)" },
     { "<leader>eS",   ":vs<bar>e" .. nvim_config_path .. "/lua/luasnip-config.lua<bar>40<cr>",                                                                                           desc = "Edit Snippets (split)" },
     { "<leader>ec",   ":e" .. nvim_config_path .. "/lua/cmp-setup.lua<cr>",                                                                                                              desc = "Edit config" },

@@ -38,7 +38,7 @@ return {
           print("using_psi4: " .. tostring(using_psi4))
           if using_psi4 then
             return {
-              "/home/awallace43/gits/psi4/build_saptdft_ein/stage/bin/psi4",
+              "/home/awallace43/gits/psi4/build_saptdft_ein_fi/stage/bin/psi4",
               -- "/home/awallace43/gits/psi4/tests/pytests/test_saptdft.py"
               "/home/awallace43/gits/psi4/tests/pytests/test_fsaptdft.py"
             }
