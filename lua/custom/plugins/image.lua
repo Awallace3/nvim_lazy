@@ -17,7 +17,7 @@ return {
           enabled = true,
           clear_in_insert_mode = false,
           download_remote_images = false,
-          only_render_image_at_cursor = false,
+          only_render_image_at_cursor = true,
           filetypes = { "markdown", "vimwiki" }, -- markdown extensions (ie. quarto) can go here
         },
         neorg = {
@@ -34,8 +34,8 @@ return {
           enabled = true,
         },
       },
-      max_width = 80,
-      max_height = 30,
+      max_width = 60,
+      max_height = 40,
       max_height_window_percentage = math.huge, -- this is necessary for a good experience
       max_width_window_percentage = math.huge,
       window_overlap_clear_enabled = true,
