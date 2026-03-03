@@ -11,6 +11,9 @@ return {
   lazy = true,
   init = function()
     local nt = require("neotest")
+    local cwd = vim.fn.getcwd()
+    local is_psi4 = vim.fn.fnamemodify(cwd, ":t") == "psi4"
+
     nt.setup({
       adapters = {
         require("neotest-python")({
@@ -22,6 +25,13 @@ return {
       discovery = {
         concurrent = 1,
         enabled = true,
+        filter_dir = function(_, rel_path)
+          if not is_psi4 then
+            return true
+          end
+
+          return rel_path == "tests" or rel_path:match("^tests/pytest") ~= nil
+        end,
       },
       floating = {
         border = "rounded",
