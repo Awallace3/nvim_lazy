@@ -3,7 +3,8 @@ return {
   init = function()
     -- vim.g.vimtex_view_method = 'zathura'
     -- vim.g.vimtex_view_method = 'zathura'
-    vim.g.vimtex_view_general_viewer = 'okular'
+    -- vim.g.vimtex_view_general_viewer = 'okular'
+    vim.g.vimtex_view_general_viewer = 'firefox'
     vim.cmd [[
       let g:vimtex_quickfix_open_on_warning = 0
     ]]
